@@ -97,6 +97,8 @@ public class MergeFilter extends FilterFrameworkGeneric
                     } // if
 
                     bytesread++;						// Increment the byte count
+                    WriteFilterOutputPort(databyte, 0);
+                    byteswritten++;
                 } // for
 
                 id1 = 0;
@@ -113,6 +115,8 @@ public class MergeFilter extends FilterFrameworkGeneric
                     } // if
 
                     bytesread++;						// Increment the byte count
+                    WriteFilterOutputPort(databyte, 0);
+                    byteswritten++;
                 } // for
 
                 /****************************************************************************
@@ -141,6 +145,9 @@ public class MergeFilter extends FilterFrameworkGeneric
                     } // if
 
                     bytesread++;									// Increment the byte count
+                    output = (byte)((measurement0 >> ((7 - i) * 8)) & 0xff);
+                    WriteFilterOutputPort(output, 0);
+                    byteswritten++;
 
                 } // for
                 measurement1 = 0;
@@ -156,9 +163,13 @@ public class MergeFilter extends FilterFrameworkGeneric
                     } // if
 
                     bytesread++;									// Increment the byte count
-
+                    output = (byte)((measurement1 >> ((7 - i) * 8)) & 0xff);
+                    WriteFilterOutputPort(output, 0);
+                    byteswritten++;
                 } // for
 
+//                System.out.println(" ID0 = " + id0);
+//                System.out.println(" ID1 = " + id1);
 //				if ( id == 0 ) Tempo
 //				if ( id == 1 ) Velocidade
 //				if ( id == 2 ) Altitude
