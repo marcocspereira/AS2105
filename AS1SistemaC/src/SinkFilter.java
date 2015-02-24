@@ -125,36 +125,8 @@ public class SinkFilter extends FilterFrameworkGeneric
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
-//                System.out.print(" ID = " + id+" ");
-                if ( id == 0 )
-				{
-					TimeStamp.setTimeInMillis(measurement);
-
-				} // if
-
-				if ( id == 2 )
-				{
-//					TimeStamp.setTimeInMillis(measurement);
-                    meters = Double.longBitsToDouble(measurement);
-				} // if
-
-				/****************************************************************************
-				// Here we pick up a measurement (ID = 4 in this case), but you can pick up
-				// any measurement you want to. All measurements in the stream are
-				// decommutated by this class. Note that all data measurements are double types
-				// This illustrates how to convert the bits read from the stream into a double
-				// type. Its pretty simple using Double.longBitsToDouble(long value). So here
-				// we print the time stamp and the data associated with the ID we are interested
-				// in.
-				****************************************************************************/
-
-				if ( id == 4 )
-				{
-                    temperature = Double.longBitsToDouble(measurement);
-                    System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f", temperature, meters);
-                    System.out.print("\n" );
-                } // if
-
+                TimeStamp.setTimeInMillis(measurement);
+                System.out.println(TimeStampFormat.format(TimeStamp.getTime()));
 
 			} // try
 
