@@ -36,7 +36,7 @@ public class SinkFilter extends FilterFrameworkGeneric
 		*	to the terminal.
 		*************************************************************************************/
 
-		Calendar TimeStamp = Calendar.getInstance();
+
 //		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss");
 
@@ -45,6 +45,8 @@ public class SinkFilter extends FilterFrameworkGeneric
 
 		int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
 		int IdLength = 4;				// This is the length of IDs in the byte stream
+
+        Calendar TimeStamp = Calendar.getInstance();
 
 		byte databyte = 0;				// This is the data byte read from the stream
 		int bytesread = 0;				// This is the number of bytes read from the stream
@@ -59,6 +61,7 @@ public class SinkFilter extends FilterFrameworkGeneric
 
 		System.out.print( "\n" + this.getName() + "::Sink Reading ");
 
+        ArrayList<Calendar> test = new ArrayList<Calendar>();
 		while (true)
 		{
 			try
@@ -104,16 +107,19 @@ public class SinkFilter extends FilterFrameworkGeneric
 				{
 					databyte = ReadFilterInputPort(0);
 					measurement = measurement | (databyte & 0xFF);	// We append the byte on to measurement...
+                    TimeStamp = Calendar.getInstance();
+                    TimeStamp.setTimeInMillis(measurement);
+                    test.add(TimeStamp);
 
-					if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
+                    if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
 					{												// previously appended byte to the left by one byte
-						measurement = measurement << 8;				// to make room for the next byte we append to the
-																	// measurement
-					} // if
+                        measurement = measurement << 8;				// to make room for the next byte we append to the
+                        // measurement
+                    } // if
 
-					bytesread++;									// Increment the byte count
+                    bytesread++;									// Increment the byte count
 
-				} // if
+                } // if
 
                 /****************************************************************************
                 // Here we look for an ID of 0 which indicates this is a time measurement.
@@ -125,27 +131,39 @@ public class SinkFilter extends FilterFrameworkGeneric
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
-                TimeStamp.setTimeInMillis(measurement);
                 System.out.println(TimeStampFormat.format(TimeStamp.getTime()));
 
-			} // try
+            } // try
 
-			/*******************************************************************************
-			*	The EndOfStreamExeception below is thrown when you reach end of the input
-			*	stream (duh). At this point, the filter ports are closed and a message is
-			*	written letting the user know what is going on.
-			********************************************************************************/
+
+            /*******************************************************************************
+            *	The EndOfStreamExeception below is thrown when you reach end of the input
+            *	stream (duh). At this point, the filter ports are closed and a message is
+            *	written letting the user know what is going on.
+            ********************************************************************************/
 
 			catch (EndOfStreamException e)
 			{
-				ClosePorts();
-				System.out.print( "\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread );
-				break;
+                ClosePorts();
+                System.out.print("\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread);
+                break;
 
-			} // catch
+            } // catch
+        } // while
 
-		} // while
+        Collections.sort(test, new Comparator<Calendar>() {
+            public int compare(Calendar x, Calendar y) {
+                if ( x.before(y) ) return -1;
+                if ( x.after(y) ) return 1;
+                return 0;
+            }
+        });
 
-   } // run
+        System.out.println("sorted");
+        for (int j = 0; j < test.size(); j++) {
+            System.out.println(TimeStampFormat.format(test.get(j).getTime()));
+        }
+
+    } // run
 
 } // SingFilter
