@@ -29,7 +29,8 @@ public class Plumber
 		SourceFilter Filter1 = new SourceFilter("SubSetA.dat");
 		SourceFilter Filter2 = new SourceFilter("SubSetB.dat");
 		MergeFilter Filter3 = new MergeFilter();
-		SinkFilter Filter4 = new SinkFilter();
+		SortFilter Filter4 = new SortFilter();
+		SinkFilter Filter5 = new SinkFilter();
 
 		/****************************************************************************
 		* Here we connect the filters starting with the sink filter (Filter 1) which
@@ -43,6 +44,7 @@ public class Plumber
        Filter3.Connect(Filter1, 0, 0);
        Filter3.Connect(Filter2, 1, 0);
        Filter4.Connect(Filter3, 0 ,0); // This essentially says, "connect Filter4 input port to Filter3 output port
+       Filter5.Connect(Filter4, 0 ,0); // This essentially says, "connect Filter4 input port to Filter3 output port
 
 		/****************************************************************************
 		* Here we start the filters up. All-in-all,... its really kind of boring.
@@ -52,6 +54,7 @@ public class Plumber
 		Filter2.start();
 		Filter3.start();
 		Filter4.start();
+		Filter5.start();
 
    } // main
 

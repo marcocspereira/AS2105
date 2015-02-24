@@ -58,7 +58,7 @@ public class MergeFilter extends FilterFrameworkGeneric
 
 		// Next we write a message to the terminal to let the world know we are alive...
 
-		System.out.print( "\n" + this.getName() + "::Middle Reading ");
+		System.out.println( "\n" + this.getName() + "::Merge Filter Reading ");
 
 		while (true)
 		{
@@ -232,7 +232,7 @@ public class MergeFilter extends FilterFrameworkGeneric
 			catch (EndOfStreamException e)
 			{
                 ClosePorts();
-                System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+                System.out.println( "\n" + this.getName() + "::Merge Filter Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
 				break;
 			} // catch
 

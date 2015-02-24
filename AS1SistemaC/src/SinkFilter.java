@@ -59,9 +59,8 @@ public class SinkFilter extends FilterFrameworkGeneric
 		*	First we announce to the world that we are alive...
 		**************************************************************/
 
-		System.out.print( "\n" + this.getName() + "::Sink Reading ");
+		System.out.println( "\n" + this.getName() + "::Sink Reading ");
 
-        ArrayList<Calendar> test = new ArrayList<Calendar>();
 		while (true)
 		{
 			try
@@ -129,9 +128,7 @@ public class SinkFilter extends FilterFrameworkGeneric
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
-                TimeStamp = Calendar.getInstance();
                 TimeStamp.setTimeInMillis(measurement);
-                test.add(TimeStamp);
                 System.out.println(TimeStampFormat.format(TimeStamp.getTime()));
 
             } // try
@@ -146,24 +143,11 @@ public class SinkFilter extends FilterFrameworkGeneric
 			catch (EndOfStreamException e)
 			{
                 ClosePorts();
-                System.out.print("\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread);
+                System.out.println("\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread);
                 break;
 
             } // catch
         } // while
-
-        Collections.sort(test, new Comparator<Calendar>() {
-            public int compare(Calendar x, Calendar y) {
-                if ( x.before(y) ) return -1;
-                if ( x.after(y) ) return 1;
-                return 0;
-            }
-        });
-        System.out.println("sorted");
-        for (int j = 0; j < test.size(); j++) {
-            System.out.println(TimeStampFormat.format(test.get(j).getTime()));
-        }
-
     } // run
 
 } // SingFilter
