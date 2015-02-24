@@ -107,9 +107,7 @@ public class SinkFilter extends FilterFrameworkGeneric
 				{
 					databyte = ReadFilterInputPort(0);
 					measurement = measurement | (databyte & 0xFF);	// We append the byte on to measurement...
-                    TimeStamp = Calendar.getInstance();
-                    TimeStamp.setTimeInMillis(measurement);
-                    test.add(TimeStamp);
+
 
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
 					{												// previously appended byte to the left by one byte
@@ -131,6 +129,9 @@ public class SinkFilter extends FilterFrameworkGeneric
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
+                TimeStamp = Calendar.getInstance();
+                TimeStamp.setTimeInMillis(measurement);
+                test.add(TimeStamp);
                 System.out.println(TimeStampFormat.format(TimeStamp.getTime()));
 
             } // try
@@ -158,7 +159,6 @@ public class SinkFilter extends FilterFrameworkGeneric
                 return 0;
             }
         });
-
         System.out.println("sorted");
         for (int j = 0; j < test.size(); j++) {
             System.out.println(TimeStampFormat.format(test.get(j).getTime()));
