@@ -155,7 +155,7 @@ public class FilterWildPoints extends FilterFramework
                 if ( id == 3 )
                 {
 
-                    //check if is wildpoint
+                    //check if is wildpoint (<50 || >80)
 
                     if(Double.longBitsToDouble(measurement) < 50 || Double.longBitsToDouble(measurement) > 80){
 
@@ -167,25 +167,22 @@ public class FilterWildPoints extends FilterFramework
                             output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
                             WriteFilterOutputPort(output);
                             byteswritten++;
-                        }
+                        } // for
                     }  // if
 
 
                     else{
-                            for(i = 0; i < 8; i++)
-                            {
-
-                                output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                                WriteFilterOutputPort(output);
-                                byteswritten++;
-                            }
-
-
-                        }
+                        for(i = 0; i < 8; i++)
+                        {
+                            output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
+                            WriteFilterOutputPort(output);
+                            byteswritten++;
+                        } // for
+                    } // else
 
 
 
-                } // else
+                } // if
 
 //                else isn't temperature
                 else
