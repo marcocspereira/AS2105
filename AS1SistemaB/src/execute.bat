@@ -1,2 +1,2 @@
 javac *.java
-java Plumber > OutputA.dat
+java Plumber > OutputB.dat
