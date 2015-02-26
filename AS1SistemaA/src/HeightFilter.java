@@ -48,7 +48,7 @@ public class HeightFilter extends FilterFramework
 
         // Next we write a message to the terminal to let the world know we are alive...
 
-        System.out.print("\n" + this.getName() + "::Height Reading ");
+        System.out.println(this.getName() + "::Height Reading ");
 
         while (true)
         {
@@ -88,9 +88,8 @@ public class HeightFilter extends FilterFramework
 
                     bytesread++;						// Increment the byte count
 
-                    WriteFilterOutputPort(databyte);
-                    byteswritten++;
                 } // for
+
 
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
@@ -114,7 +113,6 @@ public class HeightFilter extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement = measurement << 8;				// to make room for the next byte we append to the
-                        // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
@@ -128,6 +126,16 @@ public class HeightFilter extends FilterFramework
 //				if ( id == 4 ) Temperatura
 //				if ( id == 5 ) Pitch
 
+                if(id == 2)
+                {
+                    for(i=0; i<IdLength; i++)
+                    {
+                        output = (byte)((id >> ((7 - i) * 8)) & 0xff);
+                        WriteFilterOutputPort(output);
+                        byteswritten++;
+                    } // for
+                } // for
+
                 /****************************************************************************
                  // Here we look for an ID of 0 which indicates this is a time measurement.
                  // Every frame begins with an ID of 0, followed by a time stamp which correlates
@@ -138,6 +146,19 @@ public class HeightFilter extends FilterFramework
                  // dealing with time arithmetically or for string display purposes. This is
                  // illustrated below.
                  ****************************************************************************/
+                // send timestamp
+                if ( id == 0 )
+                {
+
+                    for(i = 0; i < MeasurementLength; i++)
+                    {
+                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
+                        WriteFilterOutputPort(output);
+                        byteswritten++;
+                    } // for
+
+                    TimeStamp.setTimeInMillis(measurement);
+                } // if
 
 //                if ( id == 0 )
 //                {
@@ -153,8 +174,8 @@ public class HeightFilter extends FilterFramework
                  // we print the time stamp and the data associated with the ID we are interested
                  // in.
                  ****************************************************************************/
-//                if is height
-                if ( id == 2 )
+                // if is height
+                else if ( id == 2 )
                 {
 //                    System.out.println("input " + Long.toBinaryString(measurement));
 //                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Feet " + longToDouble(measurement));
@@ -164,10 +185,10 @@ public class HeightFilter extends FilterFramework
 
 //                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Meters " + meters);
                     measurement = doubleToLong(meters);
-                    for(i = 0; i < 8; i++)
+                    for(i = 0; i < MeasurementLength; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        //WriteFilterOutputPort(output);
+                        WriteFilterOutputPort(output);
                         byteswritten++;
                     }
                 } // if
@@ -175,19 +196,14 @@ public class HeightFilter extends FilterFramework
 //                else isn't height
                 else
                 {
-                    for(i = 0; i < 8; i++)
-                    {
-                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        //WriteFilterOutputPort(output);
-                        byteswritten++;
-                    }
+                    continue;
                 } // else
             } // try
 
             catch (EndOfStreamException e)
             {
                 ClosePorts();
-                System.out.print("\n" + this.getName() + "::Height Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten);
+                System.out.println(this.getName() + "::Height Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten);
                 break;
             } // catch
 

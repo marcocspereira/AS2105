@@ -48,7 +48,7 @@ public class TemperatureFilter extends FilterFramework
 
         // Next we write a message to the terminal to let the world know we are alive...
 
-        System.out.print("\n" + this.getName() + "::Temperature Reading ");
+        System.out.println(this.getName() + "::Temperature Reading ");
 
         while (true)
         {
@@ -88,14 +88,14 @@ public class TemperatureFilter extends FilterFramework
 
                     bytesread++;						// Increment the byte count
 
-                    WriteFilterOutputPort(databyte);
-                    byteswritten++;
+                    //WriteFilterOutputPort(databyte);
+                    //byteswritten++;
                 } // for
 
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
                  // and stored as a long value. This permits us to do bitwise manipulation that
-                 // is neccesary to convert the byte stream into data words. Note that bitwise
+                 // is necessary to convert the byte stream into data words. Note that bitwise
                  // manipulation is not permitted on any kind of floating point types in Java.
                  // If the id = 0 then this is a time value and is therefore a long value - no
                  // problem. However, if the id is something other than 0, then the bits in the
@@ -128,6 +128,16 @@ public class TemperatureFilter extends FilterFramework
 //				if ( id == 4 ) Temperatura
 //				if ( id == 5 ) Pitch
 
+                if( id == 0 || id == 4)
+                {
+                    for(i=0; i<IdLength; i++)
+                    {
+                        output = (byte)((id >> ((7 - i) * 8)) & 0xff);
+                        WriteFilterOutputPort(output,0);
+                        byteswritten++;
+                    } // for
+                } // for
+
                 /****************************************************************************
                  // Here we look for an ID of 0 which indicates this is a time measurement.
                  // Every frame begins with an ID of 0, followed by a time stamp which correlates
@@ -138,11 +148,18 @@ public class TemperatureFilter extends FilterFramework
                  // dealing with time arithmetically or for string display purposes. This is
                  // illustrated below.
                  ****************************************************************************/
+                // send timestamp
+                if ( id == 0 )
+                {
+                    for(i = 0; i < MeasurementLength; i++)
+                    {
+                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
+                        WriteFilterOutputPort(output,0);
+                        byteswritten++;
+                    } // for
 
-//                if ( id == 0 )
-//                {
-//                    TimeStamp.setTimeInMillis(measurement);
-//                } // if
+                    TimeStamp.setTimeInMillis(measurement);
+                } // if
 
                 /****************************************************************************
                  // Here we pick up a measurement (ID = 4 in this case), but you can pick up
@@ -153,21 +170,21 @@ public class TemperatureFilter extends FilterFramework
                  // we print the time stamp and the data associated with the ID we are interested
                  // in.
                  ****************************************************************************/
-//                if is temperature
+                // if is temperature
                 if ( id == 4 )
                 {
 //                    System.out.println("temperatura: " + Long.toBinaryString(measurement));
-                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Fahrenheit " + longToDouble(measurement));
+//                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Fahrenheit " + longToDouble(measurement));
 
 //                  Convert to celsius
                     double celsius = ((Double.longBitsToDouble(measurement) - 32)*5)/9;
 
 //                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Celsius " + celsius);
                     measurement = doubleToLong(celsius);
-                    for(i = 0; i < 8; i++)
+                    for(i = 0; i < MeasurementLength; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        //WriteFilterOutputPort(output);
+                        WriteFilterOutputPort(output,0);
                         byteswritten++;
                     }
                 } // if
@@ -175,19 +192,14 @@ public class TemperatureFilter extends FilterFramework
 //                else isn't temperature
                 else
                 {
-                    for(i = 0; i < 8; i++)
-                    {
-                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        //WriteFilterOutputPort(output);
-                        byteswritten++;
-                    }
+                    continue;
                 } // else
             } // try
 
             catch (EndOfStreamException e)
             {
                 ClosePorts();
-                System.out.print( "\n" + this.getName() + "::Temperature Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+                System.out.println( this.getName() + "::Temperature Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
                 break;
             } // catch
 

@@ -23,7 +23,6 @@ public class SplitterFilter extends FilterFramework
 
     SplitterFilter(int numInputPort, int numOutputPorts)
     {
-
         super(numInputPort, numOutputPorts);
     }
 
@@ -38,7 +37,7 @@ public class SplitterFilter extends FilterFramework
 
         // Next we write a message to the terminal to let the world know we are alive...
 
-        System.out.print( "\n" + this.getName() + "::Splitter Reading ");
+        System.out.println(this.getName() + "::Splitter Reading ");
 
         while (true)
         {
@@ -51,7 +50,7 @@ public class SplitterFilter extends FilterFramework
                 databyte = ReadFilterInputPort();
                 bytesread++;
                 WriteFilterOutputPort(databyte, 0);
-                //WriteFilterOutputPort(databyte, 1);
+                WriteFilterOutputPort(databyte, 1);
                 byteswritten++;
 
             } // try
@@ -59,7 +58,7 @@ public class SplitterFilter extends FilterFramework
             catch (EndOfStreamException e)
             {
                 ClosePorts();
-                System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+                System.out.println(this.getName() + "::Splitter Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
                 break;
 
             } // catch

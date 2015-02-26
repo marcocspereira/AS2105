@@ -46,10 +46,10 @@ public class Plumber
        temperatureF.Connect(splitterF, 0, 0);   // connect input of TemperatureFilter port 0 to SplitterFilter output port 0
        heightF.Connect(splitterF, 0, 1);        // connect input of HeightFilter port 0 to SplitterFilter output port 1
 
-       //mergeF.Connect(temperatureF, 0, 0);      // connect input of MergerFilter port 0 to TemperatureFilter output port 0
-       //mergeF.Connect(heightF, 1, 0);           // connect input of MergerFilter port 1 to HeightFilter output port 0
+       mergeF.Connect(temperatureF, 0, 0);      // connect input of MergerFilter port 0 to TemperatureFilter output port 0
+       mergeF.Connect(heightF, 1, 0);           // connect input of MergerFilter port 1 to HeightFilter output port 0
 
-       //sinkF.Connect(mergeF);             // connect input of SinkFilter port 0 to MergerFilter output port 0
+       sinkF.Connect(mergeF);             // connect input of SinkFilter port 0 to MergerFilter output port 0
 
 
 		/****************************************************************************
@@ -60,8 +60,8 @@ public class Plumber
 		splitterF.start();
 		temperatureF.start();
 		heightF.start();
-        //mergeF.start();
-        //sinkF.start();
+        mergeF.start();
+        sinkF.start();
 
    } // main
 

@@ -92,7 +92,7 @@ public class SourceFilter extends FilterFramework
 
 		catch ( IOException iox )
 		{
-			System.out.println("\n" + this.getName() + "::Problem reading input data file::" + iox );
+			System.out.println(this.getName() + "::Problem reading input data file::" + iox );
 
 		} // catch
 

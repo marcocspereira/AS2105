@@ -1,6 +1,3 @@
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 /******************************************************************************************************************
  * File:MiddleFilter.java
  * Course: 17655
@@ -26,25 +23,21 @@ public class MergeFilter extends FilterFramework
 
     MergeFilter(int numInputPort, int numOutputPorts)
     {
-
         super(numInputPort, numOutputPorts);
     }
+
 
     public void run()
     {
         byte output;
 
-        double temperature = 0;
-        double meters = 0;
-
-        Calendar TimeStamp = Calendar.getInstance();
-        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
+//        Calendar TimeStamp = Calendar.getInstance();
+//        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
         int IdLength = 4;				// This is the length of IDs in the byte stream
 
-        byte databyte0 = 0;				// This is the data byte read from the stream
-        byte databyte1 = 0;				// This is the data byte read from the stream
+        byte databyte = 0;				// This is the data byte read from the stream
         int bytesread = 0;				// This is the number of bytes read from the stream
 
         long measurement0;				// This is the word used to store all measurements - conversions are illustrated.
@@ -87,9 +80,9 @@ public class MergeFilter extends FilterFramework
 
                 for (i=0; i<IdLength; i++ )
                 {
-                    databyte0 = ReadFilterInputPort(0);	// This is where we read the byte from the stream...
+                    databyte = ReadFilterInputPort(0);	// This is where we read the byte from the stream...
 
-                    id0 = id0 | (databyte0 & 0xFF);		// We append the byte on to ID...
+                    id0 = id0 | (databyte & 0xFF);		// We append the byte on to ID...
 
                     if (i != IdLength-1)				// If this is not the last byte, then slide the
                     {									// previously appended byte to the left by one byte
@@ -98,17 +91,51 @@ public class MergeFilter extends FilterFramework
                     } // if
 
                     bytesread++;						// Increment the byte count
-                    WriteFilterOutputPort(databyte0, 0);
-                    byteswritten++;
                 } // for
 
+                for (i = 0; i < IdLength; i++){
+                    output = (byte) ((id0 >> ((7 - i) * 8)) & 0xff);
+                    WriteFilterOutputPort(output, 0);
+                    byteswritten++;
+                }
+
+                measurement0 = 0;
+
+                for (i=0; i<MeasurementLength; i++ )
+                {
+                    databyte = ReadFilterInputPort(0);
+                    measurement0 = measurement0 | (databyte & 0xFF);	// We append the byte on to measurement...
+
+                    if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
+                    {												// previously appended byte to the left by one byte
+                        measurement0 = measurement0 << 8;				// to make room for the next byte we append to the
+                    } // if
+
+                    bytesread++;									// Increment the byte count
+                } // for
+
+                for (i=0; i<MeasurementLength; i++ ){
+                    output = (byte)((measurement0 >> ((7 - i) * 8)) & 0xff);
+                    WriteFilterOutputPort(output, 0);
+                    byteswritten++;
+                }
+            } // try
+
+            catch (EndOfStreamException e)
+            {
+                ClosePorts();
+                System.out.println( "\n" + this.getName() + "::Merge Filter Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+                break;
+            } // catch
+
+            try {
 
                 id1 = 0;
                 for (i=0; i<IdLength; i++ )
                 {
-                    databyte1 = ReadFilterInputPort(1);	// This is where we read the byte from the stream...
+                    databyte = ReadFilterInputPort(1);	// This is where we read the byte from the stream...
 
-                    id1 = id1 | (databyte1 & 0xFF);		// We append the byte on to ID...
+                    id1 = id1 | (databyte & 0xFF);		// We append the byte on to ID...
 
                     if (i != IdLength-1)				// If this is not the last byte, then slide the
                     {									// previously appended byte to the left by one byte
@@ -117,11 +144,34 @@ public class MergeFilter extends FilterFramework
                     } // if
 
                     bytesread++;						// Increment the byte count
-                    WriteFilterOutputPort(databyte1, 0);
-                    byteswritten++;
                 } // for
 
+                for (i = 0; i < IdLength; i++){
+                    output = (byte) ((id1 >> ((7 - i) * 8)) & 0xff);
+                    WriteFilterOutputPort(output, 0);
+                    byteswritten++;
+                }
 
+                measurement1 = 0;
+                for (i=0; i<MeasurementLength; i++ )
+                {
+                    databyte = ReadFilterInputPort(1);
+                    measurement1 = measurement1 | (databyte & 0xFF);	// We append the byte on to measurement...
+
+                    if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
+                    {												// previously appended byte to the left by one byte
+                        measurement1 = measurement1 << 8;				// to make room for the next byte we append to the
+                        // measurement
+                    } // if
+
+                    bytesread++;									// Increment the byte count
+                } // for
+
+                for (i=0; i<MeasurementLength; i++ ){
+                    output = (byte)((measurement1 >> ((7 - i) * 8)) & 0xff);
+                    WriteFilterOutputPort(output, 0);
+                    byteswritten++;
+                }
 
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
@@ -134,104 +184,19 @@ public class MergeFilter extends FilterFramework
                  // Double.longBitsToDouble(long val) to do the conversion which is illustrated.
                  // below.
                  *****************************************************************************/
-
-                measurement0 = 0;
-
-                for (i=0; i<MeasurementLength; i++ )
-                {
-                    databyte0 = ReadFilterInputPort(0);
-                    measurement0 = measurement0 | (databyte0 & 0xFF);	// We append the byte on to measurement...
-
-                    if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
-                    {												// previously appended byte to the left by one byte
-                        measurement0 = measurement0 << 8;				// to make room for the next byte we append to the
-                        // measurement
-                    } // if
-
-                    bytesread++;									// Increment the byte count
-                    output = (byte)((measurement0 >> ((7 - i) * 8)) & 0xff);
-                    WriteFilterOutputPort(output, 0);
-                    byteswritten++;
-
-                } // for
-
-                measurement1 = 0;
-                for (i=0; i<MeasurementLength; i++ )
-                {
-                    databyte1 = ReadFilterInputPort(1);
-                    measurement1 = measurement1 | (databyte1 & 0xFF);	// We append the byte on to measurement...
-
-                    if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
-                    {												// previously appended byte to the left by one byte
-                        measurement1 = measurement1 << 8;				// to make room for the next byte we append to the
-                        // measurement
-                    } // if
-
-                    bytesread++;									// Increment the byte count
-                    output = (byte)((measurement1 >> ((7 - i) * 8)) & 0xff);
-                    WriteFilterOutputPort(output, 0);
-                    byteswritten++;
-                } // for
-
-//                System.out.println(" ID0 = " + id0);
-//                System.out.println(" ID1 = " + id1);
-//				if ( id == 0 ) Tempo
+//                Tempo
+//				if ( id1 == 0 )
+//                {
+//                    TimeStamp = Calendar.getInstance();
+//                    TimeStamp.setTimeInMillis(measurement1);
+//                    System.out.println("ola " +TimeStampFormat.format(TimeStamp.getTime()));
+//                }
 //				if ( id == 1 ) Velocidade
 //				if ( id == 2 ) Altitude
 //				if ( id == 3 ) Pressão
 //				if ( id == 4 ) Temperatura
 //				if ( id == 5 ) Pitch
 
-                /****************************************************************************
-                 // Here we look for an ID of 0 which indicates this is a time measurement.
-                 // Every frame begins with an ID of 0, followed by a time stamp which correlates
-                 // to the time that each proceeding measurement was recorded. Time is stored
-                 // in milliseconds since Epoch. This allows us to use Java's calendar class to
-                 // retrieve time and also use text format classes to format the output into
-                 // a form humans can read. So this provides great flexibility in terms of
-                 // dealing with time arithmetically or for string display purposes. This is
-                 // illustrated below.
-                 ****************************************************************************/
-////                System.out.print(" ID = " + id+" ");
-//                if ( id == 0 )
-//                {
-//                    TimeStamp.setTimeInMillis(measurement);
-//
-//                } // if
-//
-//                if ( id == 2 )
-//                {
-////					TimeStamp.setTimeInMillis(measurement);
-//                    meters = Double.longBitsToDouble(measurement);
-//                } // if
-//
-//                /****************************************************************************
-//                 // Here we pick up a measurement (ID = 4 in this case), but you can pick up
-//                 // any measurement you want to. All measurements in the stream are
-//                 // decommutated by this class. Note that all data measurements are double types
-//                 // This illustrates how to convert the bits read from the stream into a double
-//                 // type. Its pretty simple using Double.longBitsToDouble(long value). So here
-//                 // we print the time stamp and the data associated with the ID we are interested
-//                 // in.
-//                 ****************************************************************************/
-//
-//                if ( id == 4 )
-//                {
-//                    temperature = Double.longBitsToDouble(measurement);
-//                    System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f", temperature, meters);
-//                    System.out.print("\n" );
-//                } // if
-//
-////                else isn't height
-//                else
-//                {
-//                    for(i = 0; i < 8; i++)
-//                    {
-//                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-//                        WriteFilterOutputPort(output, 0);
-//                        byteswritten++;
-//                    }
-//                } // else
             } // try
 
             catch (EndOfStreamException e)

@@ -96,7 +96,7 @@ public class FilterFramework extends Thread
 	/***************************************************************************
 	* CONCRETE METHOD:: Connect
 	* Purpose: This method connects filters to each other. All connections are
-	* through the inputport of each filter. That is each filter's inputport is
+	* through the inputPort of each filter. That is each filter's inputPort is
 	* connected to another filter's output port through this method.
 	*
 	* Arguments:
@@ -385,7 +385,7 @@ public class FilterFramework extends Thread
 	*
 	* Returns: void
 	*
-	* Exceptions: IOExecption
+	* Exceptions: IOException
 	*
 	****************************************************************************/
 
@@ -421,7 +421,7 @@ public class FilterFramework extends Thread
 	*
 	* Returns: void
 	*
-	* Exceptions: IOExecption
+	* Exceptions: IOException
 	*
 	****************************************************************************/
 
