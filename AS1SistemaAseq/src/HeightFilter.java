@@ -1,8 +1,5 @@
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 
 /******************************************************************************************************************
 * File:MiddleFilter.java
@@ -24,8 +21,9 @@ import java.util.Comparator;
 *
 ******************************************************************************************************************/
 
-public class SortFilter extends FilterFrameworkGeneric
+public class HeightFilter extends FilterFramework
 {
+
 
 	public void run()
     {
@@ -50,11 +48,9 @@ public class SortFilter extends FilterFrameworkGeneric
 
 		// Next we write a message to the terminal to let the world know we are alive...
 
-		System.out.println( "\n" + this.getName() + "::Sort Filter Reading ");
-        ArrayList<Calendar> calendars = new ArrayList<Calendar>();
-        ArrayList<Integer> ids = new ArrayList<Integer>();
+		System.out.print( "\n" + this.getName() + "::Middle Reading ");
 
-        while (true)
+		while (true)
 		{
 //			/*************************************************************
 //			*	Here we read a byte and write a byte
@@ -80,7 +76,7 @@ public class SortFilter extends FilterFrameworkGeneric
 
                 for (i=0; i<IdLength; i++ )
                 {
-                    databyte = ReadFilterInputPort(0);	// This is where we read the byte from the stream...
+                    databyte = ReadFilterInputPort();	// This is where we read the byte from the stream...
 
                     id = id | (databyte & 0xFF);		// We append the byte on to ID...
 
@@ -91,11 +87,11 @@ public class SortFilter extends FilterFrameworkGeneric
                     } // if
 
                     bytesread++;						// Increment the byte count
-//                    WriteFilterOutputPort(databyte, 0);
-//                    byteswritten++;
+
+                    WriteFilterOutputPort(databyte);
+                    byteswritten++;
                 } // for
 
-                ids.add(id);
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
                  // and stored as a long value. This permits us to do bitwise manipulation that
@@ -112,7 +108,7 @@ public class SortFilter extends FilterFrameworkGeneric
 
                 for (i=0; i<MeasurementLength; i++ )
                 {
-                    databyte = ReadFilterInputPort(0);
+                    databyte = ReadFilterInputPort();
                     measurement = measurement | (databyte & 0xFF);	// We append the byte on to measurement...
 
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
@@ -122,52 +118,81 @@ public class SortFilter extends FilterFrameworkGeneric
                     } // if
 
                     bytesread++;									// Increment the byte count
-//                    output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-//                    WriteFilterOutputPort(output, 0);
-//                    byteswritten++;
 
                 } // for
-                if ( id == 0 ) {
-                    TimeStamp = Calendar.getInstance();
-                    TimeStamp.setTimeInMillis(measurement);
-                    calendars.add(TimeStamp);
 
-                }
-//                System.out.println(TimeStampFormat.format(TimeStamp.getTime()));
+//				if ( id == 0 ) Tempo
+//				if ( id == 1 ) Velocidade
+//				if ( id == 2 ) Altitude
+//				if ( id == 3 ) Pressão
+//				if ( id == 4 ) Temperatura
+//				if ( id == 5 ) Pitch
 
+                /****************************************************************************
+                 // Here we look for an ID of 0 which indicates this is a time measurement.
+                 // Every frame begins with an ID of 0, followed by a time stamp which correlates
+                 // to the time that each proceeding measurement was recorded. Time is stored
+                 // in milliseconds since Epoch. This allows us to use Java's calendar class to
+                 // retrieve time and also use text format classes to format the output into
+                 // a form humans can read. So this provides great flexibility in terms of
+                 // dealing with time arithmetically or for string display purposes. This is
+                 // illustrated below.
+                 ****************************************************************************/
 
+//                if ( id == 0 )
+//                {
+//                    TimeStamp.setTimeInMillis(measurement);
+//                } // if
+
+                /****************************************************************************
+                 // Here we pick up a measurement (ID = 4 in this case), but you can pick up
+                 // any measurement you want to. All measurements in the stream are
+                 // decommutated by this class. Note that all data measurements are double types
+                 // This illustrates how to convert the bits read from the stream into a double
+                 // type. Its pretty simple using Double.longBitsToDouble(long value). So here
+                 // we print the time stamp and the data associated with the ID we are interested
+                 // in.
+                 ****************************************************************************/
+//                if is height
+                if ( id == 2 )
+                {
+//                    System.out.println("input " + Long.toBinaryString(measurement));
+//                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Feet " + longToDouble(measurement));
+
+//                  Convert to meters
+                    double meters = Double.longBitsToDouble(measurement)/3.2808;
+
+//                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Meters " + meters);
+                    measurement = doubleToLong(meters);
+                    for(i = 0; i < 8; i++)
+                    {
+                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
+                        WriteFilterOutputPort(output);
+                        byteswritten++;
+                    }
+                } // if
+
+//                else isn't height
+                else
+                {
+                    for(i = 0; i < 8; i++)
+                    {
+                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
+                        WriteFilterOutputPort(output);
+                        byteswritten++;
+                    }
+                } // else
             } // try
 
 			catch (EndOfStreamException e)
 			{
-                Collections.sort(calendars, new Comparator<Calendar>() {
-                    public int compare(Calendar x, Calendar y) {
-                        if (x.before(y)) return -1;
-                        if (x.after(y)) return 1;
-                        return 0;
-                    }
-                });
-//                System.out.println("sorted");
-                for (int j = 0; j < calendars.size(); j++) {
-//                    System.out.println(TimeStampFormat.format(calendars.get(j).getTime()));
-                    for (i = 0; i < IdLength; i++){
-                        output = (byte) ((ids.get(j) >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output, 0);
-                        byteswritten++;
-                    }
-                    for (i=0; i<MeasurementLength; i++ ){
-                        output = (byte)((calendars.get(j).getTimeInMillis() >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output, 0);
-                        byteswritten++;
-                    }
-                }
-
                 ClosePorts();
-                System.out.println( "\n" + this.getName() + "::Sort Filter Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+                System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
 				break;
 			} // catch
 
 		} // while
+
    } // run
 
     Double longToDouble(long measurement)
