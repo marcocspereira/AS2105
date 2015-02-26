@@ -1,3 +1,5 @@
+package AS1SistemaB.src;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -27,6 +29,9 @@ public class FilterWildPoints extends FilterFramework
 
     public void run()
     {
+        Calendar TimeStamp = Calendar.getInstance();
+        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss");
+
         byte output;
 
 
@@ -46,22 +51,11 @@ public class FilterWildPoints extends FilterFramework
 
         // Next we write a message to the terminal to let the world know we are alive...
 
-        System.out.print( "\n" + this.getName() + "::Middle Reading ");
+        System.out.print( "\n" + this.getName() + "::FilterWildPoint Reading ");
 
         while (true)
         {
-//			/*************************************************************
-//			*	Here we read a byte and write a byte
-//			*************************************************************/
-//
-//			try
-//			{
-//				databyte = ReadFilterInputPort();
-//				bytesread++;
-//				WriteFilterOutputPort(databyte);
-//				byteswritten++;
-//
-//			} // try
+
 
             try
             {
@@ -84,7 +78,7 @@ public class FilterWildPoints extends FilterFramework
 
                     } // if
 
-                    bytesread++;						// Increment the byte count
+
 
                     WriteFilterOutputPort(databyte);
                     byteswritten++;
@@ -155,9 +149,19 @@ public class FilterWildPoints extends FilterFramework
                 if ( id == 3 )
                 {
 
-                    //check if is wildpoint (<50 || >80)
+                    //check if is wildpoint (<50 || >80), se for mandar para file
+
 
                     if(Double.longBitsToDouble(measurement) < 50 || Double.longBitsToDouble(measurement) > 80){
+
+                        /*****************************
+                         *
+                         * Escrever Splitter aqui
+                         *
+                         * Enviar Tudo para a class StoreFileMem e os wildpoints para um file a parte (falta escrita para ficheiro)
+                         *
+                         *
+                         */
 
                         //Handle Wildpoint
                         double wildpoint = 1;
@@ -184,9 +188,10 @@ public class FilterWildPoints extends FilterFramework
 
                 } // if
 
-//                else isn't temperature
+//                else isn't Pressure
                 else
                 {
+                    System.out.println("ID: " + id);
                     for(i = 0; i < 8; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
@@ -196,10 +201,10 @@ public class FilterWildPoints extends FilterFramework
                 } // else
             } // try
 
-            catch (EndOfStreamException e)
+            catch (FilterFramework.EndOfStreamException e)
             {
                 ClosePorts();
-                System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+                //System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
                 break;
             } // catch
 
