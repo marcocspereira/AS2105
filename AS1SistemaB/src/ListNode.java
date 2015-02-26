@@ -1,5 +1,3 @@
-package AS1SistemaB.src;
-
 /**
  * Created by cmfsnts on 24/02/2015.
  */

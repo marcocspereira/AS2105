@@ -163,10 +163,10 @@ public class FilterWildPoints extends FilterFramework
                          */
 
                         //Handle Wildpoint
-                        double wildpoint = 1;
-                        measurement = doubleToLong(wildpoint);
+                        //measurement = doubleToLong(wildpoint);
                         for(i = 0; i < 8; i++)
                         {
+                            System.out.println("WILDPOINT= " + Double.longBitsToDouble(measurement));
                             output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
                             WriteFilterOutputPort(output);
                             byteswritten++;
@@ -190,7 +190,7 @@ public class FilterWildPoints extends FilterFramework
 //                else isn't Pressure
                 else
                 {
-                    System.out.println("ID: " + id);
+                    //System.out.println("ID: " + id);
                     for(i = 0; i < 8; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);

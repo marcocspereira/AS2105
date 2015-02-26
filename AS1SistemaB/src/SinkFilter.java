@@ -42,6 +42,7 @@ public class SinkFilter extends FilterFramework
 
         double temperature = 0;
         double meters = 0;
+        double pressure = 0;
 
 		int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
 		int IdLength = 4;				// This is the length of IDs in the byte stream
@@ -137,6 +138,25 @@ public class SinkFilter extends FilterFramework
 //					TimeStamp.setTimeInMillis(measurement);
                     meters = Double.longBitsToDouble(measurement);
 				} // if
+
+                if(id == 3){
+
+
+                    pressure = Double.longBitsToDouble(measurement);
+
+                    if(pressure<0){
+
+                        System.out.format("Wild point Alterado =  %3.5f*", -pressure);
+                        System.out.println("\n");
+                    }
+
+                    else{
+
+                        System.out.format("Pressure not modified =  %3.5f", pressure);
+                        System.out.println("\n");
+                    }
+
+                }
 
 				/****************************************************************************
 				// Here we pick up a measurement (ID = 4 in this case), but you can pick up

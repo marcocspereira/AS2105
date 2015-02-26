@@ -26,10 +26,13 @@ public class Plumber
 		* Here we instantiate three filters.
 		****************************************************************************/
 
-		SourceFilter Filter1 = new SourceFilter("/Users/Marco/IdeaProjects/AS2105/AS1SistemaB/src/FlightData.dat");
-		TemperatureFilter Filter2 = new TemperatureFilter();
-		HeightFilter Filter3 = new HeightFilter();
-		SinkFilter Filter4 = new SinkFilter();
+		SourceFilter source = new SourceFilter("FlightData.dat");
+
+        StoreFileMem convert = new StoreFileMem();
+        FilterWildPoints wildPoints = new FilterWildPoints();
+		//TemperatureFilter Filter2 = new TemperatureFilter();
+		//HeightFilter Filter3 = new HeightFilter();
+		SinkFilter sink = new SinkFilter();
 
 		/****************************************************************************
 		* Here we connect the filters starting with the sink filter (Filter 1) which
@@ -37,18 +40,27 @@ public class Plumber
 		* source filter (Filter3).
 		****************************************************************************/
 
-		Filter4.Connect(Filter3); // This essentially says, "connect Filter4 input port to Filter3 output port
-		Filter3.Connect(Filter2); // This essentially says, "connect Filter3 input port to Filter2 output port
-		Filter2.Connect(Filter1); // This essentially says, "connect Filter2 input port to Filter1 output port
+
+        wildPoints.Connect(source);
+       convert.Connect(wildPoints);
+       sink.Connect(convert);
+		//Filter4.Connect(Filter3); // This essentially says, "connect Filter4 input port to Filter3 output port
+		//Filter3.Connect(Filter2); // This essentially says, "connect Filter3 input port to Filter2 output port
+		//Filter2.Connect(Filter1); // This essentially says, "connect Filter2 input port to Filter1 output port
 
 		/****************************************************************************
 		* Here we start the filters up. All-in-all,... its really kind of boring.
 		****************************************************************************/
 
-		Filter1.start();
-		Filter2.start();
-		Filter3.start();
-		Filter4.start();
+		//Filter1.start();
+		//Filter2.start();
+		//Filter3.start();
+		//Filter4.start();
+       source.start();
+       wildPoints.start();
+       convert.start();
+       sink.start();
+
 
    } // main
 
