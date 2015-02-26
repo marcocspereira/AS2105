@@ -26,7 +26,7 @@
 import java.util.*;						// This class is used to interpret time words
 import java.text.SimpleDateFormat;		// This class is used to format and write time in a string format.
 
-public class SinkFilter extends FilterFrameworkGeneric
+public class SinkFilter extends FilterFramework
 {
 	public void run()
     {
@@ -39,9 +39,6 @@ public class SinkFilter extends FilterFrameworkGeneric
 
 //		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss");
-
-        double temperature = 0;
-        double meters = 0;
 
 		int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
 		int IdLength = 4;				// This is the length of IDs in the byte stream
@@ -130,6 +127,7 @@ public class SinkFilter extends FilterFrameworkGeneric
                 ****************************************************************************/
                 if ( id == 0 )
                 {
+                    TimeStamp = Calendar.getInstance();
                     TimeStamp.setTimeInMillis(measurement);
                     System.out.println(TimeStampFormat.format(TimeStamp.getTime()));
                 }

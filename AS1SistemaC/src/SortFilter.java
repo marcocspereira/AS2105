@@ -1,8 +1,7 @@
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /******************************************************************************************************************
 * File:MiddleFilter.java
@@ -24,15 +23,18 @@ import java.util.Comparator;
 *
 ******************************************************************************************************************/
 
-public class SortFilter extends FilterFrameworkGeneric
+public class SortFilter extends FilterFramework
 {
 
 	public void run()
     {
-        byte output;
+        int count = 0;
+        CopyOnWriteArrayList<ListNode> lista = new CopyOnWriteArrayList<ListNode>();
+
+//        byte output;
 
         Calendar TimeStamp = Calendar.getInstance();
-        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
+//        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
         int IdLength = 4;				// This is the length of IDs in the byte stream
@@ -51,9 +53,16 @@ public class SortFilter extends FilterFrameworkGeneric
 		// Next we write a message to the terminal to let the world know we are alive...
 
 		System.out.println( "\n" + this.getName() + "::Sort Filter Reading ");
-        ArrayList<Calendar> calendars = new ArrayList<Calendar>();
-        ArrayList<Integer> ids = new ArrayList<Integer>();
+//        ArrayList<Calendar> calendars = new ArrayList<Calendar>();
+//        ArrayList<Integer> ids = new ArrayList<Integer>();
 
+        //Vars to save to list
+        long temperature = 0;
+        long height = 0;
+        long pitch = 0;
+        double pressure = 0;
+        long speed = 0;
+        long timestamp = 0;
         while (true)
 		{
 //			/*************************************************************
@@ -71,7 +80,7 @@ public class SortFilter extends FilterFrameworkGeneric
 
             try
             {
-                /***************************************************************************
+                 /***************************************************************************
                  // We know that the first data coming to this filter is going to be an ID and
                  // that it is IdLength long. So we first decommutate the ID bytes.
                  ****************************************************************************/
@@ -91,11 +100,9 @@ public class SortFilter extends FilterFrameworkGeneric
                     } // if
 
                     bytesread++;						// Increment the byte count
-//                    WriteFilterOutputPort(databyte, 0);
-//                    byteswritten++;
                 } // for
 
-                ids.add(id);
+//                ids.add(id);
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
                  // and stored as a long value. This permits us to do bitwise manipulation that
@@ -122,44 +129,87 @@ public class SortFilter extends FilterFrameworkGeneric
                     } // if
 
                     bytesread++;									// Increment the byte count
-//                    output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-//                    WriteFilterOutputPort(output, 0);
-//                    byteswritten++;
-
                 } // for
                 if ( id == 0 ) {
-                    TimeStamp = Calendar.getInstance();
+
+
+                    if (count > 0) {
+                        ListNode novo = new ListNode();
+                        Calendar tempo = Calendar.getInstance();
+                        tempo.setTimeInMillis(timestamp);
+                        novo.setTime(tempo);
+                        novo.setTemperature(temperature);
+                        novo.setHeight(height);
+                        novo.setSpeed(speed);
+                        novo.setPressure(pressure);
+                        novo.setPitch(pitch);
+                        lista.add(novo);
+
+                        temperature = 0;
+                        height = 0;
+                        pitch = 0;
+                        pressure = 0;
+                        speed = 0;
+                        timestamp = 0;
+                    }
+                    if (count >= 0) {
+                        count++;
+                    }
+                    timestamp = measurement;
                     TimeStamp.setTimeInMillis(measurement);
-                    calendars.add(TimeStamp);
-
                 }
-//                System.out.println(TimeStampFormat.format(TimeStamp.getTime()));
 
-
+                if ( id == 1 ) {
+                    speed = measurement;
+                } // if
+                if( id == 2){
+                    height = measurement;
+                }
+                if( id == 3){
+                    pressure = Double.longBitsToDouble(measurement);
+                }
+                if(id == 4){
+                    temperature =  measurement;
+                }
+                if(id == 5){
+                    pitch = measurement;
+                }
             } // try
 
 			catch (EndOfStreamException e)
 			{
-                Collections.sort(calendars, new Comparator<Calendar>() {
-                    public int compare(Calendar x, Calendar y) {
-                        if (x.before(y)) return -1;
-                        if (x.after(y)) return 1;
+                ListNode novo = new ListNode();
+                TimeStamp.setTimeInMillis(timestamp);
+                novo.setTime(TimeStamp);
+                novo.setTemperature(temperature);
+                novo.setHeight(height);
+                novo.setSpeed(speed);
+                novo.setPressure(pressure);
+                novo.setPitch(pitch);
+                lista.add(novo);
+
+                Collections.sort(lista, new Comparator<ListNode>() {
+                    public int compare(ListNode x, ListNode y) {
+                        if (x.getTime().before(y.getTime())) return -1;
+                        if (x.getTime().after(y.getTime())) return 1;
                         return 0;
                     }
                 });
-//                System.out.println("sorted");
-                for (int j = 0; j < calendars.size(); j++) {
-//                    System.out.println(TimeStampFormat.format(calendars.get(j).getTime()));
-                    for (i = 0; i < IdLength; i++){
-                        output = (byte) ((ids.get(j) >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output, 0);
-                        byteswritten++;
-                    }
-                    for (i=0; i<MeasurementLength; i++ ){
-                        output = (byte)((calendars.get(j).getTimeInMillis() >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output, 0);
-                        byteswritten++;
-                    }
+
+                for (int j = 0; j < lista.size(); j++) {
+                    byteswritten += sendId(0);
+                    byteswritten += sendMeasurement(lista.get(j).getTime().getTimeInMillis());
+                    byteswritten += sendId(1);
+                    byteswritten += sendMeasurement(lista.get(j).getSpeed());
+                    byteswritten += sendId(2);
+                    byteswritten += sendMeasurement(lista.get(j).getHeight());
+                    byteswritten += sendId(3);
+                    byteswritten += sendMeasurement(Double.doubleToLongBits(lista.get(j).getPressure()));
+                    byteswritten += sendId(4);
+                    byteswritten += sendMeasurement(lista.get(j).getTemperature());
+                    byteswritten += sendId(5);
+                    byteswritten += sendMeasurement(lista.get(j).getPitch());
+
                 }
 
                 ClosePorts();
@@ -169,6 +219,33 @@ public class SortFilter extends FilterFrameworkGeneric
 
 		} // while
    } // run
+
+    int sendId(int id)
+    {
+        int byteswritten = 0;
+        int IdLength = 4;
+        byte output;
+        for (int i = 0; i < IdLength; i++){
+            output = (byte) ((id >> ((7 - i) * 8)) & 0xff);
+            WriteFilterOutputPort(output, 0);
+            byteswritten++;
+        }
+        return byteswritten;
+    }
+
+    int sendMeasurement(long measure)
+    {
+        int byteswritten = 0;
+        int MeasurementLength = 8;
+        byte output;
+
+        for (int i =0; i<MeasurementLength; i++ ){
+            output = (byte)((measure >> ((7 - i) * 8)) & 0xff);
+            WriteFilterOutputPort(output, 0);
+            byteswritten++;
+        }
+        return byteswritten;
+    }
 
     Double longToDouble(long measurement)
     {

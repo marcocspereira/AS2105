@@ -25,8 +25,8 @@ public class Plumber
 		/****************************************************************************
 		* Here we instantiate three filters.
 		****************************************************************************/
-		SourceFilter Filter1 = new SourceFilter("/Users/Marco/IdeaProjects/AS2105/AS1SistemaC/src/SubSetA.dat");
-		SourceFilter Filter2 = new SourceFilter("/Users/Marco/IdeaProjects/AS2105/AS1SistemaC/src/SubSetB.dat");
+		SourceFilter Filter1 = new SourceFilter("SubSetA.dat");
+		SourceFilter Filter2 = new SourceFilter("SubSetB.dat");
 		MergeFilter Filter3 = new MergeFilter();
 		SortFilter Filter4 = new SortFilter();
 		SinkFilter Filter5 = new SinkFilter();
