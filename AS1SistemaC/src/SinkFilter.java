@@ -36,7 +36,7 @@ public class SinkFilter extends FilterFrameworkGeneric
 		*	to the terminal.
 		*************************************************************************************/
 
-		Calendar TimeStamp = Calendar.getInstance();
+
 //		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss");
 
@@ -45,6 +45,8 @@ public class SinkFilter extends FilterFrameworkGeneric
 
 		int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
 		int IdLength = 4;				// This is the length of IDs in the byte stream
+
+        Calendar TimeStamp = Calendar.getInstance();
 
 		byte databyte = 0;				// This is the data byte read from the stream
 		int bytesread = 0;				// This is the number of bytes read from the stream
@@ -57,7 +59,7 @@ public class SinkFilter extends FilterFrameworkGeneric
 		*	First we announce to the world that we are alive...
 		**************************************************************/
 
-		System.out.print( "\n" + this.getName() + "::Sink Reading ");
+		System.out.println( "\n" + this.getName() + "::Sink Reading ");
 
 		while (true)
 		{
@@ -105,15 +107,16 @@ public class SinkFilter extends FilterFrameworkGeneric
 					databyte = ReadFilterInputPort(0);
 					measurement = measurement | (databyte & 0xFF);	// We append the byte on to measurement...
 
-					if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
+
+                    if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
 					{												// previously appended byte to the left by one byte
-						measurement = measurement << 8;				// to make room for the next byte we append to the
-																	// measurement
-					} // if
+                        measurement = measurement << 8;				// to make room for the next byte we append to the
+                        // measurement
+                    } // if
 
-					bytesread++;									// Increment the byte count
+                    bytesread++;									// Increment the byte count
 
-				} // if
+                } // if
 
                 /****************************************************************************
                 // Here we look for an ID of 0 which indicates this is a time measurement.
@@ -125,55 +128,26 @@ public class SinkFilter extends FilterFrameworkGeneric
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
-//                System.out.print(" ID = " + id+" ");
-                if ( id == 0 )
-				{
-					TimeStamp.setTimeInMillis(measurement);
+                TimeStamp.setTimeInMillis(measurement);
+                System.out.println(TimeStampFormat.format(TimeStamp.getTime()));
 
-				} // if
-
-				if ( id == 2 )
-				{
-//					TimeStamp.setTimeInMillis(measurement);
-                    meters = Double.longBitsToDouble(measurement);
-				} // if
-
-				/****************************************************************************
-				// Here we pick up a measurement (ID = 4 in this case), but you can pick up
-				// any measurement you want to. All measurements in the stream are
-				// decommutated by this class. Note that all data measurements are double types
-				// This illustrates how to convert the bits read from the stream into a double
-				// type. Its pretty simple using Double.longBitsToDouble(long value). So here
-				// we print the time stamp and the data associated with the ID we are interested
-				// in.
-				****************************************************************************/
-
-				if ( id == 4 )
-				{
-                    temperature = Double.longBitsToDouble(measurement);
-                    System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f", temperature, meters);
-                    System.out.print("\n" );
-                } // if
+            } // try
 
 
-			} // try
-
-			/*******************************************************************************
-			*	The EndOfStreamExeception below is thrown when you reach end of the input
-			*	stream (duh). At this point, the filter ports are closed and a message is
-			*	written letting the user know what is going on.
-			********************************************************************************/
+            /*******************************************************************************
+            *	The EndOfStreamExeception below is thrown when you reach end of the input
+            *	stream (duh). At this point, the filter ports are closed and a message is
+            *	written letting the user know what is going on.
+            ********************************************************************************/
 
 			catch (EndOfStreamException e)
 			{
-				ClosePorts();
-				System.out.print( "\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread );
-				break;
+                ClosePorts();
+                System.out.println("\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread);
+                break;
 
-			} // catch
-
-		} // while
-
-   } // run
+            } // catch
+        } // while
+    } // run
 
 } // SingFilter

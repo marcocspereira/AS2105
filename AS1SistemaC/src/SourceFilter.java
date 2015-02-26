@@ -49,6 +49,8 @@ public class SourceFilter extends FilterFrameworkGeneric
 			* 	byte at a time. The loop stops when it encounters an EOFExecption.
 			***********************************************************************************/
 
+
+
 			while(true)
 			{
 				databyte = in.readByte();
@@ -87,7 +89,7 @@ public class SourceFilter extends FilterFrameworkGeneric
 		} // catch
 
 		/***********************************************************************************
-		*	The following exception is raised should we have a problem openinging the file.
+		*	The following exception is raised should we have a problem opening the file.
 		***********************************************************************************/
 
 		catch ( IOException iox )
