@@ -26,7 +26,7 @@ public class Plumber
 		* Here we instantiate three filters.
 		****************************************************************************/
 
-		SourceFilter Filter1 = new SourceFilter("FlightData.dat");
+		SourceFilter Filter1 = new SourceFilter("/Users/Marco/IdeaProjects/AS2105/AS1SistemaB/src/FlightData.dat");
 		TemperatureFilter Filter2 = new TemperatureFilter();
 		HeightFilter Filter3 = new HeightFilter();
 		SinkFilter Filter4 = new SinkFilter();
