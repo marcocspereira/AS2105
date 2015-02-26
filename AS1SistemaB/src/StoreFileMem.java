@@ -1,5 +1,9 @@
 
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.DoubleSummaryStatistics;
 
 /******************************************************************************************************************
  * File:MiddleFilter.java
@@ -44,7 +48,7 @@ public class StoreFileMem extends FilterFramework
         long timestamp = 0;
 
 
-        			// This is the length of IDs in the byte stream
+        // This is the length of IDs in the byte stream
 
         byte databyte = 0;				// This is the data byte read from the stream
         int bytesread = 0;				// This is the number of bytes read from the stream
@@ -131,7 +135,7 @@ public class StoreFileMem extends FilterFramework
                 /****************************************************************************
                  Create and fill node
                  ****************************************************************************/
-                System.out.println("CONVERT = " + id);
+
 
                 if ( id == 0){
 
@@ -244,45 +248,9 @@ public class StoreFileMem extends FilterFramework
                  // in.
                  ****************************************************************************/
 
-
-
-            //last elem
-            ListNode novo = new ListNode();
-            novo.setTime(timestamp);
-            novo.setTemperature(temperature);
-            novo.setHeight(height);
-            novo.setSpeed(speed);
-            novo.setPressure(pressure);
-            novo.setPitch(pitch);
-            lista.add(novo);
-
-
-            handleWildPoints();
-            //printList();
-//            convertAndSend();
-
-
-
-            for (int j = 0; j < lista.size(); j++) {
-                byteswritten += sendId(0);
-                byteswritten += sendMeasurement(lista.get(j).getTime());
-                byteswritten += sendId(1);
-                byteswritten += sendMeasurement(lista.get(j).getSpeed());
-                byteswritten += sendId(2);
-                byteswritten += sendMeasurement(lista.get(j).getHeight());
-                byteswritten += sendId(3);
-                byteswritten += sendMeasurement(Double.doubleToLongBits(lista.get(j).getPressure()));
-                byteswritten += sendId(4);
-                byteswritten += sendMeasurement(lista.get(j).getTemperature());
-                byteswritten += sendId(5);
-                byteswritten += sendMeasurement(lista.get(j).getPitch());
-
-            }
-
-
             } // try
 
-            catch (FilterFramework.EndOfStreamException e)
+            catch (EndOfStreamException e)
             {
                 //ClosePorts();
                 System.out.print(this.getName() + "::StoreMem Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
@@ -292,6 +260,20 @@ public class StoreFileMem extends FilterFramework
 
         } // while
 
+        //last elem
+        ListNode novo = new ListNode();
+        novo.setTime(timestamp);
+        novo.setTemperature(temperature);
+        novo.setHeight(height);
+        novo.setSpeed(speed);
+        novo.setPressure(pressure);
+        novo.setPitch(pitch);
+        lista.add(novo);
+
+
+        handleWildPoints();
+        //printList();
+        convertAndSend();
 
 
     } // run
@@ -360,7 +342,7 @@ public class StoreFileMem extends FilterFramework
 
             for (int z = index_init + 1; z < lista.size(); z++) {
 
-                System.out.println(index_init);
+
                 lista.get(z).setPressure(-lista.get(index_init).getPressure());
 
             }
@@ -381,32 +363,32 @@ public class StoreFileMem extends FilterFramework
         }
 
     }
-/*
+
+
     private void convertAndSend() {
 
-                for (int z = 0; z < lista.size(); z++) {
+        for (int z = 0; z < lista.size(); z++) {
+
+            for (int x = 0; x < count; x++) {
+
+                if (x == 0) {
+
+                    int id = 3;
+
+                    for (int j = 0; j < IdLength; j++) {
+                        output = (byte) ((id >> ((7 - j) * 8)) & 0xff);
+                        WriteFilterOutputPort(output);
+                    }
+
+                    for (int j = 0; j < MeasurementLength; j++) {
+                        output = (byte) (Double.doubleToLongBits(lista.get(z).getPressure()) >> ((7 - j) * 8) & 0xff);
+                        WriteFilterOutputPort(output);
+                    }
+
+                }
 
 
-                    for (int x = 0; x < count; x++) {
-
-                        if (x == 0) {
-
-                            int id = 3;
-
-                            for (int j = 0; j < IdLength; j++) {
-                                output = (byte) ((id >> ((7 - j) * 8)) & 0xff);
-                                WriteFilterOutputPort(output);
-                            }
-
-                            for (int j = 0; j < MeasurementLength; j++) {
-                                output = (byte) ((Double.doubleToLongBits(lista.get(z).getPressure()) >> ((7 - j) * 8)) & 0xff);
-                                WriteFilterOutputPort(output);
-                            }
-
-                        }
-
-
-
+/*
                 if(x == 1){
 
                     int id = 1;
@@ -488,35 +470,10 @@ public class StoreFileMem extends FilterFramework
 
 */
 
-
-
-
-    int sendId(int id)
-    {
-        int byteswritten = 0;
-        int IdLength = 4;
-        byte output;
-        for (int i = 0; i < IdLength; i++){
-            output = (byte) ((id >> ((7 - i) * 8)) & 0xff);
-            WriteFilterOutputPort(output, 0);
-            byteswritten++;
+            }
         }
-        return byteswritten;
     }
 
-    int sendMeasurement(long measure)
-    {
-        int byteswritten = 0;
-        int MeasurementLength = 8;
-        byte output;
-
-        for (int i =0; i<MeasurementLength; i++ ){
-            output = (byte)((measure >> ((7 - i) * 8)) & 0xff);
-            WriteFilterOutputPort(output, 0);
-            byteswritten++;
-        }
-        return byteswritten;
-    }
 
 
 
