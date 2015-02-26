@@ -2,30 +2,30 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /******************************************************************************************************************
-* File:MiddleFilter.java
-* Course: 17655
-* Project: Assignment 1
-* Copyright: Copyright (c) 2003 Carnegie Mellon University
-* Versions:
-*	1.0 November 2008 - Sample Pipe and Filter code (ajl).
-*
-* Description:
-*
-* This class serves as an example for how to use the FilterRemplate to create a standard filter. This particular
-* example is a simple "pass-through" filter that reads data from the filter's input port and writes data out the
-* filter's output port.
-*
-* Parameters: 		None
-*
-* Internal Methods: None
-*
-******************************************************************************************************************/
+ * File:MiddleFilter.java
+ * Course: 17655
+ * Project: Assignment 1
+ * Copyright: Copyright (c) 2003 Carnegie Mellon University
+ * Versions:
+ *	1.0 November 2008 - Sample Pipe and Filter code (ajl).
+ *
+ * Description:
+ *
+ * This class serves as an example for how to use the FilterRemplate to create a standard filter. This particular
+ * example is a simple "pass-through" filter that reads data from the filter's input port and writes data out the
+ * filter's output port.
+ *
+ * Parameters: 		None
+ *
+ * Internal Methods: None
+ *
+ ******************************************************************************************************************/
 
 public class HeightFilter extends FilterFramework
 {
 
 
-	public void run()
+    public void run()
     {
         byte output;
 
@@ -46,12 +46,12 @@ public class HeightFilter extends FilterFramework
 //		int bytesread = 0;					// Number of bytes read from the input file.
 //		byte databyte = 0;					// The byte of data read from the file
 
-		// Next we write a message to the terminal to let the world know we are alive...
+        // Next we write a message to the terminal to let the world know we are alive...
 
-		System.out.print( "\n" + this.getName() + "::Middle Reading ");
+        System.out.print("\n" + this.getName() + "::Height Reading ");
 
-		while (true)
-		{
+        while (true)
+        {
 //			/*************************************************************
 //			*	Here we read a byte and write a byte
 //			*************************************************************/
@@ -167,7 +167,7 @@ public class HeightFilter extends FilterFramework
                     for(i = 0; i < 8; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output);
+                        //WriteFilterOutputPort(output);
                         byteswritten++;
                     }
                 } // if
@@ -178,22 +178,22 @@ public class HeightFilter extends FilterFramework
                     for(i = 0; i < 8; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output);
+                        //WriteFilterOutputPort(output);
                         byteswritten++;
                     }
                 } // else
             } // try
 
-			catch (EndOfStreamException e)
-			{
+            catch (EndOfStreamException e)
+            {
                 ClosePorts();
-                System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
-				break;
-			} // catch
+                System.out.print("\n" + this.getName() + "::Height Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten);
+                break;
+            } // catch
 
-		} // while
+        } // while
 
-   } // run
+    } // run
 
     Double longToDouble(long measurement)
     {

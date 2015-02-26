@@ -26,10 +26,14 @@ public class Plumber
 		* Here we instantiate three filters.
 		****************************************************************************/
 
-		SourceFilter Filter1 = new SourceFilter("FlightData.dat");
-		TemperatureFilter Filter2 = new TemperatureFilter();
-		HeightFilter Filter3 = new HeightFilter();
-		SinkFilter Filter4 = new SinkFilter();
+		SourceFilter sourceF = new SourceFilter("/Users/Marco/IdeaProjects/AS2105/AS1SistemaA/src/FlightData.dat");
+        SplitterFilter splitterF = new SplitterFilter(1,2);
+
+		TemperatureFilter temperatureF = new TemperatureFilter();
+		HeightFilter heightF = new HeightFilter();
+
+        MergeFilter mergeF = new MergeFilter(2,1);
+		SinkFilter sinkF = new SinkFilter();
 
 		/****************************************************************************
 		* Here we connect the filters starting with the sink filter (Filter 1) which
@@ -37,18 +41,27 @@ public class Plumber
 		* source filter (Filter3).
 		****************************************************************************/
 
-		Filter4.Connect(Filter3); // This essentially says, "connect Filter4 input port to Filter3 output port
-		Filter3.Connect(Filter2); // This essentially says, "connect Filter3 input port to Filter2 output port
-		Filter2.Connect(Filter1); // This essentially says, "connect Filter2 input port to Filter1 output port
+       splitterF.Connect(sourceF);              // connect input of SplitterFilter port 0 to SourceFilter output port 0
+
+       temperatureF.Connect(splitterF, 0, 0);   // connect input of TemperatureFilter port 0 to SplitterFilter output port 0
+       heightF.Connect(splitterF, 0, 1);        // connect input of HeightFilter port 0 to SplitterFilter output port 1
+
+       //mergeF.Connect(temperatureF, 0, 0);      // connect input of MergerFilter port 0 to TemperatureFilter output port 0
+       //mergeF.Connect(heightF, 1, 0);           // connect input of MergerFilter port 1 to HeightFilter output port 0
+
+       //sinkF.Connect(mergeF);             // connect input of SinkFilter port 0 to MergerFilter output port 0
+
 
 		/****************************************************************************
 		* Here we start the filters up. All-in-all,... its really kind of boring.
 		****************************************************************************/
 
-		Filter1.start();
-		Filter2.start();
-		Filter3.start();
-		Filter4.start();
+		sourceF.start();
+		splitterF.start();
+		temperatureF.start();
+		heightF.start();
+        //mergeF.start();
+        //sinkF.start();
 
    } // main
 

@@ -21,13 +21,21 @@ import java.util.Calendar;
  *
  ******************************************************************************************************************/
 
-public class TemperatureFilter extends FilterFramework
+public class MergeFilter extends FilterFramework
 {
 
+    MergeFilter(int numInputPort, int numOutputPorts)
+    {
+
+        super(numInputPort, numOutputPorts);
+    }
 
     public void run()
     {
         byte output;
+
+        double temperature = 0;
+        double meters = 0;
 
         Calendar TimeStamp = Calendar.getInstance();
         SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
@@ -35,11 +43,14 @@ public class TemperatureFilter extends FilterFramework
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
         int IdLength = 4;				// This is the length of IDs in the byte stream
 
-        byte databyte = 0;				// This is the data byte read from the stream
+        byte databyte0 = 0;				// This is the data byte read from the stream
+        byte databyte1 = 0;				// This is the data byte read from the stream
         int bytesread = 0;				// This is the number of bytes read from the stream
 
-        long measurement;				// This is the word used to store all measurements - conversions are illustrated.
-        int id;							// This is the measurement id
+        long measurement0;				// This is the word used to store all measurements - conversions are illustrated.
+        long measurement1;				// This is the word used to store all measurements - conversions are illustrated.
+        int id0;							// This is the measurement id
+        int id1;							// This is the measurement id
         int i;							// This is a loop counter
 
         int byteswritten = 0;				// Number of bytes written to the stream.
@@ -48,7 +59,7 @@ public class TemperatureFilter extends FilterFramework
 
         // Next we write a message to the terminal to let the world know we are alive...
 
-        System.out.print("\n" + this.getName() + "::Temperature Reading ");
+        System.out.println( "\n" + this.getName() + "::Merge Filter Reading ");
 
         while (true)
         {
@@ -72,25 +83,45 @@ public class TemperatureFilter extends FilterFramework
                  // that it is IdLength long. So we first decommutate the ID bytes.
                  ****************************************************************************/
 
-                id = 0;
+                id0 = 0;
 
                 for (i=0; i<IdLength; i++ )
                 {
-                    databyte = ReadFilterInputPort();	// This is where we read the byte from the stream...
+                    databyte0 = ReadFilterInputPort(0);	// This is where we read the byte from the stream...
 
-                    id = id | (databyte & 0xFF);		// We append the byte on to ID...
+                    id0 = id0 | (databyte0 & 0xFF);		// We append the byte on to ID...
 
                     if (i != IdLength-1)				// If this is not the last byte, then slide the
                     {									// previously appended byte to the left by one byte
-                        id = id << 8;					// to make room for the next byte we append to the ID
+                        id0 = id0 << 8;					// to make room for the next byte we append to the ID
 
                     } // if
 
                     bytesread++;						// Increment the byte count
-
-                    WriteFilterOutputPort(databyte);
+                    WriteFilterOutputPort(databyte0, 0);
                     byteswritten++;
                 } // for
+
+
+                id1 = 0;
+                for (i=0; i<IdLength; i++ )
+                {
+                    databyte1 = ReadFilterInputPort(1);	// This is where we read the byte from the stream...
+
+                    id1 = id1 | (databyte1 & 0xFF);		// We append the byte on to ID...
+
+                    if (i != IdLength-1)				// If this is not the last byte, then slide the
+                    {									// previously appended byte to the left by one byte
+                        id1 = id1 << 8;					// to make room for the next byte we append to the ID
+
+                    } // if
+
+                    bytesread++;						// Increment the byte count
+                    WriteFilterOutputPort(databyte1, 0);
+                    byteswritten++;
+                } // for
+
+
 
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
@@ -104,23 +135,46 @@ public class TemperatureFilter extends FilterFramework
                  // below.
                  *****************************************************************************/
 
-                measurement = 0;
+                measurement0 = 0;
 
                 for (i=0; i<MeasurementLength; i++ )
                 {
-                    databyte = ReadFilterInputPort();
-                    measurement = measurement | (databyte & 0xFF);	// We append the byte on to measurement...
+                    databyte0 = ReadFilterInputPort(0);
+                    measurement0 = measurement0 | (databyte0 & 0xFF);	// We append the byte on to measurement...
 
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
-                        measurement = measurement << 8;				// to make room for the next byte we append to the
+                        measurement0 = measurement0 << 8;				// to make room for the next byte we append to the
                         // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
+                    output = (byte)((measurement0 >> ((7 - i) * 8)) & 0xff);
+                    WriteFilterOutputPort(output, 0);
+                    byteswritten++;
 
                 } // for
 
+                measurement1 = 0;
+                for (i=0; i<MeasurementLength; i++ )
+                {
+                    databyte1 = ReadFilterInputPort(1);
+                    measurement1 = measurement1 | (databyte1 & 0xFF);	// We append the byte on to measurement...
+
+                    if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
+                    {												// previously appended byte to the left by one byte
+                        measurement1 = measurement1 << 8;				// to make room for the next byte we append to the
+                        // measurement
+                    } // if
+
+                    bytesread++;									// Increment the byte count
+                    output = (byte)((measurement1 >> ((7 - i) * 8)) & 0xff);
+                    WriteFilterOutputPort(output, 0);
+                    byteswritten++;
+                } // for
+
+//                System.out.println(" ID0 = " + id0);
+//                System.out.println(" ID1 = " + id1);
 //				if ( id == 0 ) Tempo
 //				if ( id == 1 ) Velocidade
 //				if ( id == 2 ) Altitude
@@ -138,56 +192,52 @@ public class TemperatureFilter extends FilterFramework
                  // dealing with time arithmetically or for string display purposes. This is
                  // illustrated below.
                  ****************************************************************************/
-
+////                System.out.print(" ID = " + id+" ");
 //                if ( id == 0 )
 //                {
 //                    TimeStamp.setTimeInMillis(measurement);
+//
 //                } // if
-
-                /****************************************************************************
-                 // Here we pick up a measurement (ID = 4 in this case), but you can pick up
-                 // any measurement you want to. All measurements in the stream are
-                 // decommutated by this class. Note that all data measurements are double types
-                 // This illustrates how to convert the bits read from the stream into a double
-                 // type. Its pretty simple using Double.longBitsToDouble(long value). So here
-                 // we print the time stamp and the data associated with the ID we are interested
-                 // in.
-                 ****************************************************************************/
-//                if is temperature
-                if ( id == 4 )
-                {
-//                    System.out.println("temperatura: " + Long.toBinaryString(measurement));
-                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Fahrenheit " + longToDouble(measurement));
-
-//                  Convert to celsius
-                    double celsius = ((Double.longBitsToDouble(measurement) - 32)*5)/9;
-
-//                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Celsius " + celsius);
-                    measurement = doubleToLong(celsius);
-                    for(i = 0; i < 8; i++)
-                    {
-                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        //WriteFilterOutputPort(output);
-                        byteswritten++;
-                    }
-                } // if
-
-//                else isn't temperature
-                else
-                {
-                    for(i = 0; i < 8; i++)
-                    {
-                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        //WriteFilterOutputPort(output);
-                        byteswritten++;
-                    }
-                } // else
+//
+//                if ( id == 2 )
+//                {
+////					TimeStamp.setTimeInMillis(measurement);
+//                    meters = Double.longBitsToDouble(measurement);
+//                } // if
+//
+//                /****************************************************************************
+//                 // Here we pick up a measurement (ID = 4 in this case), but you can pick up
+//                 // any measurement you want to. All measurements in the stream are
+//                 // decommutated by this class. Note that all data measurements are double types
+//                 // This illustrates how to convert the bits read from the stream into a double
+//                 // type. Its pretty simple using Double.longBitsToDouble(long value). So here
+//                 // we print the time stamp and the data associated with the ID we are interested
+//                 // in.
+//                 ****************************************************************************/
+//
+//                if ( id == 4 )
+//                {
+//                    temperature = Double.longBitsToDouble(measurement);
+//                    System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f", temperature, meters);
+//                    System.out.print("\n" );
+//                } // if
+//
+////                else isn't height
+//                else
+//                {
+//                    for(i = 0; i < 8; i++)
+//                    {
+//                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
+//                        WriteFilterOutputPort(output, 0);
+//                        byteswritten++;
+//                    }
+//                } // else
             } // try
 
             catch (EndOfStreamException e)
             {
                 ClosePorts();
-                System.out.print( "\n" + this.getName() + "::Temperature Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+                System.out.println( "\n" + this.getName() + "::Merge Filter Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
                 break;
             } // catch
 
