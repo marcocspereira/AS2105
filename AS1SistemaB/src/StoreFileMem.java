@@ -1,5 +1,6 @@
 package AS1SistemaB.src;
 
+import java.util.ArrayList;
 
 /******************************************************************************************************************
  * File:MiddleFilter.java
@@ -300,7 +301,7 @@ public class StoreFileMem extends FilterFramework
 
                         for(int j = 0; j<index_init;j++){
 
-                            lista.get(j).setPressure(lista.get(index_init).getPressure());
+                            lista.get(j).setPressure(-lista.get(index_init).getPressure());
 
                         }
                     }
@@ -315,7 +316,7 @@ public class StoreFileMem extends FilterFramework
                     //System.out.println("ALtered: " + pressureRevised);
                     for(int j = index_init+1; j < index_final;j++){
 
-                        lista.get(j).setPressure(pressureRevised);
+                        lista.get(j).setPressure(-pressureRevised);
 
                     }
 
@@ -339,7 +340,7 @@ public class StoreFileMem extends FilterFramework
             for (int z = index_init + 1; z < lista.size(); z++) {
 
 
-                lista.get(z).setPressure(lista.get(index_init).getPressure());
+                lista.get(z).setPressure(-lista.get(index_init).getPressure());
 
             }
         }
@@ -351,7 +352,7 @@ public class StoreFileMem extends FilterFramework
         for(int z = 0; z<lista.size();z++) {
 
             //System.out.println("iterator z = " +  z);
-            System.out.println("count = " + Double.longBitsToDouble(lista.get(z).getSpeed()));
+            System.out.println("Pressure = " + lista.get(z).getPressure());
             //teste = (byte)z;
             //System.out.println("iterator in bin = " + teste);
             //System.out.println("Decrypt iterator = " + teste);
@@ -369,7 +370,7 @@ public class StoreFileMem extends FilterFramework
 
                 if (x == 0) {
 
-                    int id = 0;
+                    int id = 3;
 
                     for (int j = 0; j < IdLength; j++) {
                         output = (byte) ((id >> ((7 - j) * 8)) & 0xff);
@@ -377,7 +378,7 @@ public class StoreFileMem extends FilterFramework
                     }
 
                     for (int j = 0; j < MeasurementLength; j++) {
-                        output = (byte) ((lista.get(z).getTime() >> ((7 - j) * 8)) & 0xff);
+                        output = (byte) ((Double.doubleToLongBits(lista.get(z).getPressure()) >> ((7 - j) * 8)) & 0xff);
                         WriteFilterOutputPort(output);
                     }
 
