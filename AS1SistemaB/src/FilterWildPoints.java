@@ -163,10 +163,10 @@ public class FilterWildPoints extends FilterFramework
                          */
 
                         //Handle Wildpoint
-                        //measurement = doubleToLong(wildpoint);
+                        double wildpoint = 1;
+                        measurement = doubleToLong(wildpoint);
                         for(i = 0; i < 8; i++)
                         {
-                            System.out.println("WILDPOINT= " + Double.longBitsToDouble(measurement));
                             output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
                             WriteFilterOutputPort(output);
                             byteswritten++;

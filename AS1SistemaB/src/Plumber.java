@@ -29,10 +29,12 @@ public class Plumber
 		SourceFilter source = new SourceFilter("FlightData.dat");
 
         StoreFileMem convert = new StoreFileMem();
-        FilterWildPoints wildPoints = new FilterWildPoints();
-		//TemperatureFilter Filter2 = new TemperatureFilter();
-		//HeightFilter Filter3 = new HeightFilter();
+       SplitterWildPoints splitter = new SplitterWildPoints(1,2);
+       FilterWildPoints wildPoints = new FilterWildPoints();
+		TemperatureFilter temp = new TemperatureFilter();
+		HeightFilter height = new HeightFilter();
 		SinkFilter sink = new SinkFilter();
+       SinkFilter2 sink2 = new SinkFilter2();
 
 		/****************************************************************************
 		* Here we connect the filters starting with the sink filter (Filter 1) which
@@ -41,26 +43,27 @@ public class Plumber
 		****************************************************************************/
 
 
-        wildPoints.Connect(source);
-       convert.Connect(wildPoints);
-       sink.Connect(convert);
-		//Filter4.Connect(Filter3); // This essentially says, "connect Filter4 input port to Filter3 output port
-		//Filter3.Connect(Filter2); // This essentially says, "connect Filter3 input port to Filter2 output port
-		//Filter2.Connect(Filter1); // This essentially says, "connect Filter2 input port to Filter1 output port
+        height.Connect(source);
+        temp.Connect(height);
+        splitter.Connect(temp);
+        sink2.Connect(splitter,0,0);
+        convert.Connect(splitter,0,1);
+        sink.Connect(convert);
+
 
 		/****************************************************************************
 		* Here we start the filters up. All-in-all,... its really kind of boring.
 		****************************************************************************/
 
-		//Filter1.start();
-		//Filter2.start();
-		//Filter3.start();
-		//Filter4.start();
-       source.start();
-       wildPoints.start();
-       convert.start();
-       sink.start();
 
+        source.start();
+       height.start();
+       temp.start();
+       splitter.start();
+        //wildPoints.start();
+        convert.start();
+        sink.start();
+        sink2.start();
 
    } // main
 

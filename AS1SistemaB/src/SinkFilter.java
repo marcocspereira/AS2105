@@ -126,7 +126,7 @@ public class SinkFilter extends FilterFramework
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
-//                System.out.print(" ID = " + id+" ");
+               //System.out.println(" ID = " + id+" ");
                 if ( id == 0 )
 				{
 					TimeStamp.setTimeInMillis(measurement);
@@ -135,26 +135,14 @@ public class SinkFilter extends FilterFramework
 
 				if ( id == 2 )
 				{
-//					TimeStamp.setTimeInMillis(measurement);
                     meters = Double.longBitsToDouble(measurement);
-				} // if
+                } // if
 
                 if(id == 3){
 
-
                     pressure = Double.longBitsToDouble(measurement);
 
-                    if(pressure<0){
 
-                        System.out.format("Wild point Alterado =  %3.5f*", -pressure);
-                        System.out.println("\n");
-                    }
-
-                    else{
-
-                        System.out.format("Pressure not modified =  %3.5f", pressure);
-                        System.out.println("\n");
-                    }
 
                 }
 
@@ -171,8 +159,22 @@ public class SinkFilter extends FilterFramework
 				if ( id == 4 )
 				{
                     temperature = Double.longBitsToDouble(measurement);
-                    System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f", temperature, meters);
-                    System.out.print("\n" );
+
+                    if(pressure<0){
+
+                        pressure = -pressure;
+                        System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f %3.5f*", temperature, meters, pressure);
+                        System.out.print("\n" );
+                    }
+
+                    else{
+                        System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f %3.5f", temperature, meters, pressure);
+                        System.out.print("\n" );
+
+                    }
+
+
+
                 } // if
 
 
