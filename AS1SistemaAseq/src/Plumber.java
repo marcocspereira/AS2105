@@ -29,7 +29,6 @@ public class Plumber
 		SourceFilter sourceF = new SourceFilter("FlightData.dat");
 		TemperatureFilter temperatureF = new TemperatureFilter();
 		HeightFilter heightF = new HeightFilter();
-        SortFilter sortF = new SortFilter();
 		SinkFilter sinkF = new SinkFilter();
 
 		/****************************************************************************
@@ -38,8 +37,7 @@ public class Plumber
 		* source filter (Filter3).
 		****************************************************************************/
 
-		sinkF.Connect(sortF);           // This essentially says, "connect sinkF input port to sortF output port
-        sortF.Connect(heightF);         // This essentially says, "connect sortF input port to heightF output port
+		sinkF.Connect(heightF);           // This essentially says, "connect sinkF input port to sortF output port
 		heightF.Connect(temperatureF); // This essentially says, "connect heightF input port to temperatureF output port
 		temperatureF.Connect(sourceF); // This essentially says, "connect temperatureF input port to sourceF output port
 
@@ -50,7 +48,6 @@ public class Plumber
 		sourceF.start();
 		temperatureF.start();
 		heightF.start();
-        sortF.start();
 		sinkF.start();
 
    } // main

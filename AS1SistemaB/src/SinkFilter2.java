@@ -40,8 +40,6 @@ public class SinkFilter2 extends FilterFramework
 //		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
         SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss");
 
-        double temperature = 0;
-        double meters = 0;
         double pressure = 0;
 
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
@@ -80,11 +78,8 @@ public class SinkFilter2 extends FilterFramework
                     if (i != IdLength-1)				// If this is not the last byte, then slide the
                     {									// previously appended byte to the left by one byte
                         id = id << 8;					// to make room for the next byte we append to the ID
-
                     } // if
-
                     bytesread++;						// Increment the byte count
-
                 } // for
 
                 /****************************************************************************
@@ -109,9 +104,7 @@ public class SinkFilter2 extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement = measurement << 8;				// to make room for the next byte we append to the
-                        // measurement
                     } // if
-
                     bytesread++;									// Increment the byte count
 
                 } // if
@@ -126,24 +119,17 @@ public class SinkFilter2 extends FilterFramework
                  // dealing with time arithmetically or for string display purposes. This is
                  // illustrated below.
                  ****************************************************************************/
-                //System.out.println(" ID = " + id+" ");
                 if ( id == 0 )
                 {
                     TimeStamp.setTimeInMillis(measurement);
-
                 } // if
-
 
                 if(id == 3){
 
                     pressure = Double.longBitsToDouble(measurement);
                     System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f", pressure);
                     System.out.print("\n" );
-
                 }
-
-
-
             } // try
 
             /*******************************************************************************

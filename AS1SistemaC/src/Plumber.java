@@ -37,9 +37,6 @@ public class Plumber
 		* source filter (Filter3).
 		****************************************************************************/
 
-//		Filter3.Connect(Filter2); // This essentially says, "connect Filter3 input port to Filter2 output port
-//		Filter2.Connect(Filter1); // This essentially says, "connect Filter2 input port to Filter1 output port
-
        Filter3.Connect(Filter1, 0, 0);
        Filter3.Connect(Filter2, 1, 0);
        Filter4.Connect(Filter3, 0 ,0); // This essentially says, "connect Filter4 input port to Filter3 output port

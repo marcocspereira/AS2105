@@ -30,7 +30,6 @@ public class Plumber
 
         StoreFileMem convert = new StoreFileMem();
        SplitterWildPoints splitter = new SplitterWildPoints(1,2);
-       FilterWildPoints wildPoints = new FilterWildPoints();
 		TemperatureFilter temp = new TemperatureFilter();
 		HeightFilter height = new HeightFilter();
 		SinkFilter sink = new SinkFilter();
@@ -41,15 +40,12 @@ public class Plumber
 		* we connect to Filter2 the middle filter. Then we connect Filter2 to the
 		* source filter (Filter3).
 		****************************************************************************/
-
-
         height.Connect(source);
         temp.Connect(height);
         splitter.Connect(temp);
         sink2.Connect(splitter,0,0);
         convert.Connect(splitter,0,1);
         sink.Connect(convert);
-
 
 		/****************************************************************************
 		* Here we start the filters up. All-in-all,... its really kind of boring.

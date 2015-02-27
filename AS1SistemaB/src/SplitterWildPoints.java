@@ -80,9 +80,6 @@ public class SplitterWildPoints extends FilterFramework
                         id = id << 8;					// to make room for the next byte we append to the ID
 
                     } // if
-
-
-
                     WriteFilterOutputPort(databyte,1);
                     byteswritten++;
                 } // for
@@ -109,7 +106,6 @@ public class SplitterWildPoints extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement = measurement << 8;				// to make room for the next byte we append to the
-                        // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
@@ -133,13 +129,6 @@ public class SplitterWildPoints extends FilterFramework
                  // dealing with time arithmetically or for string display purposes. This is
                  // illustrated below.
                  ****************************************************************************/
-
-//                if ( id == 0 )
-//                {
-//                    TimeStamp.setTimeInMillis(measurement);
-//                } // if
-
-
                 if(id == 0){
 
                     timeId = 0;
@@ -158,10 +147,7 @@ public class SplitterWildPoints extends FilterFramework
 //                if is pressure
                 if ( id == 3 )
                 {
-
                     //check if is wildpoint (<50 || >80), se for mandar para file
-
-
                     if(Double.longBitsToDouble(measurement) < 50 || Double.longBitsToDouble(measurement) > 80){
 
                         /*****************************
@@ -174,7 +160,6 @@ public class SplitterWildPoints extends FilterFramework
                          */
 
                         //Handle Wildpoint
-
                         for (int j = 0; j < IdLength; j++) {
                             output = (byte) ((timeId >> ((7 - j) * 8)) & 0xff);
                             WriteFilterOutputPort(output,0);
@@ -214,15 +199,10 @@ public class SplitterWildPoints extends FilterFramework
                             byteswritten++;
                         } // for
                     } // else
-
-
-
                 } // if
-
 //                else isn't Pressure
                 else
                 {
-                    //System.out.println("ID: " + id);
                     for(i = 0; i < 8; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
@@ -238,9 +218,7 @@ public class SplitterWildPoints extends FilterFramework
                 //System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
                 break;
             } // catch
-
         } // while
-
     } // run
 
     Double longToDouble(long measurement)

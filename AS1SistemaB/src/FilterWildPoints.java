@@ -28,11 +28,7 @@ public class FilterWildPoints extends FilterFramework
 
     public void run()
     {
-        Calendar TimeStamp = Calendar.getInstance();
-        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss");
-
         byte output;
-
 
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
         int IdLength = 4;				// This is the length of IDs in the byte stream
@@ -45,8 +41,6 @@ public class FilterWildPoints extends FilterFramework
         int i;							// This is a loop counter
 
         int byteswritten = 0;				// Number of bytes written to the stream.
-//		int bytesread = 0;					// Number of bytes read from the input file.
-//		byte databyte = 0;					// The byte of data read from the file
 
         // Next we write a message to the terminal to let the world know we are alive...
 
@@ -74,11 +68,7 @@ public class FilterWildPoints extends FilterFramework
                     if (i != IdLength-1)				// If this is not the last byte, then slide the
                     {									// previously appended byte to the left by one byte
                         id = id << 8;					// to make room for the next byte we append to the ID
-
                     } // if
-
-
-
                     WriteFilterOutputPort(databyte);
                     byteswritten++;
                 } // for
@@ -105,7 +95,6 @@ public class FilterWildPoints extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement = measurement << 8;				// to make room for the next byte we append to the
-                        // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
@@ -120,22 +109,6 @@ public class FilterWildPoints extends FilterFramework
 //				if ( id == 5 ) Pitch
 
                 /****************************************************************************
-                 // Here we look for an ID of 0 which indicates this is a time measurement.
-                 // Every frame begins with an ID of 0, followed by a time stamp which correlates
-                 // to the time that each proceeding measurement was recorded. Time is stored
-                 // in milliseconds since Epoch. This allows us to use Java's calendar class to
-                 // retrieve time and also use text format classes to format the output into
-                 // a form humans can read. So this provides great flexibility in terms of
-                 // dealing with time arithmetically or for string display purposes. This is
-                 // illustrated below.
-                 ****************************************************************************/
-
-//                if ( id == 0 )
-//                {
-//                    TimeStamp.setTimeInMillis(measurement);
-//                } // if
-
-                /****************************************************************************
                  // Here we pick up a measurement (ID = 4 in this case), but you can pick up
                  // any measurement you want to. All measurements in the stream are
                  // decommutated by this class. Note that all data measurements are double types
@@ -147,10 +120,7 @@ public class FilterWildPoints extends FilterFramework
 //                if is pressure
                 if ( id == 3 )
                 {
-
                     //check if is wildpoint (<50 || >80), se for mandar para file
-
-
                     if(Double.longBitsToDouble(measurement) < 50 || Double.longBitsToDouble(measurement) > 80){
 
                         /*****************************
@@ -182,15 +152,10 @@ public class FilterWildPoints extends FilterFramework
                             byteswritten++;
                         } // for
                     } // else
-
-
-
                 } // if
-
 //                else isn't Pressure
                 else
                 {
-                    //System.out.println("ID: " + id);
                     for(i = 0; i < 8; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
@@ -203,7 +168,7 @@ public class FilterWildPoints extends FilterFramework
             catch (FilterFramework.EndOfStreamException e)
             {
                 ClosePorts();
-                //System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+//                System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
                 break;
             } // catch
 

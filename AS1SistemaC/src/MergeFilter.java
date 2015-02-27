@@ -31,9 +31,6 @@ public class MergeFilter extends FilterFramework
     {
         byte output;
 
-//        Calendar TimeStamp = Calendar.getInstance();
-//        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
-
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
         int IdLength = 4;				// This is the length of IDs in the byte stream
 
@@ -47,8 +44,6 @@ public class MergeFilter extends FilterFramework
         int i;							// This is a loop counter
 
         int byteswritten = 0;				// Number of bytes written to the stream.
-//		int bytesread = 0;					// Number of bytes read from the input file.
-//		byte databyte = 0;					// The byte of data read from the file
 
 		// Next we write a message to the terminal to let the world know we are alive...
 
@@ -56,19 +51,6 @@ public class MergeFilter extends FilterFramework
 
 		while (true)
 		{
-//			/*************************************************************
-//			*	Here we read a byte and write a byte
-//			*************************************************************/
-//
-//			try
-//			{
-//				databyte = ReadFilterInputPort();
-//				bytesread++;
-//				WriteFilterOutputPort(databyte);
-//				byteswritten++;
-//
-//			} // try
-
             try
             {
                 /***************************************************************************
@@ -87,9 +69,7 @@ public class MergeFilter extends FilterFramework
                     if (i != IdLength-1)				// If this is not the last byte, then slide the
                     {									// previously appended byte to the left by one byte
                         id0 = id0 << 8;					// to make room for the next byte we append to the ID
-
                     } // if
-
                     bytesread++;						// Increment the byte count
                 } // for
 
@@ -161,7 +141,6 @@ public class MergeFilter extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement1 = measurement1 << 8;				// to make room for the next byte we append to the
-                        // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
@@ -172,31 +151,6 @@ public class MergeFilter extends FilterFramework
                     WriteFilterOutputPort(output, 0);
                     byteswritten++;
                 }
-
-                /****************************************************************************
-                 // Here we read measurements. All measurement data is read as a stream of bytes
-                 // and stored as a long value. This permits us to do bitwise manipulation that
-                 // is neccesary to convert the byte stream into data words. Note that bitwise
-                 // manipulation is not permitted on any kind of floating point types in Java.
-                 // If the id = 0 then this is a time value and is therefore a long value - no
-                 // problem. However, if the id is something other than 0, then the bits in the
-                 // long value is really of type double and we need to convert the value using
-                 // Double.longBitsToDouble(long val) to do the conversion which is illustrated.
-                 // below.
-                 *****************************************************************************/
-//                Tempo
-//				if ( id1 == 0 )
-//                {
-//                    TimeStamp = Calendar.getInstance();
-//                    TimeStamp.setTimeInMillis(measurement1);
-//                    System.out.println("ola " +TimeStampFormat.format(TimeStamp.getTime()));
-//                }
-//				if ( id == 1 ) Velocidade
-//				if ( id == 2 ) Altitude
-//				if ( id == 3 ) Pressão
-//				if ( id == 4 ) Temperatura
-//				if ( id == 5 ) Pitch
-
             } // try
 
 			catch (EndOfStreamException e)
@@ -205,7 +159,6 @@ public class MergeFilter extends FilterFramework
                 System.out.println( "\n" + this.getName() + "::Merge Filter Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
 				break;
 			} // catch
-
 		} // while
 
    } // run

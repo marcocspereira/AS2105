@@ -31,8 +31,6 @@ public class SortFilter extends FilterFramework
         int count = 0;
         CopyOnWriteArrayList<ListNode> lista = new CopyOnWriteArrayList<ListNode>();
 
-//        byte output;
-
         Calendar TimeStamp = Calendar.getInstance();
 //        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 
@@ -47,14 +45,10 @@ public class SortFilter extends FilterFramework
         int i;							// This is a loop counter
 
         int byteswritten = 0;				// Number of bytes written to the stream.
-//		int bytesread = 0;					// Number of bytes read from the input file.
-//		byte databyte = 0;					// The byte of data read from the file
 
 		// Next we write a message to the terminal to let the world know we are alive...
 
 		System.out.println( "\n" + this.getName() + "::Sort Filter Reading ");
-//        ArrayList<Calendar> calendars = new ArrayList<Calendar>();
-//        ArrayList<Integer> ids = new ArrayList<Integer>();
 
         //Vars to save to list
         long temperature = 0;
@@ -65,19 +59,6 @@ public class SortFilter extends FilterFramework
         long timestamp = 0;
         while (true)
 		{
-//			/*************************************************************
-//			*	Here we read a byte and write a byte
-//			*************************************************************/
-//
-//			try
-//			{
-//				databyte = ReadFilterInputPort();
-//				bytesread++;
-//				WriteFilterOutputPort(databyte);
-//				byteswritten++;
-//
-//			} // try
-
             try
             {
                  /***************************************************************************
@@ -102,7 +83,6 @@ public class SortFilter extends FilterFramework
                     bytesread++;						// Increment the byte count
                 } // for
 
-//                ids.add(id);
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
                  // and stored as a long value. This permits us to do bitwise manipulation that
@@ -125,7 +105,6 @@ public class SortFilter extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement = measurement << 8;				// to make room for the next byte we append to the
-                        // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
@@ -216,7 +195,6 @@ public class SortFilter extends FilterFramework
                 System.out.println( "\n" + this.getName() + "::Sort Filter Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
 				break;
 			} // catch
-
 		} // while
    } // run
 

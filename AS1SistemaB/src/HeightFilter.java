@@ -29,9 +29,6 @@ public class HeightFilter extends FilterFramework
     {
         byte output;
 
-        Calendar TimeStamp = Calendar.getInstance();
-        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
-
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
         int IdLength = 4;				// This is the length of IDs in the byte stream
 
@@ -52,19 +49,6 @@ public class HeightFilter extends FilterFramework
 
 		while (true)
 		{
-//			/*************************************************************
-//			*	Here we read a byte and write a byte
-//			*************************************************************/
-//
-//			try
-//			{
-//				databyte = ReadFilterInputPort();
-//				bytesread++;
-//				WriteFilterOutputPort(databyte);
-//				byteswritten++;
-//
-//			} // try
-
             try
             {
                 /***************************************************************************
@@ -114,11 +98,9 @@ public class HeightFilter extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement = measurement << 8;				// to make room for the next byte we append to the
-                        // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
-
                 } // for
 
 //				if ( id == 0 ) Tempo
@@ -127,22 +109,6 @@ public class HeightFilter extends FilterFramework
 //				if ( id == 3 ) Pressão
 //				if ( id == 4 ) Temperatura
 //				if ( id == 5 ) Pitch
-
-                /****************************************************************************
-                 // Here we look for an ID of 0 which indicates this is a time measurement.
-                 // Every frame begins with an ID of 0, followed by a time stamp which correlates
-                 // to the time that each proceeding measurement was recorded. Time is stored
-                 // in milliseconds since Epoch. This allows us to use Java's calendar class to
-                 // retrieve time and also use text format classes to format the output into
-                 // a form humans can read. So this provides great flexibility in terms of
-                 // dealing with time arithmetically or for string display purposes. This is
-                 // illustrated below.
-                 ****************************************************************************/
-
-//                if ( id == 0 )
-//                {
-//                    TimeStamp.setTimeInMillis(measurement);
-//                } // if
 
                 /****************************************************************************
                  // Here we pick up a measurement (ID = 4 in this case), but you can pick up
@@ -156,13 +122,8 @@ public class HeightFilter extends FilterFramework
 //                if is height
                 if ( id == 2 )
                 {
-//                    System.out.println("input " + Long.toBinaryString(measurement));
-//                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Feet " + longToDouble(measurement));
-
 //                  Convert to meters
                     double meters = Double.longBitsToDouble(measurement)/3.2808;
-
-//                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Meters " + meters);
                     measurement = doubleToLong(meters);
                     for(i = 0; i < 8; i++)
                     {
@@ -190,9 +151,7 @@ public class HeightFilter extends FilterFramework
                 System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
 				break;
 			} // catch
-
 		} // while
-
    } // run
 
     Double longToDouble(long measurement)

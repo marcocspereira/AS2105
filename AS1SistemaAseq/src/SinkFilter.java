@@ -125,7 +125,6 @@ public class SinkFilter extends FilterFramework
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
-//                System.out.print(" ID = " + id+" ");
                 if ( id == 0 )
 				{
 					TimeStamp.setTimeInMillis(measurement);
@@ -134,7 +133,6 @@ public class SinkFilter extends FilterFramework
 
 				if ( id == 2 )
 				{
-//					TimeStamp.setTimeInMillis(measurement);
                     meters = Double.longBitsToDouble(measurement);
 				} // if
 
@@ -154,8 +152,6 @@ public class SinkFilter extends FilterFramework
                     System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f", temperature, meters);
                     System.out.print("\n" );
                 } // if
-
-
 			} // try
 
 			/*******************************************************************************
@@ -169,11 +165,8 @@ public class SinkFilter extends FilterFramework
 				ClosePorts();
 				System.out.println(this.getName() + "::Sink Exiting; bytes read: " + bytesread );
 				break;
-
 			} // catch
-
 		} // while
-
    } // run
 
 } // SingFilter

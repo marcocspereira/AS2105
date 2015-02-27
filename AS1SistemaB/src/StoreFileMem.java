@@ -1,9 +1,5 @@
 
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.DoubleSummaryStatistics;
 
 /******************************************************************************************************************
  * File:MiddleFilter.java
@@ -35,13 +31,8 @@ public class StoreFileMem extends FilterFramework
     int IdLength = 4;
     int byteswritten = 0;				// Number of bytes written to the stream.
 
-
-
     public void run()
     {
-
-
-
         //Vars to save to list
         long temperature = 0;
         long height = 0;
@@ -49,8 +40,6 @@ public class StoreFileMem extends FilterFramework
         double pressure = 0;
         long speed = 0;
         long timestamp = 0;
-
-
         // This is the length of IDs in the byte stream
 
         byte databyte = 0;				// This is the data byte read from the stream
@@ -60,16 +49,12 @@ public class StoreFileMem extends FilterFramework
         int id;							// This is the measurement id
         int i;							// This is a loop counter
 
-
-
         // Next we write a message to the terminal to let the world know we are alive...
 
         System.out.print( "\n" + this.getName() + "::StoreMem Reading ");
 
         while (true)
         {
-
-
             try
             {
                 /***************************************************************************
@@ -90,12 +75,8 @@ public class StoreFileMem extends FilterFramework
                         id = id << 8;					// to make room for the next byte we append to the ID
 
                     } // if
-
-
                     bytesread++;
-
                 } // for
-
 
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
@@ -119,7 +100,6 @@ public class StoreFileMem extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement = measurement << 8;				// to make room for the next byte we append to the
-                        // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
@@ -154,24 +134,14 @@ public class StoreFileMem extends FilterFramework
                     if(count == -1){
                         count++;
                     }
-
-
                     timestamp = measurement;
-
-
-
                 }//if
 
                 if ( id == 1 ) {
-
                     if(count < id){
                         count++;
                     }
-
-
                     speed = measurement;
-
-
                 } // if
 
                 if( id == 2){
@@ -179,56 +149,29 @@ public class StoreFileMem extends FilterFramework
                     if(count < id){
                         count++;
                     }
-
                     height = measurement;
-
-
                 }
 
                 if( id == 3){
-
                     if(count < id){
                         count++;
                     }
-
                     pressure = Double.longBitsToDouble(measurement);
-
                 }
 
                 if(id == 4){
-
                     if(count < id){
                         count++;
                     }
-
                     temperature =  measurement;
-
-
                 }
 
                 if(id == 5){
-
                     if(count < id){
                         count++;
                     }
                     pitch = measurement;
-
-
                 }
-
-
-
-
-                /****************************************************************************
-                 // Here we pick up a measurement (ID = 4 in this case), but you can pick up
-                 // any measurement you want to. All measurements in the stream are
-                 // decommutated by this class. Note that all data measurements are double types
-                 // This illustrates how to convert the bits read from the stream into a double
-                 // type. Its pretty simple using Double.longBitsToDouble(long value). So here
-                 // we print the time stamp and the data associated with the ID we are interested
-                 // in.
-                 ****************************************************************************/
-
             } // try
 
             catch (EndOfStreamException e)
@@ -253,13 +196,8 @@ public class StoreFileMem extends FilterFramework
 
 
         handleWildPoints();
-        //printList();
         convertAndSend();
-
-
     } // run
-
-
 
     private void handleWildPoints() {
 
@@ -278,53 +216,30 @@ public class StoreFileMem extends FilterFramework
 
                 if(index_init == -1){
                     index_init = z;
-
                     //Se o primeiro valor certo nao for o primeiro do ficheiro tem que substituir os anteriores
                     if(index_init>0){
-
                         for(int j = 0; j<index_init;j++){
-
                             lista.get(j).setPressure(-lista.get(index_init).getPressure());
-
                         }
                     }
-
-
                 }
 
                 else{
-
                     index_final = z;
                     pressureRevised = (lista.get(index_init).getPressure() + lista.get(index_final).getPressure())/2;
-                    //System.out.println("ALtered: " + pressureRevised);
                     for(int j = index_init+1; j < index_final;j++){
 
                         lista.get(j).setPressure(-pressureRevised);
-
                     }
-
                     index_init = index_final;
                     index_final = -1;
-
                 }
-
             }
-
-
         }
-
-
-        //System.out.println("after iterating index final = " + index_final);
-
         //No caso se so encontrar um unico ponto certo no file
         if(index_final == -1) {
-
-
             for (int z = index_init + 1; z < lista.size(); z++) {
-
-
                 lista.get(z).setPressure(-lista.get(index_init).getPressure());
-
             }
         }
 
@@ -333,15 +248,8 @@ public class StoreFileMem extends FilterFramework
     private void printList() {
 
         for(int z = 0; z<lista.size();z++) {
-
-            //System.out.println("iterator z = " +  z);
             System.out.println("Pressure = " + lista.get(z).getPressure());
-            //teste = (byte)z;
-            //System.out.println("iterator in bin = " + teste);
-            //System.out.println("Decrypt iterator = " + teste);
-
         }
-
     }
 
 
@@ -365,25 +273,6 @@ public class StoreFileMem extends FilterFramework
         }
     }
 
-    /*        for (int x = 0; x < count; x++) {
-
-                if (x == 0) {
-
-                    int id = 3;
-
-                    for (int j = 0; j < IdLength; j++) {
-                        output = (byte) ((id >> ((7 - j) * 8)) & 0xff);
-                        WriteFilterOutputPort(output);
-                    }
-
-
-
-                }
-
-            }
-        }*/
-
-
     private void sendMeasurement(long measure) {
 
         for (int a = 0; a < MeasurementLength; a++) {
@@ -404,8 +293,6 @@ public class StoreFileMem extends FilterFramework
         }
 
     }
-
-
 
     Double longToDouble(long measurement)
     {

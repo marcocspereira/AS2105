@@ -80,11 +80,8 @@ public class SinkFilter extends FilterFramework
 					if (i != IdLength-1)				// If this is not the last byte, then slide the
 					{									// previously appended byte to the left by one byte
 						id = id << 8;					// to make room for the next byte we append to the ID
-
 					} // if
-
 					bytesread++;						// Increment the byte count
-
 				} // for
 
 				/****************************************************************************
@@ -109,9 +106,7 @@ public class SinkFilter extends FilterFramework
 					if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
 					{												// previously appended byte to the left by one byte
 						measurement = measurement << 8;				// to make room for the next byte we append to the
-																	// measurement
 					} // if
-
 					bytesread++;									// Increment the byte count
 
 				} // if
@@ -126,11 +121,9 @@ public class SinkFilter extends FilterFramework
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
-               //System.out.println(" ID = " + id+" ");
                 if ( id == 0 )
 				{
 					TimeStamp.setTimeInMillis(measurement);
-
 				} // if
 
 				if ( id == 2 )
@@ -139,11 +132,7 @@ public class SinkFilter extends FilterFramework
                 } // if
 
                 if(id == 3){
-
                     pressure = Double.longBitsToDouble(measurement);
-
-
-
                 }
 
 				/****************************************************************************
@@ -170,14 +159,8 @@ public class SinkFilter extends FilterFramework
                     else{
                         System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f %3.5f", temperature, meters, pressure);
                         System.out.print("\n" );
-
                     }
-
-
-
                 } // if
-
-
 			} // try
 
 			/*******************************************************************************
@@ -193,9 +176,7 @@ public class SinkFilter extends FilterFramework
 				break;
 
 			} // catch
-
 		} // while
-
    } // run
 
 } // SingFilter
