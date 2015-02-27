@@ -57,7 +57,7 @@ public class SinkFilter extends FilterFramework
 		*	First we announce to the world that we are alive...
 		**************************************************************/
 
-		System.out.print( "\n" + this.getName() + "::Sink Reading ");
+		System.out.println(this.getName() + "::Sink Reading ");
 
 		while (true)
 		{
@@ -167,7 +167,7 @@ public class SinkFilter extends FilterFramework
 			catch (EndOfStreamException e)
 			{
 				ClosePorts();
-				System.out.print( "\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread );
+				System.out.println(this.getName() + "::Sink Exiting; bytes read: " + bytesread );
 				break;
 
 			} // catch

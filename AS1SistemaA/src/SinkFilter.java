@@ -57,7 +57,7 @@ public class SinkFilter extends FilterFramework
          *	First we announce to the world that we are alive...
          **************************************************************/
 
-        System.out.print("\n" + this.getName() + "::Sink Reading ");
+        System.out.println(this.getName() + "::Sink Reading ");
 
         while (true)
         {

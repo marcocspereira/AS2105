@@ -1,5 +1,7 @@
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 /******************************************************************************************************************
  * File:MiddleFilter.java
@@ -21,16 +23,18 @@ import java.util.Calendar;
  *
  ******************************************************************************************************************/
 
-public class HeightFilter extends FilterFramework
+public class SortFilter extends FilterFramework
 {
-
 
     public void run()
     {
-        byte output;
+        int count = 0;
+        ArrayList<ListNode> lista = new ArrayList<ListNode>();
+
+//        byte output;
 
         Calendar TimeStamp = Calendar.getInstance();
-        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
+//        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
         int IdLength = 4;				// This is the length of IDs in the byte stream
@@ -48,8 +52,17 @@ public class HeightFilter extends FilterFramework
 
         // Next we write a message to the terminal to let the world know we are alive...
 
-        System.out.println(this.getName() + "::Height Reading ");
+        System.out.println(this.getName() + "::Sort Filter Reading ");
+//        ArrayList<Calendar> calendars = new ArrayList<Calendar>();
+//        ArrayList<Integer> ids = new ArrayList<Integer>();
 
+        //Vars to save to list
+        long temperature = 0;
+        long height = 0;
+        long pitch = 0;
+        double pressure = 0;
+        long speed = 0;
+        long timestamp = 0;
         while (true)
         {
 //			/*************************************************************
@@ -87,10 +100,9 @@ public class HeightFilter extends FilterFramework
                     } // if
 
                     bytesread++;						// Increment the byte count
-
                 } // for
 
-
+//                ids.add(id);
                 /****************************************************************************
                  // Here we read measurements. All measurement data is read as a stream of bytes
                  // and stored as a long value. This permits us to do bitwise manipulation that
@@ -113,102 +125,127 @@ public class HeightFilter extends FilterFramework
                     if (i != MeasurementLength-1)					// If this is not the last byte, then slide the
                     {												// previously appended byte to the left by one byte
                         measurement = measurement << 8;				// to make room for the next byte we append to the
+                        // measurement
                     } // if
 
                     bytesread++;									// Increment the byte count
-
                 } // for
+                if ( id == 0 ) {
 
-//				if ( id == 0 ) Tempo
-//				if ( id == 1 ) Velocidade
-//				if ( id == 2 ) Altitude
-//				if ( id == 3 ) Pressão
-//				if ( id == 4 ) Temperatura
-//				if ( id == 5 ) Pitch
 
-                if( id == 0 || id == 2)
-                {
-                    for(i=0; i<IdLength; i++)
-                    {
-                        output = (byte)((id >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output,0);
-                        byteswritten++;
-                    } // for
-                } // if
+                    if (count > 0) {
+                        ListNode novo = new ListNode();
+                        Calendar tempo = Calendar.getInstance();
+                        tempo.setTimeInMillis(timestamp);
+                        novo.setTime(tempo);
+                        novo.setTemperature(temperature);
+                        novo.setHeight(height);
+                        novo.setSpeed(speed);
+                        novo.setPressure(pressure);
+                        novo.setPitch(pitch);
+                        lista.add(novo);
 
-                /****************************************************************************
-                 // Here we look for an ID of 0 which indicates this is a time measurement.
-                 // Every frame begins with an ID of 0, followed by a time stamp which correlates
-                 // to the time that each proceeding measurement was recorded. Time is stored
-                 // in milliseconds since Epoch. This allows us to use Java's calendar class to
-                 // retrieve time and also use text format classes to format the output into
-                 // a form humans can read. So this provides great flexibility in terms of
-                 // dealing with time arithmetically or for string display purposes. This is
-                 // illustrated below.
-                 ****************************************************************************/
-                // send timestamp
-                if ( id == 0 )
-                {
-                    for(i = 0; i < MeasurementLength; i++)
-                    {
-                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output);
-                        byteswritten++;
-                    } // for
-
-                    TimeStamp.setTimeInMillis(measurement);
-                } // if
-
-//                if ( id == 0 )
-//                {
-//                    TimeStamp.setTimeInMillis(measurement);
-//                } // if
-
-                /****************************************************************************
-                 // Here we pick up a measurement (ID = 4 in this case), but you can pick up
-                 // any measurement you want to. All measurements in the stream are
-                 // decommutated by this class. Note that all data measurements are double types
-                 // This illustrates how to convert the bits read from the stream into a double
-                 // type. Its pretty simple using Double.longBitsToDouble(long value). So here
-                 // we print the time stamp and the data associated with the ID we are interested
-                 // in.
-                 ****************************************************************************/
-                // if is height
-                else if ( id == 2 )
-                {
-//                    System.out.println("input " + Long.toBinaryString(measurement));
-//                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Feet " + longToDouble(measurement));
-
-//                  Convert to meters
-                    double meters = Double.longBitsToDouble(measurement)/3.2808;
-
-//                    System.out.println(TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + " Meters " + meters);
-                    measurement = doubleToLong(meters);
-                    for(i = 0; i < MeasurementLength; i++)
-                    {
-                        output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output);
-                        byteswritten++;
+                        temperature = 0;
+                        height = 0;
+                        pitch = 0;
+                        pressure = 0;
+                        speed = 0;
+                        timestamp = 0;
                     }
-                } // if
+                    if (count >= 0) {
+                        count++;
+                    }
+                    timestamp = measurement;
+                    TimeStamp.setTimeInMillis(measurement);
+                }
 
-//                else isn't height
-                else
-                {
-                    continue;
-                } // else
+                if ( id == 1 ) {
+                    speed = measurement;
+                } // if
+                if( id == 2){
+                    height = measurement;
+                }
+                if( id == 3){
+                    pressure = Double.longBitsToDouble(measurement);
+                }
+                if(id == 4){
+                    temperature =  measurement;
+                }
+                if(id == 5){
+                    pitch = measurement;
+                }
             } // try
 
             catch (EndOfStreamException e)
             {
+                ListNode novo = new ListNode();
+                TimeStamp.setTimeInMillis(timestamp);
+                novo.setTime(TimeStamp);
+                novo.setTemperature(temperature);
+                novo.setHeight(height);
+                novo.setSpeed(speed);
+                novo.setPressure(pressure);
+                // novo.setPitch(pitch);
+                lista.add(novo);
+
+                Collections.sort(lista, new Comparator<ListNode>() {
+                    public int compare(ListNode x, ListNode y) {
+                        if (x.getTime().before(y.getTime())) return -1;
+                        if (x.getTime().after(y.getTime())) return 1;
+                        return 0;
+                    }
+                });
+
+                for (int j = 0; j < lista.size(); j++) {
+                    byteswritten += sendId(0);
+                    byteswritten += sendMeasurement(lista.get(j).getTime().getTimeInMillis());
+                    byteswritten += sendId(1);
+                    byteswritten += sendMeasurement(lista.get(j).getSpeed());
+                    byteswritten += sendId(2);
+                    byteswritten += sendMeasurement(lista.get(j).getHeight());
+                    byteswritten += sendId(3);
+                    byteswritten += sendMeasurement(Double.doubleToLongBits(lista.get(j).getPressure()));
+                    byteswritten += sendId(4);
+                    byteswritten += sendMeasurement(lista.get(j).getTemperature());
+                    // byteswritten += sendId(5);
+                    // byteswritten += sendMeasurement(lista.get(j).getPitch());
+
+                }
+
                 ClosePorts();
-                System.out.println(this.getName() + "::Height Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten);
+                System.out.println(this.getName() + "::Sort Filter Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
                 break;
             } // catch
 
         } // while
-
     } // run
+
+    int sendId(int id)
+    {
+        int byteswritten = 0;
+        int IdLength = 4;
+        byte output;
+        for (int i = 0; i < IdLength; i++){
+            output = (byte) ((id >> ((7 - i) * 8)) & 0xff);
+            WriteFilterOutputPort(output);
+            byteswritten++;
+        }
+        return byteswritten;
+    }
+
+    int sendMeasurement(long measure)
+    {
+        int byteswritten = 0;
+        int MeasurementLength = 8;
+        byte output;
+
+        for (int i =0; i<MeasurementLength; i++ ){
+            output = (byte)((measure >> ((7 - i) * 8)) & 0xff);
+            WriteFilterOutputPort(output);
+            byteswritten++;
+        }
+        return byteswritten;
+    }
 
     Double longToDouble(long measurement)
     {

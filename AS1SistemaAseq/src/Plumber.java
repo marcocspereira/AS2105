@@ -26,10 +26,11 @@ public class Plumber
 		* Here we instantiate three filters.
 		****************************************************************************/
 
-		SourceFilter Filter1 = new SourceFilter("FlightData.dat");
-		TemperatureFilter Filter2 = new TemperatureFilter();
-		HeightFilter Filter3 = new HeightFilter();
-		SinkFilter Filter4 = new SinkFilter();
+		SourceFilter sourceF = new SourceFilter("FlightData.dat");
+		TemperatureFilter temperatureF = new TemperatureFilter();
+		HeightFilter heightF = new HeightFilter();
+        SortFilter sortF = new SortFilter();
+		SinkFilter sinkF = new SinkFilter();
 
 		/****************************************************************************
 		* Here we connect the filters starting with the sink filter (Filter 1) which
@@ -37,18 +38,20 @@ public class Plumber
 		* source filter (Filter3).
 		****************************************************************************/
 
-		Filter4.Connect(Filter3); // This essentially says, "connect Filter4 input port to Filter3 output port
-		Filter3.Connect(Filter2); // This essentially says, "connect Filter3 input port to Filter2 output port
-		Filter2.Connect(Filter1); // This essentially says, "connect Filter2 input port to Filter1 output port
+		sinkF.Connect(sortF);           // This essentially says, "connect sinkF input port to sortF output port
+        sortF.Connect(heightF);         // This essentially says, "connect sortF input port to heightF output port
+		heightF.Connect(temperatureF); // This essentially says, "connect heightF input port to temperatureF output port
+		temperatureF.Connect(sourceF); // This essentially says, "connect temperatureF input port to sourceF output port
 
 		/****************************************************************************
 		* Here we start the filters up. All-in-all,... its really kind of boring.
 		****************************************************************************/
 
-		Filter1.start();
-		Filter2.start();
-		Filter3.start();
-		Filter4.start();
+		sourceF.start();
+		temperatureF.start();
+		heightF.start();
+        sortF.start();
+		sinkF.start();
 
    } // main
 
