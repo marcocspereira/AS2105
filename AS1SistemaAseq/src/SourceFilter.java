@@ -42,7 +42,7 @@ public class SourceFilter extends FilterFramework
 			***********************************************************************************/
 
 			in = new DataInputStream(new FileInputStream(fileName));
-			System.out.println("\n" + this.getName() + "::Source reading file..." );
+			System.out.println(this.getName() + "::Source reading file..." );
 
 			/***********************************************************************************
 			*	Here we read the data from the file and send it out the filter's output port one
@@ -92,7 +92,7 @@ public class SourceFilter extends FilterFramework
 
 		catch ( IOException iox )
 		{
-			System.out.println("\n" + this.getName() + "::Problem reading input data file::" + iox );
+			System.out.println(this.getName() + "::Problem reading input data file::" + iox );
 
 		} // catch
 
