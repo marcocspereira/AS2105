@@ -3,10 +3,13 @@ Mestrado em Engenharia Informática - Engenharia de Software - Arquitectura de S
 
 
 #### Sistema A
- - Concluida a versão sequencial
+ - Versão paralelizada
+
+#### Sistema A Seq
+ - Concluida
 
 #### Sistema B
- - Ainda em estudo
+ - Concluida
 
 #### Sistema C
  - Concluido
