@@ -37,7 +37,7 @@ public class Generator {
 			file = new DataOutputStream(new FileOutputStream(fileName));
 			
 			// change the constants in the for loop, to generate values in the ranges you want
-			for (int i=1; i<100;i++){
+			for (int i=1; i<10000;i++){
 				v= 250 + 50*x.nextDouble();
 				a= 10000 + 200*x.nextDouble();
 				p= 40 + 60*x.nextDouble();

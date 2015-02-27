@@ -35,20 +35,40 @@
 ******************************************************************************************************************/
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class FilterFramework extends Thread
 {
 	// Define filter input and output ports
 
+	/* ORIGINAL
 	private PipedInputStream InputReadPort = new PipedInputStream();
 	private PipedOutputStream OutputWritePort = new PipedOutputStream();
+	*/
+    private ArrayList<PipedInputStream> InputReadPort = new ArrayList<PipedInputStream>();
+    private ArrayList<PipedOutputStream> OutputWritePort = new ArrayList<PipedOutputStream>();
+
 
 	// The following reference to a filter is used because java pipes are able to reliably
 	// detect broken pipes on the input port of the filter. This variable will point to
 	// the previous filter in the network and when it dies, we know that it has closed its
 	// output pipe and will send no more data.
 
-	private FilterFramework InputFilter;
+    private FilterFramework InputFilter;
+
+    FilterFramework() {
+        InputReadPort.add(new PipedInputStream());
+        OutputWritePort.add(new PipedOutputStream());
+    }
+
+    FilterFramework(int inputPorts, int outputPorts) {
+        for (int i = 0; i < inputPorts; i++) {
+            InputReadPort.add(new PipedInputStream());
+        }
+        for (int i = 0; i < outputPorts; i++) {
+            OutputWritePort.add(new PipedOutputStream());
+        }
+    }
 
 	/***************************************************************************
 	* InnerClass:: EndOfStreamExeception
@@ -88,13 +108,32 @@ public class FilterFramework extends Thread
 	*
 	****************************************************************************/
 
-	void Connect( FilterFramework Filter )
+	void Connect( FilterFramework Filter, int inputPort, int outputPort)
 	{
 		try
 		{
 			// Connect this filter's input to the upstream pipe's output stream
 
-			InputReadPort.connect( Filter.OutputWritePort );
+            InputReadPort.get(inputPort).connect(Filter.OutputWritePort.get(outputPort));
+			InputFilter = Filter;
+
+		} // try
+
+		catch( Exception Error )
+		{
+			System.out.println( "\n" + this.getName() + " FilterFramework error connecting::"+ Error );
+
+		} // catch
+
+	} // Connect
+
+	void Connect( FilterFramework Filter)
+	{
+		try
+		{
+			// Connect this filter's input to the upstream pipe's output stream
+
+            InputReadPort.get(0).connect(Filter.OutputWritePort.get(0));
 			InputFilter = Filter;
 
 		} // try
@@ -119,7 +158,7 @@ public class FilterFramework extends Thread
 	*
 	****************************************************************************/
 
-	byte ReadFilterInputPort() throws EndOfStreamException
+	byte ReadFilterInputPort(int inputPort) throws EndOfStreamException
 	{
 		byte datum = 0;
 
@@ -139,9 +178,9 @@ public class FilterFramework extends Thread
 
 		try
 		{
-			while (InputReadPort.available()==0 )
+			while (InputReadPort.get(inputPort).available()==0 )
 			{
-				if (EndOfInputStream())
+				if (EndOfInputStream(inputPort))
 				{
 					throw new EndOfStreamException("End of input stream reached");
 
@@ -172,7 +211,74 @@ public class FilterFramework extends Thread
 
 		try
 		{
-			datum = (byte)InputReadPort.read();
+			datum = (byte)InputReadPort.get(inputPort).read();
+			return datum;
+
+		} // try
+
+		catch( Exception Error )
+		{
+			System.out.println( "\n" + this.getName() + " Pipe read error::" + Error );
+			return datum;
+
+		} // catch
+
+	} // ReadFilterPort
+
+	byte ReadFilterInputPort() throws EndOfStreamException
+	{
+		byte datum = 0;
+
+		/***********************************************************************
+		* Since delays are possible on upstream filters, we first wait until
+		* there is data available on the input port. We check,... if no data is
+		* available on the input port we wait for a quarter of a second and check
+		* again. Note there is no timeout enforced here at all and if upstream
+		* filters are deadlocked, then this can result in infinite waits in this
+		* loop. It is necessary to check to see if we are at the end of stream
+		* in the wait loop because it is possible that the upstream filter completes
+		* while we are waiting. If this happens and we do not check for the end of
+		* stream, then we could wait forever on an upstream pipe that is long gone.
+		* Unfortunately Java pipes do not throw exceptions when the input pipe is
+		* broken.
+		***********************************************************************/
+
+		try
+		{
+			while (InputReadPort.get(0).available()==0 )
+			{
+				if (EndOfInputStream(0))
+				{
+					throw new EndOfStreamException("End of input stream reached");
+
+				} //if
+
+				sleep(250);
+
+			} // while
+
+		} // try
+
+		catch( EndOfStreamException Error )
+		{
+			throw Error;
+
+		} // catch
+
+		catch( Exception Error )
+		{
+			System.out.println( "\n" + this.getName() + " Error in read port wait loop::" + Error );
+
+		} // catch
+
+		/***********************************************************************
+		* If at least one byte of data is available on the input
+		* pipe we can read it. We read and write one byte to and from ports.
+		***********************************************************************/
+
+		try
+		{
+			datum = (byte)InputReadPort.get(0).read();
 			return datum;
 
 		} // try
@@ -200,12 +306,31 @@ public class FilterFramework extends Thread
 	*
 	****************************************************************************/
 
+	void WriteFilterOutputPort(byte datum, int outputPort)
+	{
+		try
+		{
+            OutputWritePort.get(outputPort).write((int) datum);
+		   	OutputWritePort.get(outputPort).flush();
+
+		} // try
+
+		catch( Exception Error )
+		{
+			System.out.println("\n" + this.getName() + " Pipe write error::" + Error );
+
+		} // catch
+
+		return;
+
+	} // WriteFilterPort
+
 	void WriteFilterOutputPort(byte datum)
 	{
 		try
 		{
-            OutputWritePort.write((int) datum );
-		   	OutputWritePort.flush();
+            OutputWritePort.get(0).write((int) datum);
+		   	OutputWritePort.get(0).flush();
 
 		} // try
 
@@ -236,7 +361,7 @@ public class FilterFramework extends Thread
 	*
 	****************************************************************************/
 
-	private boolean EndOfInputStream()
+	private boolean EndOfInputStream(int inputPort)
 	{
 		if (InputFilter.isAlive())
 		{
@@ -268,8 +393,13 @@ public class FilterFramework extends Thread
 	{
 		try
 		{
-			InputReadPort.close();
-			OutputWritePort.close();
+            for (int i = 0; i < InputReadPort.size(); i++) {
+                InputReadPort.get(i).close();
+            }
+
+            for (int i = 0; i < OutputWritePort.size(); i++) {
+                OutputWritePort.get(i).close();
+            }
 
 		}
 		catch( Exception Error )

@@ -190,7 +190,7 @@ public class FilterWildPoints extends FilterFramework
 //                else isn't Pressure
                 else
                 {
-                    System.out.println("ID: " + id);
+                    //System.out.println("ID: " + id);
                     for(i = 0; i < 8; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);

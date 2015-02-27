@@ -42,6 +42,7 @@ public class SinkFilter extends FilterFramework
 
         double temperature = 0;
         double meters = 0;
+        double pressure = 0;
 
 		int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
 		int IdLength = 4;				// This is the length of IDs in the byte stream
@@ -125,7 +126,7 @@ public class SinkFilter extends FilterFramework
                 // dealing with time arithmetically or for string display purposes. This is
                 // illustrated below.
                 ****************************************************************************/
-//                System.out.print(" ID = " + id+" ");
+               //System.out.println(" ID = " + id+" ");
                 if ( id == 0 )
 				{
 					TimeStamp.setTimeInMillis(measurement);
@@ -134,9 +135,16 @@ public class SinkFilter extends FilterFramework
 
 				if ( id == 2 )
 				{
-//					TimeStamp.setTimeInMillis(measurement);
                     meters = Double.longBitsToDouble(measurement);
-				} // if
+                } // if
+
+                if(id == 3){
+
+                    pressure = Double.longBitsToDouble(measurement);
+
+
+
+                }
 
 				/****************************************************************************
 				// Here we pick up a measurement (ID = 4 in this case), but you can pick up
@@ -151,8 +159,22 @@ public class SinkFilter extends FilterFramework
 				if ( id == 4 )
 				{
                     temperature = Double.longBitsToDouble(measurement);
-                    System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f", temperature, meters);
-                    System.out.print("\n" );
+
+                    if(pressure<0){
+
+                        pressure = -pressure;
+                        System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f %3.5f*", temperature, meters, pressure);
+                        System.out.print("\n" );
+                    }
+
+                    else{
+                        System.out.format(TimeStampFormat.format(TimeStamp.getTime()) + " %3.5f %6.5f %3.5f", temperature, meters, pressure);
+                        System.out.print("\n" );
+
+                    }
+
+
+
                 } // if
 
 
