@@ -136,7 +136,7 @@ public class TemperatureFilter extends FilterFramework
                         WriteFilterOutputPort(output,0);
                         byteswritten++;
                     } // for
-                } // for
+                } // if
 
                 /****************************************************************************
                  // Here we look for an ID of 0 which indicates this is a time measurement.
@@ -154,7 +154,7 @@ public class TemperatureFilter extends FilterFramework
                     for(i = 0; i < MeasurementLength; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output,0);
+                        WriteFilterOutputPort(output);
                         byteswritten++;
                     } // for
 

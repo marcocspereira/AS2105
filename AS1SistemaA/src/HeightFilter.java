@@ -126,15 +126,15 @@ public class HeightFilter extends FilterFramework
 //				if ( id == 4 ) Temperatura
 //				if ( id == 5 ) Pitch
 
-                if(id == 2)
+                if( id == 0 || id == 2)
                 {
                     for(i=0; i<IdLength; i++)
                     {
                         output = (byte)((id >> ((7 - i) * 8)) & 0xff);
-                        WriteFilterOutputPort(output);
+                        WriteFilterOutputPort(output,0);
                         byteswritten++;
                     } // for
-                } // for
+                } // if
 
                 /****************************************************************************
                  // Here we look for an ID of 0 which indicates this is a time measurement.
@@ -149,7 +149,6 @@ public class HeightFilter extends FilterFramework
                 // send timestamp
                 if ( id == 0 )
                 {
-
                     for(i = 0; i < MeasurementLength; i++)
                     {
                         output = (byte)((measurement >> ((7 - i) * 8)) & 0xff);
