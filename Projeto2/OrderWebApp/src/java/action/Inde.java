@@ -19,14 +19,14 @@
  * under the License.
  */
 
-package example;
+package action;
 
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * <code>Set welcome message.</code>
  */
-public class Index extends ActionSupport {
+public class Inde extends ActionSupport {
 
     public String execute() throws Exception {
         setMessage(getText(MESSAGE));

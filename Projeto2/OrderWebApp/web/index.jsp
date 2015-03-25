@@ -2,7 +2,7 @@
 <%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>--%>
 <%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>--%>
 <%@ taglib prefix="sb" uri="/struts-bootstrap-tags"%>
-<%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
+<%--<%@ taglib prefix="sj" uri="/struts-jquery-tags"%>--%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
@@ -35,20 +35,19 @@
                  <h4 id="oneAccount"> Login: </h4>
                  
                 <s:form id="loginForm" name="login" action="login">
-                    <s:textfield id="textfield" name="direstrutsBean.loginUser" label="Username" size="20" placeholder="Introduza o username"/>
-                    <s:password id="textfield" name="direstrutsBean.loginPass" label="Password" size="20" placeholder="Introduza o username"/>
+                    <s:textfield id="textfield" name="bean.loginUser" label="Username" size="20" placeholder="Introduza o username"/>
+                    <s:password id="textfield" name="bean.loginPass" label="Password" size="20" placeholder="Introduza o username"/>
                     <s:submit cssClass="btn btn-medium btn-primary" key="btn.login" method="execute" align="center"/>
                 </s:form>
             </div>
             <div class="span5">
                 <h4 > Registo: </h4>
-
-                <s:form action="regist">
-                    <s:textfield id="textfield" name="direstrutsBean.registName" label="Name" size="20" placeholder="Introduza o nome"/>
-                    <s:textfield id="textfield" name="direstrutsBean.registEmail" label="Email" size="20" placeholder="Introduza o email"/>
-                    <s:textfield id="textfield" name="direstrutsBean.registUser" label="Username" size="20" placeholder="Introduza o username"/>
-                    <s:password id="textfield" name="direstrutsBean.registPass" label="Password" size="20" placeholder="Introduza a password"/>
-                    <s:password id="textfield" name="direstrutsBean.registPass2" label="Password" size="20" placeholder="Confirme a password"/>
+                <s:form id="registForm" name="regist" action="regist">
+                    <s:textfield id="textfield" name="bean.registName" label="Name" size="20" placeholder="Introduza o nome"/>
+                    <s:textfield id="textfield" name="bean.registEmail" label="Email" size="20" placeholder="Introduza o email"/>
+                    <s:textfield id="textfield" name="bean.registUser" label="Username" size="20" placeholder="Introduza o username"/>
+                    <s:password id="textfield" name="bean.registPass" label="Password" size="20" placeholder="Introduza a password"/>
+                    <s:password id="textfield" name="bean.registPass2" label="Password" size="20" placeholder="Confirme a password"/>
                     <s:submit cssClass="btn btn-medium btn-primary" key="btn.regist" method="execute" align="center"/>
 
                 </s:form>

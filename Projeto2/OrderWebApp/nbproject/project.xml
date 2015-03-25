@@ -15,7 +15,23 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+                    <file>${file.reference.struts2-bootstrap-plugin-1.7.0.jar}</file>
+                </library>
+                <library dirs="200">
                     <file>${file.reference.struts2-jquery-plugin-3.6.1.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.struts2-jquery-plugin-3.7.1.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.log4j-1.2.14.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.struts2-core-2.3.4.1.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.xwork-core-2.3.4.1.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

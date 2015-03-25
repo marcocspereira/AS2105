@@ -7,6 +7,7 @@
     <!-- Configuration for the default package. -->
     <constant name="struts.devMode" value="true" />
     <constant name="struts.custom.i18n.resources" value="package" />
+    
     <package name="default" extends="struts-default">
         <default-action-ref name="index"/>
      
@@ -19,5 +20,11 @@
         <action name="index">
             <result>/index.jsp</result>
         </action>
+<!--        <action name="login" class="sd.action.LoginAction" method="execute">
+            <result name="success" type="redirectAction">/welcome</result>
+            <result name="input" type="dispatcher">/index.jsp</result>
+            <result name="error">/index.jsp</result>
+            <result name="login" type="redirectAction">/logout</result>
+        </action>-->
     </package>
 </struts>
