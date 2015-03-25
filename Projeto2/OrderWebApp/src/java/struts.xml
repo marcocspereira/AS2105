@@ -1,0 +1,23 @@
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <!--<include file="example.xml"/>-->
+    <!-- Configuration for the default package. -->
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.custom.i18n.resources" value="package" />
+    <package name="default" extends="struts-default">
+        <default-action-ref name="index"/>
+     
+        <global-results>
+            <result name="index">/index.jsp</result>
+            <result name="error">/error.jsp</result>
+        </global-results>
+
+        <!-- 'index' action leads to the view provided by index.jsp -->
+        <action name="index">
+            <result>/index.jsp</result>
+        </action>
+    </package>
+</struts>
