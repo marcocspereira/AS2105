@@ -160,7 +160,7 @@ public class Bean {
             
             System.out.println("sucesso no login");
 
-            int clientId = result.getInt("userid");
+            int clientId = result.getInt("id");
             System.out.println("clientId " + clientId);
 
             //nao funciona
