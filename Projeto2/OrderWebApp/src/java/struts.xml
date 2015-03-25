@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts PUBLIC
 "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
 "http://struts.apache.org/dtds/struts-2.0.dtd">
@@ -22,11 +23,12 @@
         </action>
         <action name="login" class="action.LoginAction" method="execute">
             <result name="success">/myaccount.jsp</result>
+            <result name="error">/index.jsp</result>
+        </action>
             <!--<result name="success" type="redirectAction">/myaccount.jsp</result>-->
             <!--<result name="input" type="dispatcher">/index.jsp</result>-->
-            <result name="error">/index.jsp</result>
+            
             <!--<result name="login" type="redirectAction">/logout</result>-->
-        </action>
         <!--<action name="myaccount" class="action.MyAccountAction" method="execute">-->
             
             
