@@ -16,9 +16,8 @@
         <meta name="author" content="Gonçalo Silva Pereira">
         <!--<meta name="keywords" content="sd,distributed systems,university of coimbra">-->
 
-        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
         <link href="bootstrap/dist/css/bootstrap.css"	rel="stylesheet" media="screen">
-        <link href="bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" media="screen">
+        <!--<link href="bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" media="screen">-->
         <link href="bootstrap/dist/css/style.css" rel="stylesheet" media="screen">
         <!--<link href="img/favicon.ico" rel="shortcut icon">-->
         <meta name="robots" content="index, follow">
