@@ -16,4 +16,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `orderinfo`.`users` (`username`, `email`, `password`, `first_name`, `last_name`, `address`, `phone`) VALUES ('root', 'root@root', MD5('root'), 'root', 'root', 'root', '91');
-INSERT INTO `orderinfo`.`users` (`username`, `email`, `password`, `first_name`, `last_name`, `address`, `phone`) VALUES ('gsp', 'gsp@student.dei.uc.pt', MD5('123456'), 'goncalo', 'pereira', 'coimbra', '911112937');
+INSERT INTO `orderinfo`.`users` (`username`, `email`, `password`, `first_name`, `last_name`, `address`, `phone`) VALUES ('gsp', 'gsp@student.dei.uc.pt', MD5('123456'), 'goncalo', 'pereira', 'coimbra', '911111111');
+INSERT INTO `orderinfo`.`users` (`username`, `email`, `password`, `first_name`, `last_name`, `address`, `phone`) VALUES ('macsp', 'macsp@student.dei.uc.pt', MD5('123456'), 'marco', 'pereira', 'coimbra', '911111111');
+INSERT INTO `orderinfo`.`users` (`username`, `email`, `password`, `first_name`, `last_name`, `address`, `phone`) VALUES ('carlosms', 'carlosms@student.dei.uc.pt', MD5('123456'), 'carlos', 'santos', 'coimbra', '911111111');
