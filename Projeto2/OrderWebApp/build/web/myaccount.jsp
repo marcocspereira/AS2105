@@ -38,19 +38,19 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li><c:out value="${bean.loginUser}"></c:out></li>
-                    </ul>
+                        </ul>
 
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <button type="button" class="btn btn-default btn-danger">
-                                <span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Log Out
-                            </button>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                            <s:form id="logoutForm" name="logout" action="LogoutAction">
+                                <s:submit cssClass="btn btn-default btn-danger" key="btn.logout" method="execute" align="center"/>
+                            </s:form>
                         </li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-                    
+
         <div>
             <br>
             <div role="tabpanel">
@@ -69,29 +69,29 @@
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                <s:form id="ordersForm" name="order" action="OrderAction">
-                    <div role="tabpanel" class="tab-pane active" id="trees">                    
-                    <%--
-                    <c:forEach var="arvore" items="${bean.trees}">
-                        <s:checkbox name="arvores" value="${arvore.product_code}" label="${arvore.description}" />
-                    </c:forEach>
-                    --%>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="seeds">
-                    <%--
-                    <c:forEach var="semente" items="${bean.seed}">
-                        <s:checkbox name="sementes" value="${semente.product_code}" label="${semente.description}" />
-                    </c:forEach>
-                    --%>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="shrubs">
-                    <%--
-                    <c:forEach var="arbusto" items="${bean.shrub}">
-                        <s:checkbox name="arbustos" value="${arbusto.product_code}"  label="${arbusto.description}" />
-                    </c:forEach>
-                    --%>
-                    </div>
-                </s:form>
+                    <s:form id="ordersForm" name="order" action="OrderAction">
+                        <div role="tabpanel" class="tab-pane active" id="trees">                    
+                            <%--
+                            <c:forEach var="arvore" items="${bean.trees}">
+                                <s:checkbox name="arvores" value="${arvore.product_code}" label="${arvore.description}" />
+                            </c:forEach>
+                            --%>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="seeds">
+                            <%--
+                            <c:forEach var="semente" items="${bean.seed}">
+                                <s:checkbox name="sementes" value="${semente.product_code}" label="${semente.description}" />
+                            </c:forEach>
+                            --%>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="shrubs">
+                            <%--
+                            <c:forEach var="arbusto" items="${bean.shrub}">
+                                <s:checkbox name="arbustos" value="${arbusto.product_code}"  label="${arbusto.description}" />
+                            </c:forEach>
+                            --%>
+                        </div>
+                    </s:form>
                 </div>
             </div>
         </div>
