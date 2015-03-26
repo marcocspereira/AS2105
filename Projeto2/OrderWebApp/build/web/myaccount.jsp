@@ -42,7 +42,7 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-menu" id="bs-example-navbar-collapse-1">
                   <ul class="nav navbar-nav navbar-right">
-                            <li><c:out value="${bean.loginUser}"></c:out></li>
+                      <li style="margin: 12px 5px;"><c:out value="${bean.loginUser}"> </c:out></li>
                             <li>
                             <s:form id="logoutForm" name="logout" action="LogoutAction">
                                 <s:submit cssClass="btn btn-default btn-danger" key="btn.logout" method="execute" align="center"/>

@@ -50,9 +50,6 @@ public class Bean {
     private String registAddress;
     private String registPhone;
     
-    
-
-    
     @PostConstruct
     void initialize() {
         try {
