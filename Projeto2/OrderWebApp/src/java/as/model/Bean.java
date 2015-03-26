@@ -49,6 +49,8 @@ public class Bean {
     private String registLastName;
     private String registAddress;
     private String registPhone;
+    
+    
 
     
     @PostConstruct
