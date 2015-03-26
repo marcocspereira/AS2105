@@ -70,20 +70,26 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                 <s:form id="ordersForm" name="order" action="OrderAction">
-                    <div role="tabpanel" class="tab-pane active" id="trees">
+                    <div role="tabpanel" class="tab-pane active" id="trees">                    
+                    <%--
                     <c:forEach var="arvore" items="${bean.trees}">
-                        <s:checkbox name="arvores" value="${arvore.product_code}" label="${arvore.description}">
+                        <s:checkbox name="arvores" value="${arvore.product_code}" label="${arvore.description}" />
                     </c:forEach>
+                    --%>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="seeds">
+                    <%--
                     <c:forEach var="semente" items="${bean.seed}">
-                        <s:checkbox name="sementes" value="${semente.product_code}" label="${semente.description}">
+                        <s:checkbox name="sementes" value="${semente.product_code}" label="${semente.description}" />
                     </c:forEach>
+                    --%>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="shrubs">
+                    <%--
                     <c:forEach var="arbusto" items="${bean.shrub}">
-                        <s:checkbox name="arbustos" value="${arbusto.product_code}"  label="${arbusto.description}">
+                        <s:checkbox name="arbustos" value="${arbusto.product_code}"  label="${arbusto.description}" />
                     </c:forEach>
+                    --%>
                     </div>
                 </s:form>
                 </div>
