@@ -1,0 +1,107 @@
+body {
+  font-size: 16px;
+
+}
+
+h1 {
+  font-size:  50px;
+}
+
+section {
+  padding: 150px 0;
+}
+
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
+#associateAccount
+{
+display:none;
+}
+
+#loginAssociateFacebook
+{
+display:none;
+}
+
+#loginFormFacebook
+{
+display:none;
+}
+
+#anotherAccount
+{
+display:none;
+}
+
+#textfield {
+  height: 30px;
+}
+
+
+#inner {
+    margin: 0 auto;
+}
+
+#outer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-brand
+{
+    position: absolute;
+    width: 100%;
+    left: 20;
+    text-align: left;
+    margin: auto;
+}
+
+
+/* Large desktop */
+@media (min-width: 1200px) { }
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { }
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+  h1 {
+    font-size: 40px;
+  }
+  section {
+    padding: 50px 0 !important;
+  }
+  .navbar-toggle {
+    margin-top: 25px;
+    width: 50px;
+  }
+  #img-top{
+    text-align: center;
+  }
+
+  footer .pull-left {
+    display: none;
+  }
+
+  footer .pull-right{
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) { }
+
+/* Portrait phones */
+@media (max-width: 479px) { }

@@ -18,6 +18,7 @@
         <!-- Bootstrap-->
         <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="bootstrap/css/style.css">
 
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
@@ -26,8 +27,12 @@
     <sb:head/>
 
     <body>
+        
+        <s:if test="#session.login != 'true'">
+            <jsp:forward page="index.jsp" />
+        </s:if>
 
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-default navbar-static-top"  role="navigation">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -35,12 +40,9 @@
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li><c:out value="${bean.loginUser}"></c:out></li>
-                        </ul>
-
-                        <ul class="nav navbar-nav navbar-right">
+                <div class="collapse navbar-collapse navbar-menu" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav navbar-right">
+                            <li><c:out value="${bean.loginUser}"></c:out></li>
                             <li>
                             <s:form id="logoutForm" name="logout" action="LogoutAction">
                                 <s:submit cssClass="btn btn-default btn-danger" key="btn.logout" method="execute" align="center"/>
