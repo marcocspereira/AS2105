@@ -37,10 +37,10 @@
             <result name="error">/index.jsp</result>
             <!--<result name="login" type="redirectAction">/logout</result>-->
         </action>
-<!--        <action name="logout" class="sd.action.LogoutAction" method="execute">
+        <action name="LogoutAction" class="as.action.LogoutAction" method="execute">
             <result name="success">/index.jsp</result>
             <result name="login">/index.jsp</result>
-        </action>-->
+        </action>
 <!--        <action name="as.action.LoginAction">
             <result name="success">/myaccount.jsp</result>
             

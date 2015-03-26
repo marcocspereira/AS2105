@@ -210,7 +210,6 @@ public class Bean {
             result.close();
             return clientId;
         }
-
         return CMD.ERROR;
     }
 
@@ -263,7 +262,6 @@ public class Bean {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-
         return CMD.ERROR;
     }
     
