@@ -79,14 +79,14 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="seeds">
                             <%--
-                            <c:forEach var="semente" items="${bean.seed}">
+                            <c:forEach var="semente" items="${bean.seeds}">
                                 <s:checkbox name="sementes" value="${semente.product_code}" label="${semente.description}" />
                             </c:forEach>
                             --%>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="shrubs">
                             <%--
-                            <c:forEach var="arbusto" items="${bean.shrub}">
+                            <c:forEach var="arbusto" items="${bean.shrubs}">
                                 <s:checkbox name="arbustos" value="${arbusto.product_code}"  label="${arbusto.description}" />
                             </c:forEach>
                             --%>

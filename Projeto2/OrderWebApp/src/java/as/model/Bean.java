@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -50,9 +51,11 @@ public class Bean {
     private String registAddress;
     private String registPhone;
     
+    private ArrayList<Tree> trees = new ArrayList<Tree>();
+    private ArrayList<Seed> seeds = new ArrayList<Seed>();
+    private ArrayList<Shrub> shrubs = new ArrayList<Shrub>();
     
 
-    
     @PostConstruct
     void initialize() {
         try {
@@ -167,6 +170,42 @@ public class Bean {
     }
     
     
+        /**
+     * @return the trees
+     */
+    public ArrayList<Tree> getTrees() {
+        return trees;
+    }
+
+    /**
+     * @return the seeds
+     */
+    public ArrayList<Seed> getSeeds() {
+        return seeds;
+    }
+
+    /**
+     * @return the shrubs
+     */
+    public ArrayList<Shrub> getShrubs() {
+        return shrubs;
+    }
+
+    public void setTrees(ArrayList<Tree> trees) {
+        this.trees = trees;
+    }
+
+    public void setSeeds(ArrayList<Seed> seeds) {
+        this.seeds = seeds;
+    }
+
+    public void setShrubs(ArrayList<Shrub> shrubs) {
+        this.shrubs = shrubs;
+    }
+
+       
+    
+    
 
     private String md5(String s) {
         try {
@@ -266,5 +305,50 @@ public class Bean {
         }
         return CMD.ERROR;
     }
-    
+
+    public int doLoadProducts(){
+        ResultSet res = null;
+        ResultSet resultTrees = null;
+        ResultSet resultSeeds = null;
+        ResultSet resultShrubs = null;
+        
+        String msgString = null;
+        
+        String queryTrees = "Select * from " + CMD.treesTable;
+        System.out.println(queryTrees);
+        String querySeeds = "Select * from" + CMD.seedsTable;
+        System.out.println(querySeeds);
+        String queryShrubs = "Select * from" + CMD.shrubsTable;
+        System.out.println(queryShrubs);
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            connection_orderinfo = DriverManager.getConnection(ORDERINFO_DB_URL, USER, PASS);
+            statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        } catch (SQLException ex) {
+            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            resultTrees = statement_orderinfo.executeQuery(queryTrees);
+            resultSeeds = statement_orderinfo.executeQuery(querySeeds);
+            resultShrubs = statement_orderinfo.executeQuery(queryShrubs);
+            
+            while (res.next())
+                {
+                    msgString = res.getString(1) + " : " + res.getString(2) +
+                            " : $"+ res.getString(4) + " : " + res.getString(3)
+                            + " units in stock";
+
+                } // while
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return CMD.OK;
+    }
 }
