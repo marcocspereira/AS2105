@@ -16,10 +16,13 @@
         <meta name="author" content="Gonçalo Silva Pereira">
         <!--<meta name="keywords" content="sd,distributed systems,university of coimbra">-->
 
-        <link href="bootstrap/dist/css/bootstrap.css"	rel="stylesheet" media="screen">
-        <!--<link href="bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" media="screen">-->
-        <link href="bootstrap/dist/css/style.css" rel="stylesheet" media="screen">
-        <!--<link href="img/favicon.ico" rel="shortcut icon">-->
+        <!-- Bootstrap-->
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+        
         <meta name="robots" content="index, follow">
         <meta name="googlebot" content="index, follow">
 
