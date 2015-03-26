@@ -42,14 +42,16 @@
             </div>
             <div class="span5">
                 <h4 > Registo: </h4>
-                <s:form id="registForm" name="regist" action="regist">
-                    <s:textfield id="textfield" name="bean.registName" label="Name" size="20" placeholder="Introduza o nome"/>
-                    <s:textfield id="textfield" name="bean.registEmail" label="Email" size="20" placeholder="Introduza o email"/>
+                <s:form id="registForm" name="regist" action="RegistAction">
+                    <s:textfield id="textfield" name="bean.registEmail" label="Email" size="50" placeholder="Introduza o email"/>
                     <s:textfield id="textfield" name="bean.registUser" label="Username" size="20" placeholder="Introduza o username"/>
+                    <s:textfield id="textfield" name="bean.registFirstName" label="Firstname" size="25" placeholder="Introduza o primeiro nome"/>
+                    <s:textfield id="textfield" name="bean.registLastName" label="Lastname" size="25" placeholder="Introduza o último nome"/>
+                    <s:textfield id="textfield" name="bean.registAddress" label="Address" size="100" placeholder="Introduza a morada"/>
+                    <s:textfield id="textfield" name="bean.registPhone" label="Phone" size="20" placeholder="Introduza o telefone"/>
                     <s:password id="textfield" name="bean.registPass" label="Password" size="20" placeholder="Introduza a password"/>
                     <s:password id="textfield" name="bean.registPass2" label="Password" size="20" placeholder="Confirme a password"/>
                     <s:submit cssClass="btn btn-medium btn-primary" key="btn.regist" method="execute" align="center"/>
-
                 </s:form>
             </div>
         </div>

@@ -10,11 +10,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 
 /**
  *
@@ -39,15 +41,19 @@ public class Bean {
     private String loginUser;
     private String loginPass;
 
-    private String registName;
     private String registEmail;
     private String registUser;
     private String registPass;
     private String registPass2;
+    private String registFirstName;
+    private String registLastName;
+    private String registAddress;
+    private String registPhone;
 
-    public Bean() {
+    
+    @PostConstruct
+    void initialize() {
         try {
-
             Class.forName("com.mysql.jdbc.Driver");
 
             connection_orderinfo = DriverManager.getConnection(ORDERINFO_DB_URL, USER, PASS);
@@ -61,6 +67,13 @@ public class Bean {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        try {
+//            Properties prop = new Properties();
+//            prop.load(new FileInputStream("config.properties"));
+//            host = prop.getProperty("RMI");
+//        } catch (IOException ex) {
+//            Logger.getLogger(DirestrutsBean.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     public String getLoginUser() {
@@ -77,14 +90,6 @@ public class Bean {
 
     public void setLoginPass(String loginPass) {
         this.loginPass = loginPass;
-    }
-
-    public String getRegistName() {
-        return registName;
-    }
-
-    public void setRegistName(String registName) {
-        this.registName = registName;
     }
 
     public String getRegistEmail() {
@@ -118,6 +123,48 @@ public class Bean {
     public void setRegistPass2(String registPass2) {
         this.registPass2 = registPass2;
     }
+
+    public static Connection getConnection_orderinfo() {
+        return connection_orderinfo;
+    }
+
+    public static void setConnection_orderinfo(Connection connection_orderinfo) {
+        Bean.connection_orderinfo = connection_orderinfo;
+    }
+
+    public String getRegistFirstName() {
+        return registFirstName;
+    }
+
+    public void setRegistFirstName(String registFirstName) {
+        this.registFirstName = registFirstName;
+    }
+
+    public String getRegistLastName() {
+        return registLastName;
+    }
+
+    public void setRegistLastName(String registLastName) {
+        this.registLastName = registLastName;
+    }
+
+    public String getRegistAddress() {
+        return registAddress;
+    }
+
+    public void setRegistAddress(String registAddress) {
+        this.registAddress = registAddress;
+    }
+
+    public String getRegistPhone() {
+        return registPhone;
+    }
+
+    public void setRegistPhone(String registPhone) {
+        this.registPhone = registPhone;
+    }
+    
+    
 
     private String md5(String s) {
         try {
@@ -168,10 +215,56 @@ public class Bean {
     }
 
     public int doLogout() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return CMD.OK;
     }
     
     public int doRegist() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String query = "Select username from " + CMD.usersTable + " where username ='" + registUser + "'";
+        System.out.println(query);
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            connection_orderinfo = DriverManager.getConnection(ORDERINFO_DB_URL, USER, PASS);
+            statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        } catch (SQLException ex) {
+            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            ResultSet result = statement_orderinfo.executeQuery(query);
+
+            if (!result.next()) {
+
+                PreparedStatement pst = connection_orderinfo.prepareStatement("Insert into " + CMD.usersTable
+//                        + " (name,username,email,password,deicoins,\"ONLINE\")"
+                        + "(username, email, password, first_name, last_name, address, phone)"
+                        + " values(?,?,?,?,?,?,?)");
+
+                pst.setString(1, registUser);
+                pst.setString(2, registEmail);
+                pst.setString(3, registPass);
+                pst.setString(4, registFirstName);
+                pst.setString(5, registLastName);
+                pst.setString(6, registAddress);
+                pst.setString(7, registPhone);
+                pst.executeUpdate();
+
+                result.close();
+                pst.close();
+                return CMD.OK;
+            } else {
+                result.close();
+                return CMD.ERROR;
+            }
+
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        return CMD.ERROR;
     }
+    
 }

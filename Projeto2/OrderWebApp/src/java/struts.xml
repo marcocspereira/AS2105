@@ -31,6 +31,16 @@
             <result name="success">/myaccount.jsp</result>
             <result name="error">/index.jsp</result>
         </action>
+        <action name="RegistAction" class="as.action.RegistAction" method="execute">
+            <result name="success">/myaccount.jsp</result>
+            <result name="input">/index.jsp</result>
+            <result name="error">/index.jsp</result>
+            <!--<result name="login" type="redirectAction">/logout</result>-->
+        </action>
+<!--        <action name="logout" class="sd.action.LogoutAction" method="execute">
+            <result name="success">/index.jsp</result>
+            <result name="login">/index.jsp</result>
+        </action>-->
 <!--        <action name="as.action.LoginAction">
             <result name="success">/myaccount.jsp</result>
             
