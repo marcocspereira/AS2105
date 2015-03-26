@@ -69,7 +69,7 @@
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                <s:form>
+                <s:form id="ordersForm" name="order" action="OrderAction">
                     <div role="tabpanel" class="tab-pane active" id="trees">
                     <c:forEach var="arvore" items="${bean.trees}">
                         <s:checkbox name="arvores" value="${arvore.product_code}" label="${arvore.description}">
