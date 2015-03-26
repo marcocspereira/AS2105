@@ -27,6 +27,12 @@ public class RegistAction extends ActionSupport implements SessionAware {
         if (getBean().getRegistUser().length() == 0) {
             addFieldError("bean.registUser", getText("registUser.required"));
         }
+        if (getBean().getRegistAddress().length() == 0) {
+            addFieldError("bean.registAddress", getText("registAddress.required"));
+        }
+        if (getBean().getRegistPhone().length() == 0) {
+            addFieldError("bean.registPhone", getText("registPhone.required"));
+        }
         if (getBean().getRegistPass().length() == 0) {
             addFieldError("bean.registPass", getText("registPass.required"));
         }
