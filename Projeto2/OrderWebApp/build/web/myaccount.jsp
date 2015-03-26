@@ -1,7 +1,8 @@
-<%@ taglib prefix="s" uri="/struts-tags"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="sb" uri="/struts-bootstrap-tags"%>
+<%@ taglib prefix="sb" uri="/struts-bootstrap-tags" %>
 <%--<%@ taglib prefix="sj" uri="/struts-jquery-tags"%>--%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
@@ -71,29 +72,48 @@
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <s:form id="ordersForm" name="order" action="OrderAction">
-                        <div role="tabpanel" class="tab-pane active" id="trees">                    
-                            <%--
-                            <c:forEach var="arvore" items="${bean.trees}">
-                                <s:checkbox name="arvores" value="${arvore.product_code}" label="${arvore.description}" />
+                    <%--<s:form id="ordersForm" name="order" action="OrderAction">--%>
+                        <div role="tabpanel" class="tab-pane active" id="trees">      
+                            <%--<c:out value="${bean.trees.size}"></c:out>--%>
+                            
+                            <c:forEach var="arvore" items="${bean.trees}" varStatus="myIndex">
+                                <s:checkbox name="checkbox" value="0">
+                                <c:out value="${arvore.product_code}"> </c:out>
+                                <c:out value="${arvore.description}"> </c:out>
+                                <c:out value="${arvore.quantity}"> </c:out>
+                                <c:out value="${arvore.price}"> </c:out>
+                                </s:checkbox>
+                                <br>
+                                <%--<s:checkbox name="arvores" value="${arvore.product_code}" />--%>
                             </c:forEach>
-                            --%>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="seeds">
-                            <%--
-                            <c:forEach var="semente" items="${bean.seeds}">
-                                <s:checkbox name="sementes" value="${semente.product_code}" label="${semente.description}" />
+                            <c:forEach var="arvore" items="${bean.seeds}">
+                                <%--<s:checkbox name="seeds(${myIndex})" value="" />--%>
+                                <c:out value="${arvore.product_code}"> </c:out>
+                                <c:out value="${arvore.description}"> </c:out>
+                                <c:out value="${arvore.quantity}"> </c:out>
+                                <c:out value="${arvore.price}"> </c:out>
+                                <br>
                             </c:forEach>
-                            --%>
+                            <%--<c:forEach var="semente" items="${bean.seeds}">--%>
+                                <%--<s:checkbox name="sementes" value="${semente.product_code}" label="${semente.description}" />--%>
+                            <%--</c:forEach>--%>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="shrubs">
-                            <%--
-                            <c:forEach var="arbusto" items="${bean.shrubs}">
-                                <s:checkbox name="arbustos" value="${arbusto.product_code}"  label="${arbusto.description}" />
+                            <c:forEach var="arvore" items="${bean.shrubs}">
+                                <c:out value="${arvore.product_code}"> </c:out>
+                                <c:out value="${arvore.description}"> </c:out>
+                                <c:out value="${arvore.quantity}"> </c:out>
+                                <c:out value="${arvore.price}"> </c:out>
+                                <br>
+                                <%--<s:checkbox name="arvores" value="<c:out value='${arvore.product_code}'/>" />--%>
                             </c:forEach>
-                            --%>
+                            <%--<c:forEach var="arbusto" items="${bean.shrubs}">--%>
+                                <%--<s:checkbox name="arbustos" value="${arbusto.product_code}"  label="${arbusto.description}" />--%>
+                            <%--</c:forEach>--%>
                         </div>
-                    </s:form>
+                    <%--</s:form>--%>
                 </div>
             </div>
         </div>

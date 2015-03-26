@@ -51,9 +51,9 @@ public class Bean {
     private String registAddress;
     private String registPhone;
     
-    private ArrayList<Tree> trees = new ArrayList<Tree>();
-    private ArrayList<Seed> seeds = new ArrayList<Seed>();
-    private ArrayList<Shrub> shrubs = new ArrayList<Shrub>();
+    private ArrayList<Product> trees = new ArrayList<Product>();
+    private ArrayList<Product> seeds = new ArrayList<Product>();
+    private ArrayList<Product> shrubs = new ArrayList<Product>();
     
 
     @PostConstruct
@@ -169,43 +169,29 @@ public class Bean {
         this.registPhone = registPhone;
     }
     
-    
-        /**
-     * @return the trees
-     */
-    public ArrayList<Tree> getTrees() {
+    public ArrayList<Product> getTrees() {
         return trees;
     }
 
-    /**
-     * @return the seeds
-     */
-    public ArrayList<Seed> getSeeds() {
+    public ArrayList<Product> getSeeds() {
         return seeds;
     }
 
-    /**
-     * @return the shrubs
-     */
-    public ArrayList<Shrub> getShrubs() {
+    public ArrayList<Product> getShrubs() {
         return shrubs;
     }
 
-    public void setTrees(ArrayList<Tree> trees) {
+    public void setTrees(ArrayList<Product> trees) {
         this.trees = trees;
     }
 
-    public void setSeeds(ArrayList<Seed> seeds) {
+    public void setSeeds(ArrayList<Product> seeds) {
         this.seeds = seeds;
     }
 
-    public void setShrubs(ArrayList<Shrub> shrubs) {
+    public void setShrubs(ArrayList<Product> shrubs) {
         this.shrubs = shrubs;
     }
-
-       
-    
-    
 
     private String md5(String s) {
         try {
@@ -305,49 +291,40 @@ public class Bean {
         }
         return CMD.ERROR;
     }
-
-    public int doLoadProducts(){
-        ResultSet res = null;
-        ResultSet resultTrees = null;
-        ResultSet resultSeeds = null;
-        ResultSet resultShrubs = null;
-        
-        String msgString = null;
-        
-        String queryTrees = "Select * from " + CMD.treesTable;
-        System.out.println(queryTrees);
-        String querySeeds = "Select * from" + CMD.seedsTable;
-        System.out.println(querySeeds);
-        String queryShrubs = "Select * from" + CMD.shrubsTable;
-        System.out.println(queryShrubs);
-        
+    
+    public ArrayList<Product> returnProduts(String table) {
+        String query = "Select * from " + table;
+        ResultSet result = null;
+        ArrayList<Product> products = new ArrayList<>();
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connection_orderinfo = DriverManager.getConnection(ORDERINFO_DB_URL, USER, PASS);
-            statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            connection_inventory = DriverManager.getConnection(INVENTORY_DB_URL, USER, PASS);
+            statement_inventory = connection_inventory.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            result = statement_inventory.executeQuery(query);
+            
+            while (result.next())
+            {
+//                TODO Correct ParseFloat to last parameter
+                Product product = new Product(result.getString(1), result.getString(2), Integer.parseInt(result.getString(3)), Float.parseFloat(result.getString(4)));
+                products.add(product);
+            } // while
+                    
         } catch (SQLException ex) {
             Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        try {
-            resultTrees = statement_orderinfo.executeQuery(queryTrees);
-            resultSeeds = statement_orderinfo.executeQuery(querySeeds);
-            resultShrubs = statement_orderinfo.executeQuery(queryShrubs);
-            
-            while (res.next())
-                {
-                    msgString = res.getString(1) + " : " + res.getString(2) +
-                            " : $"+ res.getString(4) + " : " + res.getString(3)
-                            + " units in stock";
+        return products;
+    }
 
-                } // while
-            
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public int doLoadProducts(){
+        trees = returnProduts(CMD.treesTable);
+        seeds = returnProduts(CMD.seedsTable);
+        shrubs = returnProduts(CMD.shrubsTable);
+        
+        System.out.println(trees.size());
+        System.out.println(seeds.size());
+        System.out.println(shrubs.size());
         
         return CMD.OK;
     }

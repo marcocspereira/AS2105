@@ -9,13 +9,13 @@ package as.model;
  *
  * @author Marco
  */
-public abstract class Product {
+public class Product {
     private String product_code;
     private String description;
     private int quantity;
-    private int price;  /*multiplicar por 100 qdo vem da BD. Dividir por 100 quando vai para a BD*/
+    private float price;  /*multiplicar por 100 qdo vem da BD. Dividir por 100 quando vai para a BD*/
     
-    public Product(String product_code, String description, int quantity, int price){
+    public Product(String product_code, String description, int quantity, float price){
         this.product_code = product_code;
         this.description = description;
         this.quantity = quantity;
@@ -67,14 +67,14 @@ public abstract class Product {
     /**
      * @return the price
      */
-    public double getPrice() {
+    public float getPrice() {
         return price;
     }
 
     /**
      * @param price the price to set
      */
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
     

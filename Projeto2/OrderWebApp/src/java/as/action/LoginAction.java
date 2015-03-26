@@ -30,6 +30,7 @@ public class LoginAction extends ActionSupport implements SessionAware {
             }
             if (getBean().getLoginUser() != null && getBean().getLoginPass() != null && getBean().doLogin() > 0)
             {
+                getBean().doLoadProducts();
                 session.put("login", "true");
                 addActionError(getText("login.ok"));
                 System.out.println(SUCCESS);
