@@ -66,7 +66,7 @@ hs_err_pid*
 # Created by https://www.gitignore.io
 
 ### NetBeans ###
-nbproject/private/
+nbproject/private/*.*
 build/
 nbbuild/
 dist/
