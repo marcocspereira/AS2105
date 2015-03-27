@@ -31,6 +31,12 @@
                 if (input.value > limit)
                     input.value = limit;
             }
+            
+            function addToCart(to_buy, code_product, uprice){
+                var result = parseInt(to_buy)*parseInt(uprice);
+                $('#text1').val('cona');
+            }
+            
         </script>
 
     </head>
@@ -67,8 +73,7 @@
             <br>
             
             <h3><span class=" glyphicon glyphicon-shopping-cart glyphicon-align-left" aria-hidden="true"></span> Cart</h3>    
-            <table>
-            </table>
+            <textarea name="Text1" id="text1"></textarea>
             
             <s:form id="ordersForm" name="order" action="OrderAction">
                 <h3><span class="glyphicon glyphicon-tree-conifer glyphicon-align-left" aria-hidden="true"></span> Trees</h3>
@@ -87,13 +92,10 @@
                             <td><c:out value="${arvore.quantity}" /></td>
                             <td><c:out value="${arvore.price}" /></td>
                             <td>
-                                <input type="number" class="input_text" onchange="handleChange(this,${arvore.quantity});" onkeyup="handleChange(this,${arvore.quantity});" />                                
-                            </td>                           
+                                <input type="number" class="input_text" onchange="handleChange(this,${arvore.quantity});" onkeyup="handleChange(this,${arvore.quantity});" onblur="addToCart(this,${arvore.product_code},${arvore.price});" />                                
+                            </td>
                         </tr>
                     </c:forEach>
-                    <tr>
-                        <td colspan="5" class="addToChart"><input type="button" value="Add to Cart!"></td>
-                    </tr>
                 </table>
 
                 <h3><span class="glyphicon glyphicon-grain glyphicon-align-left" aria-hidden="true"></span> Seeds</h3>
