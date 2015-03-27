@@ -20,6 +20,28 @@ section {
   -webkit-user-drag: element;
 }
 
+.input_text{
+    width:100px;
+    text-align: center;
+}
+
+.contentor_div{
+    margin-left: 10%;
+}
+
+.contentor_div td{
+    min-width: 200px;
+}
+
+.addToChart{
+    height: 50px;
+    text-align: center;
+}
+
+.header_td{
+    font-weight: bold;
+}
+
 #associateAccount
 {
 display:none;

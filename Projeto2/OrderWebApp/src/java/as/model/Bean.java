@@ -55,7 +55,10 @@ public class Bean {
     private ArrayList<Product> seeds = new ArrayList<Product>();
     private ArrayList<Product> shrubs = new ArrayList<Product>();
     
-
+    private ArrayList<Product> checkList = new ArrayList<Product>();
+    
+    
+    
     @PostConstruct
     void initialize() {
         try {
