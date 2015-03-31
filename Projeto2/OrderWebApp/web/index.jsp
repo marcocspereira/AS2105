@@ -23,7 +23,7 @@
 
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-        
+
         <meta name="robots" content="index, follow">
         <meta name="googlebot" content="index, follow">
 
@@ -39,27 +39,28 @@
                 <jsp:forward page="myaccount.jsp" />
             </s:if>
         </s:if>
-        
+
         <s:if test="hasActionErrors()">
-   <div class="errors">
-      <s:actionerror/>
-   </div>
-</s:if>
-        
-          <div id="outer">
-        <div id="inner" class="row">
-             <div class="span4">
-                 
-                 <h4 id="oneAccount"> Login: </h4>
-                 
-                <s:form id="loginForm" name="login" action="LoginAction">
-                    <s:textfield id="textfield" name="bean.loginUser" label="Username" size="20" placeholder="Introduza o username"/>
-                    <s:password id="textfield" name="bean.loginPass" label="Password" size="20" placeholder="Introduza o username"/>
-                    <s:submit cssClass="btn btn-medium btn-primary" key="btn.login" method="execute" align="center"/>
-                </s:form>
+            <div class="alert alert-dannger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <s:actionerror/>
             </div>
-<!--            <div class="span5">
-                <h4 > Registo: </h4>
+        </s:if>
+
+        <div id="outer">
+            <div id="inner" class="row">
+                <div class="span4">
+
+                    <h4 id="oneAccount"> Login: </h4>
+
+                    <s:form id="loginForm" name="login" action="LoginAction">
+                        <s:textfield id="textfield" name="bean.loginUser" label="Username" size="20" placeholder="Introduza o username"/>
+                        <s:password id="textfield" name="bean.loginPass" label="Password" size="20" placeholder="Introduza o username"/>
+                        <s:submit cssClass="btn btn-medium btn-primary" key="btn.login" method="execute" align="center"/>
+                    </s:form>
+                </div>
+                <!--            <div class="span5">
+                                <h4 > Registo: </h4>
                 <s:form id="registForm" name="regist" action="RegistAction">
                     <s:textfield id="textfield" name="bean.registEmail" label="Email" size="50" placeholder="Introduza o email"/>
                     <s:textfield id="textfield" name="bean.registUser" label="Username" size="20" placeholder="Introduza o username"/>
@@ -72,8 +73,8 @@
                     <s:submit cssClass="btn btn-medium btn-primary" key="btn.regist" method="execute" align="center"/>
                 </s:form>
             </div>-->
+            </div>
         </div>
-    </div>
     </body>
 </html>
 

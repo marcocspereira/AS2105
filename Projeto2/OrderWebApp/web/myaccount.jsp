@@ -25,11 +25,15 @@
         <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 
         <script type="text/javascript">
+            var total = 0.0;
+            
             function copyToCart(celula) {
                 // window.alert(celula);
                 celula = celula.trim();
                 var content = celula + ";\n";
                 $('#text1').append(content);
+                celula = celula.split("|");
+                total += parseFloat((celula[celula.length-1]));
             }
         </script>
 
@@ -45,7 +49,7 @@
             <jsp:forward page="admin.jsp" />
         </s:if>
 
-        
+
 
         <nav class="navbar navbar-default navbar-static-top"  role="navigation">
             <div class="container-fluid">
@@ -68,99 +72,28 @@
             </div><!-- /.container-fluid -->
         </nav>
 
-                            <s:if test="hasActionMessages()">
-            <div class="welcome">
+        <s:if test="hasActionMessages()">
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <s:actionmessage/>
             </div>
         </s:if>
-                            
+
         <div class="contentor_div">
             <br>
 
             <h3><span class=" glyphicon glyphicon-shopping-cart glyphicon-align-left" aria-hidden="true"></span> Cart</h3>    
 
-        <s:form id="ordersForm" name="order" action="OrderAction" cssClass="formToSubmit">
-                <s:textfield id="textfield" name="bean.orderFirstName" label="Primeiro Nome" placeholder="Primeiro nome do cliente"/>
-                <s:textfield id="textfield" name="bean.orderLastName" label="?ltimo Nome" placeholder="?ltimo nome do cliente"/>
-                <s:textfield id="textfield" name="bean.orderAddress" label="Morada" placeholder="Morada do cliente"/>
-                <s:textfield id="textfield" name="bean.orderPhoneNumber" label="Telefone" placeholder="Telefone do cliente"/>
+            <s:form id="ordersForm" name="order" action="OrderAction" cssClass="formToSubmit">
+                <s:textfield id="textfield" name="bean.orderFirstName" placeholder="Primeiro nome do cliente"/>
+                <s:textfield id="textfield" name="bean.orderLastName" placeholder="Último nome do cliente"/>
+                <s:textfield id="textfield" name="bean.orderAddress" placeholder="Morada do cliente"/>
+                <s:textfield id="textfield" name="bean.orderPhoneNumber" placeholder="Telefone do cliente"  />
 
                 <s:textarea name="Text1" id="text1" cssClass="text1" disabled="true" />
 
                 <s:submit cssClass="btn btn-medium btn-primary" key="btn.order" method="execute"/>
-            <textarea name="Text1" id="text1"></textarea>
-        </s:form>
-                <h3><span class="glyphicon glyphicon-tree-conifer glyphicon-align-left" aria-hidden="true"></span> Trees</h3>
-                <table>
-                    <tr>
-                        <td class="header_td">ID</td>
-                        <td class="header_td">Description</td>
-                        <td class="header_td">Quantity</td>
-                        <td class="header_td">Price/Unity</td>
-                        <td class="header_td">Add</td>
-                    </tr>
-                    <c:forEach var="arvore" items="${bean.trees}" varStatus="myIndex">
-                        <tr>
-                            <td><c:out value="${arvore.product_code}" /></td>
-                            <td><c:out value="${arvore.description}" /></td>
-                            <td><c:out value="${arvore.quantity}" /></td>
-                            <td><c:out value="${arvore.price}" /></td>
-                            <td>
-                                <input type="number" class="input_text" onchange="handleChange(this,${arvore.quantity});" onkeyup="handleChange(this,${arvore.quantity});" onblur="addToCart(this,${arvore.product_code},${arvore.price});" />                                
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
-
-                <h3><span class="glyphicon glyphicon-grain glyphicon-align-left" aria-hidden="true"></span> Seeds</h3>
-                <table>
-                    <tr>
-                        <td class="header_td">ID</td>
-                        <td class="header_td">Description</td>
-                        <td class="header_td">Quantity</td>
-                        <td class="header_td">Price/Unity</td>
-                        <td class="header_td">Add</td>
-                    </tr>
-                    <c:forEach var="arvore" items="${bean.seeds}" varStatus="myIndex">
-                        <tr>
-                            <td><c:out value="${arvore.product_code}" /></td>
-                            <td> <c:out value="${arvore.description}" /></td>
-                            <td><c:out value="${arvore.quantity}" /></td>
-                            <td><c:out value="${arvore.price}" /></td>
-                            <td>
-                                <input type="number" class="input_text" onchange="handleChange(this,${arvore.quantity});" onkeyup="handleChange(this,${arvore.quantity});" />                                
-                            </td>                               
-                        </tr>
-                    </c:forEach>
-                    <tr>
-                        <td colspan="5" class="addToChart"><input type="button" value="Add to Cart!"></td>
-                    </tr>
-                </table>
-
-                <h3><span class="glyphicon glyphicon-certificate glyphicon-align-left" aria-hidden="true"></span> Shrubs</h3>
-                <table>
-                    <tr>
-                        <td class="header_td">ID</td>
-                        <td class="header_td">Description</td>
-                        <td class="header_td">Quantity</td>
-                        <td class="header_td">Price/Unity</td>
-                        <td class="header_td">Add</td>
-                    </tr>
-                    <c:forEach var="arvore" items="${bean.shrubs}" varStatus="myIndex">
-                        <tr>
-                            <td><c:out value="${arvore.product_code}" /></td>
-                            <td> <c:out value="${arvore.description}" /></td>
-                            <td><c:out value="${arvore.quantity}" /></td>
-                            <td><c:out value="${arvore.price}" /></td>
-                            <td>
-                                <input type="number" class="input_text" onchange="handleChange(this,${arvore.quantity});" onkeyup="handleChange(this,${arvore.quantity});" />                                
-                            </td>                              
-                        </tr>
-                    </c:forEach>
-                    <tr>
-                        <td colspan="5" class="addToChart"><input type="button" value="Add to Cart!"></td>
-                    </tr>
-                </table>
+            </s:form>
 
             <br />
 
@@ -194,7 +127,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tr>
-                                    <td><b>C?digo | Descri??o | Quantidade | Pre?o</b></td>
+                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
                                 </tr>
                                 <c:forEach var="arvore" items="${bean.trees}" varStatus="myIndex">
                                     <tr>
@@ -211,7 +144,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tr>
-                                    <td><b>C?digo | Descri??o | Quantidade | Pre?o</b></td>
+                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
                                 </tr>
                                 <c:forEach var="arvore" items="${bean.seeds}" varStatus="myIndex">
                                     <tr>
@@ -228,7 +161,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tr>
-                                    <td><b>C?digo | Descri??o | Quantidade | Pre?o</b></td>
+                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
                                 </tr>
                                 <c:forEach var="arvore" items="${bean.shrubs}" varStatus="myIndex">
                                     <tr>

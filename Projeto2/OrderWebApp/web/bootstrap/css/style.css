@@ -27,21 +27,30 @@ section {
 }
 
 
+
+
 .contentor_div{
     margin-left: 10%;
     width: 70%;
 }
 
 .formToSubmit{
-    background-color: red;
-    wdith:100%;
+    width:100%;
+    float: left;
 }
 
 .text1{
-    height: 100px;
-    width: 100% !important;
-    background-color: red;
+    height: 300px;
+    width: 100%;
+    resize: vertical;
 }
+
+.formToSubmit textfield{
+    width:100%;
+    
+}
+
+
 
 #associateAccount
 {
@@ -64,7 +73,8 @@ display:none;
 }
 
 #textfield {
-  height: 30px;
+  height: 50px;
+  width: 100%;
 }
 
 
