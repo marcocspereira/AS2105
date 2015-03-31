@@ -25,18 +25,21 @@
         <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 
         <script type="text/javascript">
-            function handleChange(input, limit) {
-                if (input.value < 0)
-                    input.value = 0;
-                if (input.value > limit)
-                    input.value = limit;
+            function copyToCart(celula) {
+                // window.alert(celula);
+                celula = celula.trim();
+                var content = celula + ";\n";
+                $('#text1').append(content);
             }
 
+<<<<<<< HEAD
+=======
             function addToCart(to_buy, code_product, uprice) {
                 var result = parseInt(to_buy) * parseInt(uprice);
                 $('#text1').val('cona');
             }
 
+>>>>>>> 21eb3888f33c10559624c3e5ff93b4415e775bd5
         </script>
 
     </head>
@@ -84,6 +87,17 @@
             <br>
 
             <h3><span class=" glyphicon glyphicon-shopping-cart glyphicon-align-left" aria-hidden="true"></span> Cart</h3>    
+<<<<<<< HEAD
+        <s:form id="ordersForm" name="order" action="OrderAction" cssClass="formToSubmit">
+                <s:textfield id="textfield" name="bean.orderFirstName" label="Primeiro Nome" placeholder="Primeiro nome do cliente"/>
+                <s:textfield id="textfield" name="bean.orderLastName" label="Último Nome" placeholder="Último nome do cliente"/>
+                <s:textfield id="textfield" name="bean.orderAddress" label="Morada" placeholder="Morada do cliente"/>
+                <s:textfield id="textfield" name="bean.orderPhoneNumber" label="Telefone" placeholder="Telefone do cliente"/>
+
+                <s:textarea name="Text1" id="text1" cssClass="text1" disabled="true" />
+
+                <s:submit cssClass="btn btn-medium btn-primary" key="btn.order" method="execute"/>
+=======
             <textarea name="Text1" id="text1"></textarea>
 
             <s:form id="ordersForm" name="order" action="OrderAction">
@@ -158,7 +172,91 @@
                         <td colspan="5" class="addToChart"><input type="button" value="Add to Cart!"></td>
                     </tr>
                 </table>
+>>>>>>> 21eb3888f33c10559624c3e5ff93b4415e775bd5
             </s:form>
+
+            <br />
+
+            <div role="tabpanel">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#trees" aria-controls="trees" role="tab" data-toggle="tab">
+                            <span class="glyphicon glyphicon-tree-conifer glyphicon-align-left" aria-hidden="true"></span>
+                            Trees
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#seeds" aria-controls="seeds" role="tab" data-toggle="tab">
+                            <span class="glyphicon glyphicon-grain glyphicon-align-left" aria-hidden="true"></span> Seeds
+                            Seeds
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#shrubs" aria-controls="shrubs" role="tab" data-toggle="tab">
+                            <span class="glyphicon glyphicon-certificate glyphicon-align-left" aria-hidden="true"></span>
+                            Shrubs
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="trees">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
+                                </tr>
+                                <c:forEach var="arvore" items="${bean.trees}" varStatus="myIndex">
+                                    <tr>
+                                        <td onclick="copyToCart(this.innerHTML)">
+                                            <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />                                            
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="seeds">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
+                                </tr>
+                                <c:forEach var="arvore" items="${bean.seeds}" varStatus="myIndex">
+                                    <tr>
+                                        <td onclick="copyToCart(this.innerHTML)">
+                                            <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="shrubs">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
+                                </tr>
+                                <c:forEach var="arvore" items="${bean.shrubs}" varStatus="myIndex">
+                                    <tr>
+                                        <td onclick="copyToCart(this.innerHTML)">
+                                            <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
 
         </div>
 

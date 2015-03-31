@@ -26,22 +26,21 @@ section {
     text-align: center;
 }
 
+
 .contentor_div{
     margin-left: 10%;
+    width: 70%;
 }
 
-.contentor_div td{
-    min-width: 150px;
+.formToSubmit{
+    background-color: red;
+    wdith:100%;
 }
 
-
-.header_td{
-    font-weight: bold;
-}
-
-#text1{
+.text1{
     height: 100px;
-    width: 80%;
+    width: 100% !important;
+    background-color: red;
 }
 
 #associateAccount
