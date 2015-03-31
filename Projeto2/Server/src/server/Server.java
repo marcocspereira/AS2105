@@ -39,10 +39,14 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
     static Statement statement_orderinfo;
-    static Statement statement_inventory;
     static Connection connection_orderinfo;
+    
+    static Statement statement_inventory;
     static Connection connection_inventory;
     
+    static Statement statement_users;
+    static Connection connection_users;
+  
     private ArrayList<Product> trees = new ArrayList<Product>();
     private ArrayList<Product> seeds = new ArrayList<Product>();
     private ArrayList<Product> shrubs = new ArrayList<Product>();
@@ -74,21 +78,28 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             Class.forName("com.mysql.jdbc.Driver");
             
             String dbHostInventory = prop.getProperty("INVENTORY_DB_URL");
+            String userInventory = prop.getProperty("USER_INVENTORY_DB");
+            String passInventory = prop.getProperty("PASS_INVENTORY_DB");
+            connection_inventory = DriverManager.getConnection(dbHostInventory, userInventory, passInventory);
+            statement_inventory = connection_inventory.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+          
+            System.out.println("Ligado a BD Inventory com sucesso");
+            
             String dbHostOrderInfo = prop.getProperty("ORDERINFO_DB_URL");
-            
-            String user = prop.getProperty("USER");
-            String pass = prop.getProperty("PASS");
-            
-//            connection = DriverManager.getConnection(dbHost, "project", "project");
-//			connection = DriverManager.getConnection("jdbc:oracle:thin:@10.211.55.3:1521:xe", "project", "project");
-
-            connection_orderinfo = DriverManager.getConnection(dbHostOrderInfo, user, pass);
+            String userOrderInfo = prop.getProperty("USER_ORDERINFO_DB");
+            String passOrderInfo = prop.getProperty("PASS_ORDERINFO_DB");
+            connection_orderinfo = DriverManager.getConnection(dbHostOrderInfo, userOrderInfo, passOrderInfo);
             statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-            connection_inventory = DriverManager.getConnection(dbHostInventory, user, pass);
-            statement_inventory = connection_inventory.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            System.out.println("Ligado a BD OrderInfo com sucesso");
+            
+            String dbHostUsers = prop.getProperty("USERS_DB_URL");
+            String userUsers = prop.getProperty("USER_USERS_DB");
+            String passUsers = prop.getProperty("PASS_USERS_DB");
+            connection_orderinfo = DriverManager.getConnection(dbHostUsers, userUsers, passUsers);
+            statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-            System.out.println("Ligado a BD com sucesso");
+            System.out.println("Ligado a BD OrderInfo com sucesso");
         } catch (SQLException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
