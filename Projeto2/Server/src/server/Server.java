@@ -99,7 +99,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             System.getProperties().put("java.security.policy", "policy.all");
             Server s = new Server();
             Registry r = LocateRegistry.createRegistry(7000);
-            r.rebind("ideabroker", s);
+            r.rebind("server", s);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
