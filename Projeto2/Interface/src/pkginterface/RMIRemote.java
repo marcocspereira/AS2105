@@ -19,6 +19,6 @@ public interface RMIRemote extends Remote{
     int doLogout() throws RemoteException;
     int doRegist(String registUser, String registEmail, String registPass, String registFirstName, String registLastName, String registAddress, String registPhone)throws RemoteException;
     ArrayList<Product> returnProduts(String table)throws RemoteException;
-    int doWebOrders(String orderFirstName, String orderLastName, String orderAddress, String orderPhoneNumber, ArrayList<Product> checkList) throws RemoteException;
+    int doWebOrders(String orderFirstName, String orderLastName, String orderAddress, String orderPhoneNumber, float orderTotalCost, ArrayList<Product> checkList) throws RemoteException;
     
 }

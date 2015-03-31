@@ -63,6 +63,7 @@ public class Bean {
     private String product_name;
     private String product_quantity;
     private String product_price;    
+    private float orderTotalCost = 0;
 
     private ArrayList<Product> trees = new ArrayList<Product>();
     private ArrayList<Product> seeds = new ArrayList<Product>();
@@ -348,6 +349,14 @@ public class Bean {
     public void setCheckList(ArrayList<Product> checkList) {
         this.checkList = checkList;
     }
+
+    public float getOrderTotalCost() {
+        return orderTotalCost;
+    }
+
+    public void setOrderTotalCost(float orderTotalCost) {
+        this.orderTotalCost = orderTotalCost;
+    }
     
     
     
@@ -418,7 +427,7 @@ public class Bean {
     public int doWebOrders() throws RemoteException{
         init();
         doOrder(orderCart); // vai fazer parse ao carrinho de compras
-        return server.doWebOrders(orderFirstName, orderLastName, orderAddress, orderPhoneNumber, checkList);
+        return server.doWebOrders(orderFirstName, orderLastName, orderAddress, orderPhoneNumber, orderTotalCost, checkList);
     }
 //    public int doRegist() {
 //        String query = "Select username from " + CMD.usersTable + " where username ='" + registUser + "'";
@@ -536,6 +545,7 @@ public class Bean {
                 if(i == 3){
                     token = token.replaceAll("\\s","");
                     product_price = token;
+                    orderTotalCost += Float.parseFloat(product_price);
                 } // if
                 i++;
             } // for token

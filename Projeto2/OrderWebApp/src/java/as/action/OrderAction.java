@@ -45,6 +45,7 @@ public class OrderAction extends ActionSupport implements SessionAware {
                 getBean().setOrderLastName("");
                 getBean().setOrderAddress("");
                 getBean().setOrderPhoneNumber("");
+                getBean().setOrderTotalCost(0);
             }            
         }        
         

@@ -24,6 +24,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,21 +43,21 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
 
     static Statement statement_orderinfo;
     static Connection connection_orderinfo;
-    
+
     static Statement statement_inventory;
     static Connection connection_inventory;
-    
+
     static Statement statement_users;
     static Connection connection_users;
-  
+
     private ArrayList<Product> trees = new ArrayList<Product>();
     private ArrayList<Product> seeds = new ArrayList<Product>();
     private ArrayList<Product> shrubs = new ArrayList<Product>();
-    
+
     public Server() throws RemoteException {
         super();
     }
-     
+
     /**
      * @param args the command line arguments
      */
@@ -77,15 +79,15 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         //Ligacao a BD
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            
+
             String dbHostInventory = prop.getProperty("INVENTORY_DB_URL");
             String userInventory = prop.getProperty("USER_INVENTORY_DB");
             String passInventory = prop.getProperty("PASS_INVENTORY_DB");
             connection_inventory = DriverManager.getConnection(dbHostInventory, userInventory, passInventory);
             statement_inventory = connection_inventory.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-          
+
             System.out.println("Ligado a BD Inventory com sucesso");
-            
+
             String dbHostOrderInfo = prop.getProperty("ORDERINFO_DB_URL");
             String userOrderInfo = prop.getProperty("USER_ORDERINFO_DB");
             String passOrderInfo = prop.getProperty("PASS_ORDERINFO_DB");
@@ -93,7 +95,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
             System.out.println("Ligado a BD OrderInfo com sucesso");
-            
+
             String dbHostUsers = prop.getProperty("USERS_DB_URL");
             String userUsers = prop.getProperty("USER_USERS_DB");
             String passUsers = prop.getProperty("PASS_USERS_DB");
@@ -116,7 +118,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             e.printStackTrace();
         }
     }
-    
+
     private String md5(String s) {
         try {
             MessageDigest m = MessageDigest.getInstance("MD5");
@@ -128,7 +130,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         }
         return null;
     }
-    
+
     public int doLogin(String loginUser, String loginPass) throws RemoteException, SQLException {
         String query = "Select * from " + CMD.usersTable + " where username ='" + loginUser + "'";
         System.out.println(query);
@@ -154,10 +156,10 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         return CMD.ERROR;
     }
 
-    public int doLogout() throws RemoteException{
+    public int doLogout() throws RemoteException {
         return CMD.OK;
     }
-    
+
     public int doRegist(String registUser, String registEmail, String registPass, String registFirstName, String registLastName, String registAddress, String registPhone) throws RemoteException {
         String query = "Select username from " + CMD.usersTable + " where username ='" + registUser + "'";
         System.out.println(query);
@@ -168,7 +170,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             if (!result.next()) {
 
                 PreparedStatement pst = connection_users.prepareStatement("Insert into " + CMD.usersTable
-//                        + " (name,username,email,password,deicoins,\"ONLINE\")"
+                        //                        + " (name,username,email,password,deicoins,\"ONLINE\")"
                         + "(username, email, password, first_name, last_name, address, phone)"
                         + " values(?,?,?,?,?,?,?)");
 
@@ -180,7 +182,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
                 pst.setString(6, registAddress);
                 pst.setString(7, registPhone);
                 pst.executeUpdate();
-                   
+
                 System.out.println(pst);
                 result.close();
                 pst.close();
@@ -196,15 +198,14 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         }
         return CMD.ERROR;
     }
-    
+
     public ArrayList<Product> returnProduts(String table) throws RemoteException {
         String query = "Select * from " + table;
         ResultSet result = null;
         ArrayList<Product> products = new ArrayList<>();
         try {
             result = statement_inventory.executeQuery(query);
-            while (result.next())
-            {
+            while (result.next()) {
                 Product product = new Product(result.getString(1), result.getString(2), Integer.parseInt(result.getString(3)), result.getString(4));
                 products.add(product);
             } // while
@@ -214,20 +215,123 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         return products;
     }
 
-    public int doLoadProducts() throws RemoteException{
+    public int doLoadProducts() throws RemoteException {
         trees = returnProduts(CMD.treesTable);
         seeds = returnProduts(CMD.seedsTable);
         shrubs = returnProduts(CMD.shrubsTable);
-        
+
         System.out.println(trees.size());
         System.out.println(seeds.size());
         System.out.println(shrubs.size());
-        
+
         return CMD.OK;
     }
-    
-    public int doWebOrders(String orderFirstName, String orderLastName, String orderAddress, String orderPhoneNumber, ArrayList<Product> checkList) throws RemoteException{
+
+    public int doWebOrders(String orderFirstName, String orderLastName, String orderAddress, String orderPhoneNumber, float orderTotalCost, ArrayList<Product> checkList) throws RemoteException {
+
+        Calendar rightNow = Calendar.getInstance();
+
+        int TheHour = rightNow.get(rightNow.HOUR_OF_DAY);
+        int TheMinute = rightNow.get(rightNow.MINUTE);
+        int TheSecond = rightNow.get(rightNow.SECOND);
+        int TheDay = rightNow.get(rightNow.DAY_OF_WEEK);
+        int TheMonth = rightNow.get(rightNow.MONTH);
+        int TheYear = rightNow.get(rightNow.YEAR);
         
-        return CMD.OK;
+        int orderId = -1;
+
+        String query;
+        String orderTableName = "order" + String.valueOf(rightNow.getTimeInMillis());
+        String errString = null;
+        Boolean executeError = false;
+
+        String dateTimeStamp = TheMonth + "/" + TheDay + "/" + TheYear + " "
+                + TheHour + ":" + TheMinute + ":" + TheSecond;
+
+        try {
+
+            query = ("CREATE TABLE " + orderTableName
+                    + "(item_id int unsigned not null auto_increment primary key, "
+                    + "product_id varchar(20), description varchar(80), "
+                    + "item_price float(7,2) );");
+
+            statement_orderinfo.executeUpdate(query);
+
+        } catch (Exception e) {
+            errString = "\nProblem creating order table " + orderTableName + ":: " + e;
+            System.out.println(errString);
+            executeError = true;
+
+        } // try
+
+        if (!executeError) {
+            try {
+
+                PreparedStatement pst = connection_orderinfo.prepareStatement("Insert into " + orderTableName
+                        + "(order_date, first_name, last_name, address, phone, total_cost, shipped, ordertable)"
+                        + "Values (?,?,?,?,?,?,?,?)");
+
+                pst.setString(1, dateTimeStamp);
+                pst.setString(2, orderFirstName);
+                pst.setString(3, orderLastName);
+                pst.setString(4, orderAddress);
+                pst.setString(5, orderPhoneNumber);
+                pst.setFloat(6, orderTotalCost);
+                pst.setBoolean(7, false);
+                pst.setString(8, orderTableName);
+                pst.executeUpdate();
+
+            } catch (Exception e1) {
+
+                errString = "\nProblem with inserting into table orders:: " + e1;
+                executeError = true;
+
+                try {
+                    query = ("DROP TABLE " + orderTableName + ";");
+                    statement_orderinfo.executeUpdate(query);
+
+                } catch (Exception e2) {
+
+                    errString = "\nProblem deleting unused order table:: " + orderTableName + ":: " + e2;
+                    System.out.println(errString);
+
+                } // try
+
+            } // try
+
+        } //execute error check
+
+        // Now, if there is no connect or SQL execution errors at this point, 
+        // then we have an order added to the orderinfo::orders table, and a 
+        // new ordersXXXX table created.
+        if (!executeError) {
+            // Now we create a table that contains the itemized list
+            // of stuff that is associated with the order
+
+            Iterator<Product> iterator = checkList.iterator();
+
+            while (iterator.hasNext()) {
+
+                try {
+                    PreparedStatement pst = connection_orderinfo.prepareStatement("Insert into " + orderTableName
+                            + "(product_id, description, item_price)"
+                            + "Values (?,?,?)");
+
+                    pst.setString(1, iterator.next().getProduct_code());
+                    pst.setString(2, iterator.next().getDescription());
+                    pst.setFloat(3, Float.parseFloat(iterator.next().getPrice()));
+                    pst.executeUpdate();
+                    System.out.println("\nORDER SUBMITTED FOR: " + orderFirstName + " " + orderLastName);
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+
+        }
+
+        return CMD.ERROR;
+
     }
 }
