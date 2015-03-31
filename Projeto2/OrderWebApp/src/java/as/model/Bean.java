@@ -32,13 +32,14 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import pkginterface.Product;
 import pkginterface.RMIRemote;
 
 /**
  *
  * @author GonçaloSilva
  */
-public class Bean{
+public class Bean {
 
     private String loginUser;
     private String loginPass;
@@ -69,40 +70,43 @@ public class Bean{
 
     String RMI = "";
 
-//    @PostConstruct
     public void init() {
-        Properties prop = new Properties();
-        try {
-            prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties"));
-//            prop.load(new FileInputStream("config.properties"config));
-            RMI = prop.getProperty("RMI");
-        } catch (FileNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        try {
+        if (RMI.compareTo("") == 0) {
+            Properties prop = new Properties();
             try {
-                System.getProperties().put("java.security.policy", "policy.all");
-                server = (RMIRemote) Naming.lookup("rmi://" + RMI + "/server");
-            } catch (MalformedURLException e) {
+                prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties"));
+                //            prop.load(new FileInputStream("config.properties"config));
+                RMI = prop.getProperty("RMI");
+            } catch (FileNotFoundException e1) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
             }
-        } catch (AccessException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (RemoteException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (NotBoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+        }
+        if (server == null) {
+            try {
+                try {
+                    System.getProperties().put("java.security.policy", "policy.all");
+                    server = (RMIRemote) Naming.lookup("rmi://" + RMI + "/server");
+                } catch (MalformedURLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            } catch (AccessException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (RemoteException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (NotBoundException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
     }
-    
+
 //    Preparable.prepare() {
 ////        try {
 //        Properties prop = new Properties();
@@ -136,7 +140,6 @@ public class Bean{
 //            // TODO Auto-generated catch block
 //            e1.printStackTrace();
 //        }
-
 //        try{
 //            clientSocket = aClientSocket;
 //            out = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -151,7 +154,6 @@ public class Bean{
 //            Logger.getLogger(DirestrutsBean.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-
     public String getLoginUser() {
         return loginUser;
     }
@@ -307,13 +309,15 @@ public class Bean{
 //        }
 //        return CMD.ERROR;
 //    }
-//
-//    public int doLogout() {
+
+    public int doLogout() throws RemoteException {
+        init();
+        return server.doLogout();
 //        return CMD.OK;
-//    }
-//    
+    }
 
     public int doRegist() throws RemoteException {
+        init();
         return server.doRegist(registUser, registEmail, registPass, registFirstName, registLastName, registAddress, registPhone);
     }
 //    public int doRegist() {
@@ -389,17 +393,18 @@ public class Bean{
 //        return products;
 //    }
 
-//    public int doLoadProducts(){
-//        trees = returnProduts(CMD.treesTable);
-//        seeds = returnProduts(CMD.seedsTable);
-//        shrubs = returnProduts(CMD.shrubsTable);
-//        
-//        System.out.println(trees.size());
-//        System.out.println(seeds.size());
-//        System.out.println(shrubs.size());
-//        
-//        return CMD.OK;
-//    }
+    public int doLoadProducts() throws RemoteException{
+        init();
+        trees = server.returnProduts(CMD.treesTable);
+        seeds = server.returnProduts(CMD.seedsTable);
+        shrubs = server.returnProduts(CMD.shrubsTable);
+        
+        System.out.println(trees.size());
+        System.out.println(seeds.size());
+        System.out.println(shrubs.size());
+        
+        return CMD.OK;
+    }
 }
 
 //Thread para tratar de cada canal de comunicacao com um cliente

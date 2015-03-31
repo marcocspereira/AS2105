@@ -31,6 +31,20 @@
     </head>
     <sb:head/>
     <body>
+        <s:if test="#session.login == 'true'">
+            <s:if test="#session.user == 'root'">
+                <jsp:forward page="admin.jsp" />
+            </s:if>
+            <s:if test="#session.user != 'root'">
+                <jsp:forward page="myaccount.jsp" />
+            </s:if>
+        </s:if>
+        
+        <s:if test="hasActionErrors()">
+   <div class="errors">
+      <s:actionerror/>
+   </div>
+</s:if>
         
           <div id="outer">
         <div id="inner" class="row">
@@ -44,7 +58,7 @@
                     <s:submit cssClass="btn btn-medium btn-primary" key="btn.login" method="execute" align="center"/>
                 </s:form>
             </div>
-            <div class="span5">
+<!--            <div class="span5">
                 <h4 > Registo: </h4>
                 <s:form id="registForm" name="regist" action="RegistAction">
                     <s:textfield id="textfield" name="bean.registEmail" label="Email" size="50" placeholder="Introduza o email"/>
@@ -57,7 +71,7 @@
                     <s:password id="textfield" name="bean.registPass2" label="Password" size="20" placeholder="Confirme a password"/>
                     <s:submit cssClass="btn btn-medium btn-primary" key="btn.regist" method="execute" align="center"/>
                 </s:form>
-            </div>
+            </div>-->
         </div>
     </div>
     </body>

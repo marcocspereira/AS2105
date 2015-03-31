@@ -30,10 +30,12 @@ public class LoginAction extends ActionSupport implements SessionAware {
             }
             if (getBean().getLoginUser() != null && getBean().getLoginPass() != null && getBean().doLogin() > 0)
             {
-//                getBean().doLoadProducts();
+                getBean().doLoadProducts();
                 session.put("login", "true");
-                addActionError(getText("login.ok"));
-                System.out.println(SUCCESS);
+                session.put("user", getBean().getLoginUser());
+//                System.out.println(session.get("user"));
+                addActionMessage(getText("login.ok"));
+                if (getBean().getLoginUser().compareTo("root") == 0) return "root";
                 return SUCCESS;
             }
             addActionError(getText("login.error"));
@@ -41,15 +43,14 @@ public class LoginAction extends ActionSupport implements SessionAware {
 	}
 
 	public String logout() throws Exception {
-//            if (getBean().doLogout()> 0)
-//            {
-//                session.remove("login");
-//                session.clear();
-//                addActionError(getText("logout.ok"));
-//                return SUCCESS;
-//            }
-
-                addActionError(getText("logout.error"));
+            if (getBean().doLogout()> 0)
+            {
+                session.remove("login");
+                session.clear();
+                addActionError(getText("logout.ok"));
+                return SUCCESS;
+            }
+            addActionError(getText("logout.error"));
             return ERROR;
 	}
 

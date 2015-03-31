@@ -31,12 +31,12 @@
                 if (input.value > limit)
                     input.value = limit;
             }
-            
-            function addToCart(to_buy, code_product, uprice){
-                var result = parseInt(to_buy)*parseInt(uprice);
+
+            function addToCart(to_buy, code_product, uprice) {
+                var result = parseInt(to_buy) * parseInt(uprice);
                 $('#text1').val('cona');
             }
-            
+
         </script>
 
     </head>
@@ -47,6 +47,11 @@
         <s:if test="#session.login != 'true'">
             <jsp:forward page="index.jsp" />
         </s:if>
+        <s:if test="#session.user == 'root'">
+            <jsp:forward page="admin.jsp" />
+        </s:if>
+
+        
 
         <nav class="navbar navbar-default navbar-static-top"  role="navigation">
             <div class="container-fluid">
@@ -69,12 +74,18 @@
             </div><!-- /.container-fluid -->
         </nav>
 
+                            <s:if test="hasActionMessages()">
+            <div class="welcome">
+                <s:actionmessage/>
+            </div>
+        </s:if>
+                            
         <div class="contentor_div">
             <br>
-            
+
             <h3><span class=" glyphicon glyphicon-shopping-cart glyphicon-align-left" aria-hidden="true"></span> Cart</h3>    
             <textarea name="Text1" id="text1"></textarea>
-            
+
             <s:form id="ordersForm" name="order" action="OrderAction">
                 <h3><span class="glyphicon glyphicon-tree-conifer glyphicon-align-left" aria-hidden="true"></span> Trees</h3>
                 <table>

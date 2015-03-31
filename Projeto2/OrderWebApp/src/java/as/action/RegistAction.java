@@ -48,14 +48,17 @@ public class RegistAction extends ActionSupport implements SessionAware {
     public String execute() throws Exception {
         if (getBean() == null) {
             addActionError(getText("login.expire"));
+            System.out.println("RegistAction = login");
             return "login";
         }
         if (getBean().doRegist() == CMD.OK) {
             addActionError(getText("regist.ok"));
+            System.out.println("RegistAction = SUCCESS");
             return SUCCESS;
         }
 
         addActionError(getText("regist.error"));
+        System.out.println("RegistAction = ERROR");
         return ERROR;
     }
 

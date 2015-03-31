@@ -19,14 +19,14 @@ public class LogoutAction extends ActionSupport implements SessionAware {
                 addActionError(getText("login.expire"));
                 return "login";
             }
-//            if (getBean().doLogout()== CMD.OK)
-//            {
-//                addActionError(getText("logout.ok"));
-//                session.remove("login");
-//                session.clear();
-//                return SUCCESS;
-//
-//            }
+            if (getBean().doLogout()== CMD.OK)
+            {
+                addActionError(getText("logout.ok"));
+                session.remove("login");
+                session.clear();
+                return SUCCESS;
+
+            }
             addActionError(getText("logout.error"));
             return ERROR;
 	}
