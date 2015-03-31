@@ -64,12 +64,17 @@
                 <s:actionmessage/>
             </div>
         </s:if>
+        <s:if test="hasActionErrors()">
+            <div class="errors">
+                <s:actionerror/>
+            </div>
+        </s:if>
 
         <div id="outer">
             <div id="inner" class="row">
 
                 <div class="span4">
-                    <h4 > Registo: </h4>
+                    <h4 > Registar novo funcionário: </h4>
                     <s:form id="registForm" name="regist" action="RegistAction">
                         <s:textfield id="textfield" name="bean.registEmail" label="Email" size="50" placeholder="Introduza o email"/>
                         <s:textfield id="textfield" name="bean.registUser" label="Username" size="20" placeholder="Introduza o username"/>

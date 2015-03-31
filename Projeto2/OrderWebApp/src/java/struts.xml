@@ -33,7 +33,7 @@
             <result name="error">/index.jsp</result>
         </action>
         <action name="RegistAction" class="as.action.RegistAction" method="execute">
-            <result name="success" type="redirectAction">/myaccount.jsp</result>
+            <result name="success">/myaccount.jsp</result>
             <result name="input">/index.jsp</result>
             <result name="error">/index.jsp</result>
             <!--<result name="login" type="redirectAction">/logout</result>-->

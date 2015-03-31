@@ -52,7 +52,15 @@ public class RegistAction extends ActionSupport implements SessionAware {
             return "login";
         }
         if (getBean().doRegist() == CMD.OK) {
-            addActionError(getText("regist.ok"));
+            addActionMessage(getText("regist.ok"));
+            getBean().setRegistAddress("");
+            getBean().setRegistEmail("");
+            getBean().setRegistFirstName("");
+            getBean().setRegistLastName("");
+            getBean().setRegistPass("");
+            getBean().setRegistPass2("");
+            getBean().setRegistPhone("");
+            getBean().setRegistUser("");
             System.out.println("RegistAction = SUCCESS");
             return SUCCESS;
         }
