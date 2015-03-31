@@ -52,6 +52,11 @@ public class Bean {
     private String registLastName;
     private String registAddress;
     private String registPhone;
+    
+    private String product_code;
+    private String product_name;
+    private int product_quantity;
+    private float product_price; 
 
     private ArrayList<Product> trees = new ArrayList<Product>();
     private ArrayList<Product> seeds = new ArrayList<Product>();
@@ -233,6 +238,38 @@ public class Bean {
     public void setRegistPhone(String registPhone) {
         this.registPhone = registPhone;
     }
+    
+    public void setProductCode(String product_code){
+        this.product_code=product_code;
+    }
+    
+    public String getProductCode(){
+        return product_code;
+    }
+    
+    public void setProductName(String product_name){
+        this.product_name=product_name;
+    }
+    
+    public String getProductName(){
+        return product_name;
+    }
+    
+    public void setProductPrice(float product_price){
+        this.product_price=product_price;
+    }
+    
+    public float getProductPrice(){
+        return product_price;
+    }
+    
+    public void setProductQuantity(int product_quantity){
+        this.product_quantity=product_quantity;
+    }
+    
+    public float getProductPQuantity(){
+        return product_quantity;
+    }
 
     public ArrayList<Product> getTrees() {
         return trees;
@@ -405,6 +442,47 @@ public class Bean {
         
         return CMD.OK;
     }
+    
+    
+     public int DoOrder(String products){
+        String outdelim = "[;]";
+        String innerdelim = "[|]";
+        String[] outString = products.split(outdelim);
+        String[] innerString;
+        int i = 0;
+       
+        for(String temp : outString){            
+            innerString = temp.split(innerdelim);
+            
+            for(String token : innerString){           
+                if(i == 0){
+                    token = token.replaceAll("\\s","");
+                    product_code=token;
+                }
+
+                if(i == 1){
+                    product_name=token;
+                }
+
+                if(i == 2){
+                    token = token.replaceAll("\\s","");
+                    product_quantity = Integer.parseInt(token);
+                }
+
+                if(i == 3){
+                    token = token.replaceAll("\\s","");
+                    product_price=Float.valueOf(token);
+                }
+                i++;
+            }
+            i=0;
+        }
+
+        return CMD.OK;
+    }
+    
+    
+    
 }
 
 //Thread para tratar de cada canal de comunicacao com um cliente
