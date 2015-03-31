@@ -61,9 +61,8 @@ public class Bean {
     
     private String product_code;
     private String product_name;
-    private int product_quantity;
-    private float product_price; 
-    
+    private String product_quantity;
+    private String product_price;    
 
     private ArrayList<Product> trees = new ArrayList<Product>();
     private ArrayList<Product> seeds = new ArrayList<Product>();
@@ -262,19 +261,19 @@ public class Bean {
         return product_name;
     }
     
-    public void setProductPrice(float product_price){
+    public void setProductPrice(String product_price){
         this.product_price=product_price;
     }
     
-    public float getProductPrice(){
+    public String getProductPrice(){
         return product_price;
     }
     
-    public void setProductQuantity(int product_quantity){
+    public void setProductQuantity(String product_quantity){
         this.product_quantity=product_quantity;
     }
     
-    public float getProductPQuantity(){
+    public String getProductPQuantity(){
         return product_quantity;
     }
 
@@ -341,6 +340,14 @@ public class Bean {
     public void setOrderCart(String orderCart) {
         this.orderCart = orderCart;
     }
+
+    public ArrayList<Product> getCheckList() {
+        return checkList;
+    }
+
+    public void setCheckList(ArrayList<Product> checkList) {
+        this.checkList = checkList;
+    }
     
     
     
@@ -406,6 +413,12 @@ public class Bean {
     public int doRegist() throws RemoteException {
         init();
         return server.doRegist(registUser, registEmail, registPass, registFirstName, registLastName, registAddress, registPhone);
+    }
+    
+    public int doWebOrders() throws RemoteException{
+        init();
+        doOrder(orderCart); // vai fazer parse ao carrinho de compras
+        return server.doWebOrders(orderFirstName, orderLastName, orderAddress, orderPhoneNumber, checkList);
     }
 //    public int doRegist() {
 //        String query = "Select username from " + CMD.usersTable + " where username ='" + registUser + "'";
@@ -495,7 +508,7 @@ public class Bean {
     
     
      public int doOrder(String products){
-        String outdelim = "[;]";
+        String outdelim = "[\n]";
         String innerdelim = "[|]";
         String[] outString = products.split(outdelim);
         String[] innerString;
@@ -508,25 +521,27 @@ public class Bean {
                 if(i == 0){
                     token = token.replaceAll("\\s","");
                     product_code=token;
-                }
+                } // iff
 
                 if(i == 1){
+                    token = token.replaceAll("\\s","");
                     product_name=token;
-                }
+                } // if
 
                 if(i == 2){
                     token = token.replaceAll("\\s","");
-                    product_quantity = Integer.parseInt(token);
-                }
+                    product_quantity = token;
+                } // if
 
                 if(i == 3){
                     token = token.replaceAll("\\s","");
-                    product_price=Float.valueOf(token);
-                }
+                    product_price = token;
+                } // if
                 i++;
-            }
+            } // for token
             i=0;
-        }
+            getCheckList().add(new Product(product_code, product_name, product_price));
+        } // for temp
 
         return CMD.OK;
     }

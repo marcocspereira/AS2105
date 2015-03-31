@@ -7,8 +7,11 @@ package as.action;
 
 import as.model.Bean;
 import com.opensymphony.xwork2.ActionSupport;
+import java.util.ArrayList;
 import java.util.Map;
 import org.apache.struts2.interceptor.SessionAware;
+import pkginterface.CMD;
+import pkginterface.Product;
 
 /**
  *
@@ -21,11 +24,30 @@ public class OrderAction extends ActionSupport implements SessionAware {
 
     @Override
     public String execute() throws Exception {
+        /*
         System.out.println(getBean().getOrderFirstName());
         System.out.println(getBean().getOrderLastName());
-        System.out.println(getBean().getOrderPhoneNumber());
         System.out.println(getBean().getOrderAddress());
-        System.out.println(getBean().getOrderCart());
+        System.out.println(getBean().getOrderPhoneNumber());
+        getBean().doOrder(getBean().getOrderCart());
+        */
+        
+        if (!getBean().getCheckList().isEmpty() &&
+        getBean().getOrderFirstName()!= null &&
+        getBean().getOrderLastName()!= null &&
+        getBean().getOrderAddress() != null &&
+        getBean().getOrderPhoneNumber() != null)        
+        {
+            if(getBean().doWebOrders() == CMD.OK){
+                getBean().setCheckList(new ArrayList<Product>());
+                getBean().setOrderCart("");
+                getBean().setOrderFirstName("");
+                getBean().setOrderLastName("");
+                getBean().setOrderAddress("");
+                getBean().setOrderPhoneNumber("");
+            }            
+        }        
+        
         if (getBean() == null) {
             addActionError(getText("login.expire"));
             return "login";

@@ -205,8 +205,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             result = statement_inventory.executeQuery(query);
             while (result.next())
             {
-    //                TODO Correct ParseFloat to last parameter
-                Product product = new Product(result.getString(1), result.getString(2), Integer.parseInt(result.getString(3)), Float.parseFloat(result.getString(4)));
+                Product product = new Product(result.getString(1), result.getString(2), Integer.parseInt(result.getString(3)), result.getString(4));
                 products.add(product);
             } // while
         } catch (SQLException ex) {
@@ -223,6 +222,11 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         System.out.println(trees.size());
         System.out.println(seeds.size());
         System.out.println(shrubs.size());
+        
+        return CMD.OK;
+    }
+    
+    public int doWebOrders(String orderFirstName, String orderLastName, String orderAddress, String orderPhoneNumber, ArrayList<Product> checkList) throws RemoteException{
         
         return CMD.OK;
     }

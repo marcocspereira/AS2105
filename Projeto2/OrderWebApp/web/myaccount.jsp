@@ -30,7 +30,7 @@
             function copyToCart(celula) {
                 // window.alert(celula);
                 celula = celula.trim();
-                var content = celula + ";\n";
+                var content = celula + "\n";
                 $('#text1').append(content);
                 celula = celula.split("|");
                 total += parseFloat((celula[celula.length-1]));
@@ -90,7 +90,7 @@
                 <s:textfield id="textfield" name="bean.orderAddress" placeholder="Morada do cliente"/>
                 <s:textfield id="textfield" name="bean.orderPhoneNumber" placeholder="Telefone do cliente"  />
 
-                <s:textarea name="Text1" id="text1" name="cenass" cssClass="text1" disabled="true" />
+                <s:textarea id="text1" name="bean.orderCart" cssClass="text1"  />
 
                 <s:submit cssClass="btn btn-medium btn-primary" key="btn.order" method="execute"/>
             </s:form>
