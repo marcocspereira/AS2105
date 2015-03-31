@@ -9,8 +9,8 @@ import as.model.Bean;
 import com.opensymphony.xwork2.ActionSupport;
 import java.util.ArrayList;
 import java.util.Map;
+import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
-import pkginterface.CMD;
 import pkginterface.Product;
 
 /**
@@ -19,6 +19,9 @@ import pkginterface.Product;
  */
 public class OrderAction extends ActionSupport implements SessionAware {
 
+    //get log4j
+    private static final Logger logger = Logger.getLogger(OrderAction.class);
+        
     private static final long serialVersionUID = 4L;
     private Map<String, Object> session;
 
@@ -31,33 +34,27 @@ public class OrderAction extends ActionSupport implements SessionAware {
         System.out.println(getBean().getOrderPhoneNumber());
         getBean().doOrder(getBean().getOrderCart());
         */
-        
+        if (getBean() == null) {
+            addActionError(getText("login.expire"));
+            return "login";
+        }
         if (!getBean().getCheckList().isEmpty() &&
-        getBean().getOrderFirstName()!= null &&
-        getBean().getOrderLastName()!= null &&
-        getBean().getOrderAddress() != null &&
-        getBean().getOrderPhoneNumber() != null)        
+            getBean().getOrderFirstName()!= null &&
+            getBean().getOrderLastName()!= null &&
+            getBean().getOrderAddress() != null &&
+            getBean().getOrderPhoneNumber() != null)        
         {
-            if(getBean().doWebOrders() == CMD.OK){
+            if(getBean().doWebOrders() > 0 && getBean().doLoadProducts()> 0){
                 getBean().setCheckList(new ArrayList<Product>());
                 getBean().setOrderCart("");
                 getBean().setOrderFirstName("");
                 getBean().setOrderLastName("");
                 getBean().setOrderAddress("");
                 getBean().setOrderPhoneNumber("");
-                getBean().setOrderTotalCost(0);
+                addActionMessage(getText("order.ok"));
+                return SUCCESS;
             }            
-        }        
-        
-        if (getBean() == null) {
-            addActionError(getText("login.expire"));
-            return "login";
         }
-        if (getBean().doLoadProducts()> 0) {
-            addActionError(getText("order.ok"));
-            return SUCCESS;
-        }
-
         addActionError(getText("order.error"));
         return ERROR;
     }

@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @author Marco
  */
 public class Product implements Serializable{
+    
     private String product_code;
     private String description;
     private int quantity;

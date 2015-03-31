@@ -7,11 +7,15 @@ import static com.opensymphony.xwork2.Action.SUCCESS;
 import java.util.Map;
 import org.apache.struts2.interceptor.SessionAware;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.log4j.Logger;
 
 public class LogoutAction extends ActionSupport implements SessionAware {
 	private static final long serialVersionUID = 4L;
 	private Map<String, Object> session;
 
+        //get log4j
+	private static final Logger logger = Logger.getLogger(LoginAction.class);
+        
 	@Override
 	public String execute() throws Exception {
             if (getBean() == null)
@@ -21,6 +25,7 @@ public class LogoutAction extends ActionSupport implements SessionAware {
             }
             if (getBean().doLogout()== CMD.OK)
             {
+                logger.info("Logout with "+getBean().getLoginUser()+".");
                 addActionError(getText("logout.ok"));
                 session.remove("login");
                 session.clear();
@@ -28,6 +33,7 @@ public class LogoutAction extends ActionSupport implements SessionAware {
 
             }
             addActionError(getText("logout.error"));
+            logger.info("Logout with "+getBean().getLoginUser()+" fail.");
             return ERROR;
 	}
 
