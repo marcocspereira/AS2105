@@ -25,10 +25,10 @@ public class OrderAction extends ActionSupport implements SessionAware {
             addActionError(getText("login.expire"));
             return "login";
         }
-        if (getBean().doLoadProducts()> 0) {
-            addActionError(getText("order.ok"));
-            return SUCCESS;
-        }
+//        if (getBean().doLoadProducts()> 0) {
+//            addActionError(getText("order.ok"));
+//            return SUCCESS;
+//        }
 
         addActionError(getText("order.error"));
         return ERROR;

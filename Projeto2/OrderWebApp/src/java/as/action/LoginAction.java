@@ -13,7 +13,7 @@ public class LoginAction extends ActionSupport implements SessionAware {
     @Override
     public void validate() {
         if (getBean().getLoginUser().length() == 0){
-        addFieldError("bean.loginUser", getText("loginUser.required"));
+            addFieldError("bean.loginUser", getText("loginUser.required"));
         }
         if (getBean().getLoginPass().length() == 0){
             addFieldError("bean.loginPass", getText("loginPass.required"));
@@ -30,7 +30,7 @@ public class LoginAction extends ActionSupport implements SessionAware {
             }
             if (getBean().getLoginUser() != null && getBean().getLoginPass() != null && getBean().doLogin() > 0)
             {
-                getBean().doLoadProducts();
+//                getBean().doLoadProducts();
                 session.put("login", "true");
                 addActionError(getText("login.ok"));
                 System.out.println(SUCCESS);
@@ -41,13 +41,13 @@ public class LoginAction extends ActionSupport implements SessionAware {
 	}
 
 	public String logout() throws Exception {
-            if (getBean().doLogout()> 0)
-            {
-                session.remove("login");
-                session.clear();
-                addActionError(getText("logout.ok"));
-                return SUCCESS;
-            }
+//            if (getBean().doLogout()> 0)
+//            {
+//                session.remove("login");
+//                session.clear();
+//                addActionError(getText("logout.ok"));
+//                return SUCCESS;
+//            }
 
                 addActionError(getText("logout.error"));
             return ERROR;

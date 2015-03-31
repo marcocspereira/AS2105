@@ -99,7 +99,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             connection_orderinfo = DriverManager.getConnection(dbHostUsers, userUsers, passUsers);
             statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-            System.out.println("Ligado a BD OrderInfo com sucesso");
+            System.out.println("Ligado a BD Users com sucesso");
         } catch (SQLException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
