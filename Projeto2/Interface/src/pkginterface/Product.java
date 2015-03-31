@@ -15,12 +15,19 @@ public class Product implements Serializable{
     private String product_code;
     private String description;
     private int quantity;
-    private float price;  /*multiplicar por 100 qdo vem da BD. Dividir por 100 quando vai para a BD*/
+    private String price;  /*multiplicar por 100 qdo vem da BD. Dividir por 100 quando vai para a BD*/
     
-    public Product(String product_code, String description, int quantity, float price){
+    public Product(String product_code, String description, int quantity, String price){
         this.product_code = product_code;
         this.description = description;
         this.quantity = quantity;
+        this.price = price;
+    }
+    
+    public Product(String product_code, String description, String price){
+        this.product_code = product_code;
+        this.description = description;
+        this.quantity = 1;
         this.price = price;
     }
 
@@ -69,14 +76,14 @@ public class Product implements Serializable{
     /**
      * @return the price
      */
-    public float getPrice() {
+    public String getPrice() {
         return price;
     }
 
     /**
      * @param price the price to set
      */
-    public void setPrice(float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
     
