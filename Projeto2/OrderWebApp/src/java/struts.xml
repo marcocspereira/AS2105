@@ -42,6 +42,11 @@
             <result name="success">/index.jsp</result>
             <result name="login">/index.jsp</result>
         </action>
+        
+        <action name="OrderAction" class="as.action.OrderAction" method="execute">
+            <result name="success">/myaccount.jsp</result>
+            <result name="login">/myaccount.jsp</result>
+        </action>
 <!--        <action name="as.action.LoginAction">
             <result name="success">/myaccount.jsp</result>
             

@@ -21,6 +21,11 @@ public class OrderAction extends ActionSupport implements SessionAware {
 
     @Override
     public String execute() throws Exception {
+        System.out.println(getBean().getOrderFirstName());
+        System.out.println(getBean().getOrderLastName());
+        System.out.println(getBean().getOrderPhoneNumber());
+        System.out.println(getBean().getOrderAddress());
+        System.out.println(getBean().getOrderCart());
         if (getBean() == null) {
             addActionError(getText("login.expire"));
             return "login";

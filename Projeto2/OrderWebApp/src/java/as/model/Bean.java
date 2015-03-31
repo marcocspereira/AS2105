@@ -53,10 +53,17 @@ public class Bean {
     private String registAddress;
     private String registPhone;
     
+    private String orderFirstName;
+    private String orderLastName;
+    private String orderAddress;
+    private String orderPhoneNumber;
+    private String orderCart;
+    
     private String product_code;
     private String product_name;
     private int product_quantity;
     private float product_price; 
+    
 
     private ArrayList<Product> trees = new ArrayList<Product>();
     private ArrayList<Product> seeds = new ArrayList<Product>();
@@ -295,6 +302,49 @@ public class Bean {
         this.shrubs = shrubs;
     }
 
+    public String getOrderFirstName() {
+        return orderFirstName;
+    }
+
+    public void setOrderFirstName(String orderFirstName) {
+        this.orderFirstName = orderFirstName;
+    }
+
+    public String getOrderLastName() {
+        return orderLastName;
+    }
+
+    public void setOrderLastName(String orderLastName) {
+        this.orderLastName = orderLastName;
+    }
+
+    public String getOrderAddress() {
+        return orderAddress;
+    }
+
+    public void setOrderAddress(String orderAddress) {
+        this.orderAddress = orderAddress;
+    }
+
+    public String getOrderPhoneNumber() {
+        return orderPhoneNumber;
+    }
+
+    public void setOrderPhoneNumber(String orderPhoneNumber) {
+        this.orderPhoneNumber = orderPhoneNumber;
+    }
+
+    public String getOrderCart() {
+        return orderCart;
+    }
+
+    public void setOrderCart(String orderCart) {
+        this.orderCart = orderCart;
+    }
+    
+    
+    
+
 //    private String md5(String s) {
 //        try {
 //            MessageDigest m = MessageDigest.getInstance("MD5");
@@ -444,7 +494,7 @@ public class Bean {
     }
     
     
-     public int DoOrder(String products){
+     public int doOrder(String products){
         String outdelim = "[;]";
         String innerdelim = "[|]";
         String[] outString = products.split(outdelim);
