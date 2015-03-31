@@ -133,7 +133,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         String query = "Select * from " + CMD.usersTable + " where username ='" + loginUser + "'";
         System.out.println(query);
 
-        ResultSet result = statement_orderinfo.executeQuery(query);
+        ResultSet result = statement_users.executeQuery(query);
 
         if (!result.next()) {
             return CMD.ERROR;

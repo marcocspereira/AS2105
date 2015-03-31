@@ -31,15 +31,6 @@
                 var content = celula + ";\n";
                 $('#text1').append(content);
             }
-
-<<<<<<< HEAD
-=======
-            function addToCart(to_buy, code_product, uprice) {
-                var result = parseInt(to_buy) * parseInt(uprice);
-                $('#text1').val('cona');
-            }
-
->>>>>>> 21eb3888f33c10559624c3e5ff93b4415e775bd5
         </script>
 
     </head>
@@ -87,20 +78,18 @@
             <br>
 
             <h3><span class=" glyphicon glyphicon-shopping-cart glyphicon-align-left" aria-hidden="true"></span> Cart</h3>    
-<<<<<<< HEAD
+
         <s:form id="ordersForm" name="order" action="OrderAction" cssClass="formToSubmit">
                 <s:textfield id="textfield" name="bean.orderFirstName" label="Primeiro Nome" placeholder="Primeiro nome do cliente"/>
-                <s:textfield id="textfield" name="bean.orderLastName" label="Último Nome" placeholder="Último nome do cliente"/>
+                <s:textfield id="textfield" name="bean.orderLastName" label="?ltimo Nome" placeholder="?ltimo nome do cliente"/>
                 <s:textfield id="textfield" name="bean.orderAddress" label="Morada" placeholder="Morada do cliente"/>
                 <s:textfield id="textfield" name="bean.orderPhoneNumber" label="Telefone" placeholder="Telefone do cliente"/>
 
                 <s:textarea name="Text1" id="text1" cssClass="text1" disabled="true" />
 
                 <s:submit cssClass="btn btn-medium btn-primary" key="btn.order" method="execute"/>
-=======
             <textarea name="Text1" id="text1"></textarea>
-
-            <s:form id="ordersForm" name="order" action="OrderAction">
+        </s:form>
                 <h3><span class="glyphicon glyphicon-tree-conifer glyphicon-align-left" aria-hidden="true"></span> Trees</h3>
                 <table>
                     <tr>
@@ -172,8 +161,6 @@
                         <td colspan="5" class="addToChart"><input type="button" value="Add to Cart!"></td>
                     </tr>
                 </table>
->>>>>>> 21eb3888f33c10559624c3e5ff93b4415e775bd5
-            </s:form>
 
             <br />
 
@@ -207,7 +194,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tr>
-                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
+                                    <td><b>C?digo | Descri??o | Quantidade | Pre?o</b></td>
                                 </tr>
                                 <c:forEach var="arvore" items="${bean.trees}" varStatus="myIndex">
                                     <tr>
@@ -224,7 +211,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tr>
-                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
+                                    <td><b>C?digo | Descri??o | Quantidade | Pre?o</b></td>
                                 </tr>
                                 <c:forEach var="arvore" items="${bean.seeds}" varStatus="myIndex">
                                     <tr>
@@ -241,7 +228,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tr>
-                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
+                                    <td><b>C?digo | Descri??o | Quantidade | Pre?o</b></td>
                                 </tr>
                                 <c:forEach var="arvore" items="${bean.shrubs}" varStatus="myIndex">
                                     <tr>
