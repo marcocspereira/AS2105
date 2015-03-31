@@ -29,6 +29,7 @@
         </action>
         <action name="LoginAction" class="as.action.LoginAction">
             <result name="success">/myaccount.jsp</result>
+            <result name="root">/admin.jsp</result>
             <result name="error">/index.jsp</result>
         </action>
         <action name="RegistAction" class="as.action.RegistAction" method="execute">

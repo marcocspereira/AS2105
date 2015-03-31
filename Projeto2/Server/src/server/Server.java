@@ -5,6 +5,7 @@
  */
 package server;
 
+import pkginterface.CMD;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -96,10 +97,10 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             String dbHostUsers = prop.getProperty("USERS_DB_URL");
             String userUsers = prop.getProperty("USER_USERS_DB");
             String passUsers = prop.getProperty("PASS_USERS_DB");
-            connection_orderinfo = DriverManager.getConnection(dbHostUsers, userUsers, passUsers);
-            statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            connection_users = DriverManager.getConnection(dbHostUsers, userUsers, passUsers);
+            statement_users = connection_users.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-            System.out.println("Ligado a BD OrderInfo com sucesso");
+            System.out.println("Ligado a BD Users com sucesso");
         } catch (SQLException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -153,7 +154,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         return CMD.ERROR;
     }
 
-    public int doLogout() {
+    public int doLogout() throws RemoteException{
         return CMD.OK;
     }
     
@@ -162,11 +163,11 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         System.out.println(query);
 
         try {
-            ResultSet result = statement_orderinfo.executeQuery(query);
+            ResultSet result = statement_users.executeQuery(query);
 
             if (!result.next()) {
 
-                PreparedStatement pst = connection_orderinfo.prepareStatement("Insert into " + CMD.usersTable
+                PreparedStatement pst = connection_users.prepareStatement("Insert into " + CMD.usersTable
 //                        + " (name,username,email,password,deicoins,\"ONLINE\")"
                         + "(username, email, password, first_name, last_name, address, phone)"
                         + " values(?,?,?,?,?,?,?)");
@@ -179,7 +180,8 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
                 pst.setString(6, registAddress);
                 pst.setString(7, registPhone);
                 pst.executeUpdate();
-
+                   
+                System.out.println(pst);
                 result.close();
                 pst.close();
                 return CMD.OK;
