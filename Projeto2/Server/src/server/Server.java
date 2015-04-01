@@ -38,6 +38,9 @@ import pkginterface.RMIRemote;
  */
 public class Server extends UnicastRemoteObject implements RMIRemote, Serializable {
 
+    //get log4j
+//    private static final Logger logger = Logger.getLogger(Server.class);
+        
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
@@ -198,6 +201,18 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         return CMD.ERROR;
     }
 
+    public int shipped(int updateOrderID) throws RemoteException {
+        
+        String query = "UPDATE "+CMD.ordersTable+" SET shipped=" + true + " WHERE order_id=" + updateOrderID;
+        try {
+            int rows = statement_orderinfo.executeUpdate(query);
+            System.out.println(rows);
+        } catch (SQLException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return CMD.ERROR;
+        
+    }
     public ArrayList<Product> returnProduts(String table) throws RemoteException {
         String query = "Select * from " + table;
         ResultSet result = null;
@@ -218,11 +233,6 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         trees = returnProduts(CMD.treesTable);
         seeds = returnProduts(CMD.seedsTable);
         shrubs = returnProduts(CMD.shrubsTable);
-
-        System.out.println(trees.size());
-        System.out.println(seeds.size());
-        System.out.println(shrubs.size());
-
         return CMD.OK;
     }
 
