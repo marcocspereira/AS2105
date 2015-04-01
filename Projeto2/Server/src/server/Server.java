@@ -23,6 +23,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -38,9 +40,6 @@ import pkginterface.RMIRemote;
  */
 public class Server extends UnicastRemoteObject implements RMIRemote, Serializable {
 
-    //get log4j
-//    private static final Logger logger = Logger.getLogger(Server.class);
-        
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
@@ -202,17 +201,28 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
     }
 
     public int shipped(int updateOrderID) throws RemoteException {
-        
-        String query = "UPDATE "+CMD.ordersTable+" SET shipped=" + true + " WHERE order_id=" + updateOrderID;
+        String query = "UPDATE " + CMD.ordersTable + " SET shipped=" + true + " WHERE order_id=" + updateOrderID;
         try {
             int rows = statement_orderinfo.executeUpdate(query);
-            System.out.println(rows);
+            TextFile newFile = new TextFile();
+            try {
+                newFile.openTextFileToWrite("shipping.log");
+                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Calendar cal = Calendar.getInstance();
+                System.out.println(); //2014/08/06 16:00:22
+                newFile.writeLine(dateFormat.format(cal.getTime())+" "+updateOrderID);
+                newFile.closeWrite();
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return rows;
         } catch (SQLException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         return CMD.ERROR;
-        
+
     }
+
     public ArrayList<Product> returnProduts(String table) throws RemoteException {
         String query = "Select * from " + table;
         ResultSet result = null;
@@ -290,14 +300,15 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
                 pst.executeUpdate();
 
                 System.out.println("pst: " + pst);
-                
+
                 String querySelect = "Select * from " + CMD.ordersTable + " order by order_id desc limit 1";
 
                 System.out.println("orderId before result: " + orderId);
                 ResultSet result = statement_orderinfo.executeQuery(querySelect);
-                if (result.next())
+                if (result.next()) {
                     orderId = result.getInt("order_id");
-                
+                }
+
                 System.out.println("orderId after result: " + orderId);
 
             } catch (Exception e1) {
