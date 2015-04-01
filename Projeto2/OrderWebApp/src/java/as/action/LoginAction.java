@@ -19,13 +19,13 @@ public class LoginAction extends ActionSupport implements SessionAware {
         if (getBean() != null && getBean().getLoginUser().length() == 0){
             addFieldError("bean.loginUser", getText("loginUser.required"));
         }
-        if (getBean() != null && getBean().getLoginUser().length() <= 16){
+        if (getBean() != null && getBean().getLoginUser().length() > 16){
             addFieldError("bean.loginUser", getText("loginUser.limits"));
         }
         if (getBean() != null && getBean().getLoginPass().length() == 0){
             addFieldError("bean.loginPass", getText("loginPass.required"));
         }
-        if (getBean() != null && getBean().getLoginPass().length() <= 32 && getBean().getLoginPass().length() >= 4){
+        if (getBean() != null && getBean().getLoginPass().length() > 32 || getBean().getLoginPass().length() < 4){
             addFieldError("bean.loginPass", getText("loginPass.limits"));
         }
     }
@@ -46,7 +46,7 @@ public class LoginAction extends ActionSupport implements SessionAware {
                 session.put("user", getBean().getLoginUser());
 //                System.out.println(session.get("user"));
                 addActionMessage(getText("login.ok"));
-                if (getBean().getLoginUser().compareTo("root") == 0) return "root";
+                if (getBean() != null && getBean().getLoginUser().compareTo("root") == 0) return "root";
                 return SUCCESS;
             }
             logger.error("Login with "+getBean().getLoginUser()+" fail.");

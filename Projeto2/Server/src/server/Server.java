@@ -249,10 +249,10 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
 
         try {
 
-            query = ("CREATE TABLE " + orderTableName
+            query = "CREATE TABLE " + orderTableName
                     + "(item_id int unsigned not null auto_increment primary key, "
                     + "product_id varchar(20), description varchar(80), "
-                    + "item_price float(7,2) );");
+                    + "item_price float(7,2) );";
 
             statement_orderinfo.executeUpdate(query);
 
@@ -285,7 +285,9 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
 
                 System.out.println("orderId before result: " + orderId);
                 ResultSet result = statement_orderinfo.executeQuery(querySelect);
-                orderId = result.getInt("order_id");
+                if (result.next())
+                    orderId = result.getInt("order_id");
+                
                 System.out.println("orderId after result: " + orderId);
 
             } catch (Exception e1) {
@@ -295,7 +297,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
                 executeError = true;
 
                 try {
-                    query = ("DROP TABLE " + orderTableName + ";");
+                    query = "DROP TABLE " + orderTableName + ";";
                     statement_orderinfo.executeUpdate(query);
 
                 } catch (Exception e2) {

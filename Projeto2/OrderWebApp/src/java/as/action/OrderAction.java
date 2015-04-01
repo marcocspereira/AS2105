@@ -47,10 +47,6 @@ public class OrderAction extends ActionSupport implements SessionAware {
             if((result = getBean().doWebOrders()) > 0){
                 getBean().doLoadProducts();
                 logger.info("Order by "+getBean().getLoginUser()+" with ID="+result+".");
-                
-                System.out.println("doWebOrders: " + getBean().doWebOrders());
-                System.out.println("doLoadProducts: " + getBean().doLoadProducts());
-                
                 getBean().setCheckList(new ArrayList<Product>());
                 getBean().setOrderCart("");
                 getBean().setOrderFirstName("");
