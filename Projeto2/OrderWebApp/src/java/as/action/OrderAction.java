@@ -26,37 +26,44 @@ public class OrderAction extends ActionSupport implements SessionAware {
     private Map<String, Object> session;
 
     @Override
+    public void validate() {
+        if (getBean() != null && getBean().getOrderFirstName()!= null && getBean().getOrderFirstName().length() == 0) {
+            addFieldError("bean.orderFirstName", getText("orderFirstName.required"));
+        }
+        if (getBean() != null && getBean().getOrderLastName()!= null && getBean().getOrderLastName().length() == 0) {
+            addFieldError("bean.orderLastName", getText("orderLastName.required"));
+        }
+        if (getBean() != null && getBean().getOrderAddress()!= null && getBean().getOrderAddress().length() == 0) {
+            addFieldError("bean.orderAddress", getText("orderAddress.required"));
+        }
+        if (getBean() != null && getBean().getOrderPhoneNumber()!= null && getBean().getOrderPhoneNumber().length() == 0) {
+            addFieldError("bean.orderPhoneNumber", getText("orderPhoneNumber.required"));
+        }
+        if (getBean() != null && getBean().getOrderCart()!= null && getBean().getOrderCart().length() == 0) {
+            addFieldError("bean.orderCart", getText("orderCart.required"));
+        }
+
+    }
+    
+    @Override
     public String execute() throws Exception {
-        /*
-        System.out.println(getBean().getOrderFirstName());
-        System.out.println(getBean().getOrderLastName());
-        System.out.println(getBean().getOrderAddress());
-        System.out.println(getBean().getOrderPhoneNumber());
-        getBean().doOrder(getBean().getOrderCart());
-        */
         if (getBean() == null) {
             addActionError(getText("login.expire"));
             return "login";
         }
-        if (getBean().getOrderFirstName()!= null &&
-            getBean().getOrderLastName()!= null &&
-            getBean().getOrderAddress() != null &&
-            getBean().getOrderPhoneNumber() != null)        
-        {
-            int result = 0;
-            if((result = getBean().doWebOrders()) > 0){
-                getBean().doLoadProducts();
-                logger.info("Order by "+getBean().getLoginUser()+" with ID="+result+".");
-                getBean().setCheckList(new ArrayList<Product>());
-                getBean().setOrderCart("");
-                getBean().setOrderFirstName("");
-                getBean().setOrderLastName("");
-                getBean().setOrderAddress("");
-                getBean().setOrderPhoneNumber("");
-                addActionMessage(getText("order.ok"));
-                return SUCCESS;
-            }            
-        }
+        int result = 0;
+        if((result = getBean().doWebOrders()) > 0){
+            getBean().doLoadProducts();
+            logger.info("Order by "+getBean().getLoginUser()+" with ID="+result+".");
+            getBean().setCheckList(new ArrayList<Product>());
+            getBean().setOrderCart("");
+            getBean().setOrderFirstName("");
+            getBean().setOrderLastName("");
+            getBean().setOrderAddress("");
+            getBean().setOrderPhoneNumber("");
+            addActionMessage(getText("order.ok"));
+            return SUCCESS;
+        }            
         logger.error("Order by "+getBean().getLoginUser()+" fail.");
         addActionError(getText("order.error"));
         return ERROR;
