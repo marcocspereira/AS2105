@@ -16,16 +16,16 @@ public class LoginAction extends ActionSupport implements SessionAware {
 
     @Override
     public void validate() {
-        if (getBean() != null && getBean().getLoginUser().length() == 0){
+        if (getBean() != null && getBean().getLoginUser() != null && getBean().getLoginUser().length() == 0){
             addFieldError("bean.loginUser", getText("loginUser.required"));
         }
-        if (getBean() != null && getBean().getLoginUser().length() > 16){
+        if (getBean() != null && getBean().getLoginUser() != null && getBean().getLoginUser().length() > 16){
             addFieldError("bean.loginUser", getText("loginUser.limits"));
         }
-        if (getBean() != null && getBean().getLoginPass().length() == 0){
+        if (getBean() != null && getBean().getLoginPass() != null  && getBean().getLoginPass().length() == 0){
             addFieldError("bean.loginPass", getText("loginPass.required"));
         }
-        if (getBean() != null && getBean().getLoginPass().length() > 32 || getBean().getLoginPass().length() < 4){
+        if (getBean() != null && getBean().getLoginPass() != null && getBean().getLoginPass().length() > 32 || getBean().getLoginPass().length() < 4){
             addFieldError("bean.loginPass", getText("loginPass.limits"));
         }
     }

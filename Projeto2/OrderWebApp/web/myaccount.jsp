@@ -90,7 +90,7 @@
                 <s:textfield id="textfield" name="bean.orderAddress" placeholder="Morada do cliente"/>
                 <s:textfield id="textfield" name="bean.orderPhoneNumber" placeholder="Telefone do cliente"  />
 
-                <s:textarea id="text1" name="bean.orderCart" cssClass="text1"  />
+                <s:textarea id="text1" name="bean.orderCart" cssClass="text1" readonly="true" />
 
                 <s:submit cssClass="btn btn-medium btn-primary" key="btn.order" method="execute"/>
             </s:form>
