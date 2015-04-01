@@ -74,7 +74,7 @@
         </nav>
 
         <s:if test="hasActionMessages()">
-            <div class="alert alert-warning alert-dismissible" role="alert">
+            <div class="alert alert-success alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <s:actionmessage/>
             </div>
@@ -94,7 +94,7 @@
                         </li>
                         <li role="presentation" class="titleTab">
                             <a href="#seeds" aria-controls="seeds" role="tab" data-toggle="tab">
-                                <span class="glyphicon glyphicon-grain glyphicon-align-left" aria-hidden="true"></span> Seeds
+                                <span class="glyphicon glyphicon-grain glyphicon-align-left" aria-hidden="true"></span>
                                 Seeds
                             </a>
                         </li>
