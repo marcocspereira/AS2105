@@ -16,11 +16,17 @@ public class LoginAction extends ActionSupport implements SessionAware {
 
     @Override
     public void validate() {
-        if (getBean().getLoginUser().length() == 0){
+        if (getBean() != null && getBean().getLoginUser().length() == 0){
             addFieldError("bean.loginUser", getText("loginUser.required"));
         }
-        if (getBean().getLoginPass().length() == 0){
+        if (getBean() != null && getBean().getLoginUser().length() <= 16){
+            addFieldError("bean.loginUser", getText("loginUser.limits"));
+        }
+        if (getBean() != null && getBean().getLoginPass().length() == 0){
             addFieldError("bean.loginPass", getText("loginPass.required"));
+        }
+        if (getBean() != null && getBean().getLoginPass().length() <= 32 && getBean().getLoginPass().length() >= 4){
+            addFieldError("bean.loginPass", getText("loginPass.limits"));
         }
     }
 
@@ -32,7 +38,7 @@ public class LoginAction extends ActionSupport implements SessionAware {
                 logger.warn("Login of "+getBean().getLoginUser()+" was expired.");
                 return "login";
             }
-            if (getBean().getLoginUser() != null && getBean().getLoginPass() != null && getBean().doLogin() > 0)
+            if (getBean() != null && getBean().getLoginUser() != null && getBean().getLoginPass() != null && getBean().doLogin() > 0)
             {
                 logger.info("Login with "+getBean().getLoginUser()+".");
                 getBean().doLoadProducts();

@@ -13,6 +13,8 @@ import java.io.Serializable;
  */
 public class Product implements Serializable{
     
+    private static final long serialVersionUID = -1208949373134085399L;
+    
     private String product_code;
     private String description;
     private int quantity;

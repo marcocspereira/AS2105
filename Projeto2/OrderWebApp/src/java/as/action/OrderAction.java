@@ -44,7 +44,11 @@ public class OrderAction extends ActionSupport implements SessionAware {
             getBean().getOrderAddress() != null &&
             getBean().getOrderPhoneNumber() != null)        
         {
-            if(getBean().doWebOrders() > 0 && getBean().doLoadProducts()> 0){
+            int result = 0;
+            if((result = getBean().doWebOrders()) > 0){
+                getBean().doLoadProducts();
+                logger.info("Order by "+getBean().getLoginUser()+" with ID="+result+".");
+                
                 getBean().setCheckList(new ArrayList<Product>());
                 getBean().setOrderCart("");
                 getBean().setOrderFirstName("");
@@ -55,6 +59,7 @@ public class OrderAction extends ActionSupport implements SessionAware {
                 return SUCCESS;
             }            
         }
+        logger.error("Order by "+getBean().getLoginUser()+" fail.");
         addActionError(getText("order.error"));
         return ERROR;
     }

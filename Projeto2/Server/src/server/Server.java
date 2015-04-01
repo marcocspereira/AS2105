@@ -170,7 +170,6 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
             if (!result.next()) {
 
                 PreparedStatement pst = connection_users.prepareStatement("Insert into " + CMD.usersTable
-                        //                        + " (name,username,email,password,deicoins,\"ONLINE\")"
                         + "(username, email, password, first_name, last_name, address, phone)"
                         + " values(?,?,?,?,?,?,?)");
 
