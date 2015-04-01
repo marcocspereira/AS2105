@@ -38,12 +38,13 @@ public class OrderAction extends ActionSupport implements SessionAware {
             addActionError(getText("login.expire"));
             return "login";
         }
-        if (!getBean().getCheckList().isEmpty() &&
-            getBean().getOrderFirstName()!= null &&
+        if (getBean().getOrderFirstName()!= null &&
             getBean().getOrderLastName()!= null &&
             getBean().getOrderAddress() != null &&
             getBean().getOrderPhoneNumber() != null)        
         {
+            System.out.println("doWebOrders: " + getBean().doWebOrders());
+            System.out.println("doLoadProducts: " + getBean().doLoadProducts());
             if(getBean().doWebOrders() > 0 && getBean().doLoadProducts()> 0){
                 getBean().setCheckList(new ArrayList<Product>());
                 getBean().setOrderCart("");

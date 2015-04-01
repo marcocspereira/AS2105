@@ -237,7 +237,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
         int TheDay = rightNow.get(rightNow.DAY_OF_WEEK);
         int TheMonth = rightNow.get(rightNow.MONTH);
         int TheYear = rightNow.get(rightNow.YEAR);
-        
+
         int orderId = -1;
 
         String query;
@@ -266,8 +266,7 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
 
         if (!executeError) {
             try {
-
-                PreparedStatement pst = connection_orderinfo.prepareStatement("Insert into " + orderTableName
+                PreparedStatement pst = connection_orderinfo.prepareStatement("Insert into " + CMD.ordersTable
                         + "(order_date, first_name, last_name, address, phone, total_cost, shipped, ordertable)"
                         + "Values (?,?,?,?,?,?,?,?)");
 
@@ -281,9 +280,19 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
                 pst.setString(8, orderTableName);
                 pst.executeUpdate();
 
+                System.out.println("pst: " + pst);
+                
+                String querySelect = "Select * from " + CMD.ordersTable + " order by order_id desc limit 1";
+
+                System.out.println("orderId before result: " + orderId);
+                ResultSet result = statement_orderinfo.executeQuery(querySelect);
+                orderId = result.getInt("order_id");
+                System.out.println("orderId after result: " + orderId);
+
             } catch (Exception e1) {
 
                 errString = "\nProblem with inserting into table orders:: " + e1;
+                System.out.println(errString);
                 executeError = true;
 
                 try {
@@ -310,28 +319,27 @@ public class Server extends UnicastRemoteObject implements RMIRemote, Serializab
 
             Iterator<Product> iterator = checkList.iterator();
 
-            while (iterator.hasNext()) {
+            try {
+                while (iterator.hasNext()) {
 
-                try {
                     PreparedStatement pst = connection_orderinfo.prepareStatement("Insert into " + orderTableName
                             + "(product_id, description, item_price)"
                             + "Values (?,?,?)");
 
-                    pst.setString(1, iterator.next().getProduct_code());
-                    pst.setString(2, iterator.next().getDescription());
-                    pst.setFloat(3, Float.parseFloat(iterator.next().getPrice()));
+                    Product tempProduct = iterator.next();
+                    pst.setString(1, tempProduct.getProduct_code());
+                    pst.setString(2, tempProduct.getDescription());
+                    pst.setFloat(3, Float.parseFloat(tempProduct.getPrice()));
                     pst.executeUpdate();
-                    System.out.println("\nORDER SUBMITTED FOR: " + orderFirstName + " " + orderLastName);
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                System.out.println("\nORDER SUBMITTED FOR: " + orderFirstName + " " + orderLastName);
 
+            } catch (SQLException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            return orderId;
         }
-
         return CMD.ERROR;
-
     }
 }
