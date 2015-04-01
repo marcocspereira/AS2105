@@ -39,7 +39,7 @@
                 <jsp:forward page="myaccount.jsp" />
             </s:if>
         </s:if>
-        
+
         <nav class="navbar navbar-default navbar-static-top"  role="navigation">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -48,23 +48,30 @@
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-<!--                <div class="collapse navbar-collapse navbar-menu" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li style="margin: 12px 5px;"><c:out value="${bean.loginUser}"> </c:out></li>
-                            <li>
-                            <s:form id="logoutForm" name="logout" action="LogoutAction">
-                                <s:submit cssClass="btn btn-default btn-danger" key="btn.logout" method="execute" align="center"/>
-                            </s:form>
-                        </li>
-                    </ul>
-                </div> /.navbar-collapse -->
+                <!--                <div class="collapse navbar-collapse navbar-menu" id="bs-example-navbar-collapse-1">
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li style="margin: 12px 5px;"><c:out value="${bean.loginUser}"> </c:out></li>
+                                            <li>
+                <s:form id="logoutForm" name="logout" action="LogoutAction">
+                    <s:submit cssClass="btn btn-default btn-danger" key="btn.logout" method="execute" align="center"/>
+                </s:form>
+            </li>
+        </ul>
+    </div> /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
 
         <s:if test="hasActionErrors()">
-            <div class="alert alert-dannger alert-dismissible" role="alert">
+            <div class="alert alert-danger alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <s:actionerror/>
+            </div>
+        </s:if>
+
+        <s:if test="hasActionMessages()">
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <s:actionmessage/>
             </div>
         </s:if>
 
