@@ -26,14 +26,15 @@
 
         <script type="text/javascript">
             var total = 0.0;
-            
+
             function copyToCart(celula) {
                 // window.alert(celula);
                 celula = celula.trim();
                 var content = celula + "\n";
                 $('#text1').append(content);
                 celula = celula.split("|");
-                total += parseFloat((celula[celula.length-1]));
+                total += parseFloat((celula[celula.length - 1]));
+                $('#totalValue').val("Total: " + total);
             }
         </script>
 
@@ -77,105 +78,109 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <s:actionmessage/>
             </div>
-        </s:if>
+        </s:if>                            
 
         <div class="contentor_div">
-            <br>
+            <div id="divLeft">
+                <div role="tabpanel">
 
-            <h3><span class=" glyphicon glyphicon-shopping-cart glyphicon-align-left" aria-hidden="true"></span> Cart</h3>    
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active titleTab">
+                            <a href="#trees" aria-controls="trees" role="tab" data-toggle="tab">
+                                <span class="glyphicon glyphicon-tree-conifer glyphicon-align-left" aria-hidden="true"></span>
+                                Trees
+                            </a>
+                        </li>
+                        <li role="presentation" class="titleTab">
+                            <a href="#seeds" aria-controls="seeds" role="tab" data-toggle="tab">
+                                <span class="glyphicon glyphicon-grain glyphicon-align-left" aria-hidden="true"></span> Seeds
+                                Seeds
+                            </a>
+                        </li>
+                        <li role="presentation" class="titleTab">
+                            <a href="#shrubs" aria-controls="shrubs" role="tab" data-toggle="tab">
+                                <span class="glyphicon glyphicon-certificate glyphicon-align-left" aria-hidden="true"></span>
+                                Shrubs
+                            </a>
+                        </li>
+                    </ul>
 
-            <s:form id="ordersForm" name="order" action="OrderAction" cssClass="formToSubmit">
-                <s:textfield id="textfield" name="bean.orderFirstName" placeholder="Primeiro nome do cliente"/>
-                <s:textfield id="textfield" name="bean.orderLastName" placeholder="Último nome do cliente"/>
-                <s:textfield id="textfield" name="bean.orderAddress" placeholder="Morada do cliente"/>
-                <s:textfield id="textfield" name="bean.orderPhoneNumber" placeholder="Telefone do cliente"  />
-
-                <s:textarea id="text1" name="bean.orderCart" cssClass="text1" readonly="true" />
-
-                <s:submit cssClass="btn btn-medium btn-primary" key="btn.order" method="execute"/>
-            </s:form>
-
-            <br />
-
-            <div role="tabpanel">
-
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active">
-                        <a href="#trees" aria-controls="trees" role="tab" data-toggle="tab">
-                            <span class="glyphicon glyphicon-tree-conifer glyphicon-align-left" aria-hidden="true"></span>
-                            Trees
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#seeds" aria-controls="seeds" role="tab" data-toggle="tab">
-                            <span class="glyphicon glyphicon-grain glyphicon-align-left" aria-hidden="true"></span> Seeds
-                            Seeds
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#shrubs" aria-controls="shrubs" role="tab" data-toggle="tab">
-                            <span class="glyphicon glyphicon-certificate glyphicon-align-left" aria-hidden="true"></span>
-                            Shrubs
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="trees">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <tr>
-                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
-                                </tr>
-                                <c:forEach var="arvore" items="${bean.trees}" varStatus="myIndex">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="trees">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
                                     <tr>
-                                        <td onclick="copyToCart(this.innerHTML)">
-                                            <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />                                            
-                                        </td>
+                                        <td><b>Código | Descrição | Quantidade | Preço</b></td>
                                     </tr>
-                                </c:forEach>
-                            </table>
+                                    <c:forEach var="arvore" items="${bean.trees}" varStatus="myIndex">
+                                        <tr>
+                                            <td onclick="copyToCart(this.innerHTML)" class="tableTd">
+                                                <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />                                            
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="seeds">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td><b>Código | Descrição | Quantidade | Preço</b></td>
+                                    </tr>
+                                    <c:forEach var="arvore" items="${bean.seeds}" varStatus="myIndex">
+                                        <tr>
+                                            <td onclick="copyToCart(this.innerHTML)" class="tableTd">
+                                                <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="shrubs">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td><b>Código | Descrição | Quantidade | Preço</b></td>
+                                    </tr>
+                                    <c:forEach var="arvore" items="${bean.shrubs}" varStatus="myIndex">
+                                        <tr>
+                                            <td onclick="copyToCart(this.innerHTML)" class="tableTd">
+                                                <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div role="tabpanel" class="tab-pane" id="seeds">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <tr>
-                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
-                                </tr>
-                                <c:forEach var="arvore" items="${bean.seeds}" varStatus="myIndex">
-                                    <tr>
-                                        <td onclick="copyToCart(this.innerHTML)">
-                                            <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div role="tabpanel" class="tab-pane" id="shrubs">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <tr>
-                                    <td><b>Código | Descrição | Quantidade | Preço</b></td>
-                                </tr>
-                                <c:forEach var="arvore" items="${bean.shrubs}" varStatus="myIndex">
-                                    <tr>
-                                        <td onclick="copyToCart(this.innerHTML)">
-                                            <c:out value="${arvore.product_code}" /> | <c:out value="${arvore.description}" /> | <c:out value="${arvore.quantity}" /> | <c:out value="${arvore.price}" />
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </div>
-                    </div>
                 </div>
-
             </div>
+
+            <div id="divRight">
+                <h3><span class=" glyphicon glyphicon-shopping-cart glyphicon-align-left" aria-hidden="true"></span> Cart</h3>    
+
+                <s:form id="ordersForm" name="order" action="OrderAction" cssClass="formToSubmit">
+                    <s:textfield cssClass="textfieldMyAccount" name="bean.orderFirstName" placeholder="Primeiro nome do cliente"/>
+                    <s:textfield cssClass="textfieldMyAccount" name="bean.orderLastName" placeholder="Último nome do cliente"/>
+                    <s:textfield cssClass="textfieldMyAccount" name="bean.orderAddress" placeholder="Morada do cliente"/>
+                    <s:textfield cssClass="textfieldMyAccount" name="bean.orderPhoneNumber" placeholder="Telefone do cliente"  />
+
+                    <s:textarea id="text1" name="bean.orderCart" cssClass="text1" readonly="true" />
+                    
+                    <s:textfield readonly="true" cssClass="textfieldMyAccount" id="totalValue" />
+                    
+                    <s:submit cssClass="btn btn-medium btn-primary" key="btn.order" method="execute"/>
+                </s:form>
+            </div>
+
+
 
 
         </div>

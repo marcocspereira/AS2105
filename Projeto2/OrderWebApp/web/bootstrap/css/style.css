@@ -30,8 +30,10 @@ section {
 
 
 .contentor_div{
-    margin-left: 10%;
-    width: 70%;
+    width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .formToSubmit{
@@ -50,7 +52,19 @@ section {
     
 }
 
+#divLeft{
+    width: 49%;
+    float: left;
+}
 
+#divRight{
+    width: 49%;
+    float: right;
+}
+
+.titleTab{
+    width:33.33%;
+}
 
 #associateAccount
 {
@@ -73,10 +87,22 @@ display:none;
 }
 
 #textfield {
-  height: 50px;
-  width: 100%;
+  height: 30px;
 }
 
+.textfieldMyAccount{
+  height: 30px !important;
+  width: 100%;
+  margin-bottom: 15px !important;
+}
+
+.tableTd{
+    cursor: pointer;
+}
+
+#totalValue{
+    
+}
 
 #inner {
     margin: 0 auto;
