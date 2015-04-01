@@ -48,7 +48,6 @@ public class LoginAction extends ActionSupport implements SessionAware {
                 addActionMessage(getText("login.ok"));
                 if (getBean() != null && getBean().getLoginUser() != null && getBean().getLoginUser().compareTo("root") == 0)
                 {
-                    getBean().loadLogs();
                     return "root";
                 }
                 return SUCCESS;

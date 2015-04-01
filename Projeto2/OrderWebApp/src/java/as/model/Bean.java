@@ -5,11 +5,7 @@
  */
 package as.model;
 
-import as.action.TextFile;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -114,53 +110,6 @@ public class Bean {
         }
     }
 
-//    Preparable.prepare() {
-////        try {
-//        Properties prop = new Properties();
-//        try {
-//            prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties"));
-////            prop.load(new FileInputStream("config.properties"config));
-//            RMI = prop.getProperty("RMI");
-//        } catch (FileNotFoundException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        } catch (IOException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//        try {
-//
-//            try {
-//                System.getProperties().put("java.security.policy", "policy.all");
-//                server = (RMIRemote) Naming.lookup("rmi://" + RMI + "/server");
-//            } catch (MalformedURLException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        } catch (AccessException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        } catch (RemoteException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        } catch (NotBoundException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//        try{
-//            clientSocket = aClientSocket;
-//            out = new ObjectOutputStream(clientSocket.getOutputStream());
-//            in = new ObjectInputStream(clientSocket.getInputStream());
-//            this.start();
-//        }catch(IOException e){System.out.println("Connection:" + e.getMessage());}
-//        try {
-//            Properties prop = new Properties();
-//            prop.load(new FileInputStream("config.properties"));
-//            host = prop.getProperty("RMI");
-//        } catch (IOException ex) {
-//            Logger.getLogger(DirestrutsBean.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
     public String getLoginUser() {
         return loginUser;
     }
@@ -353,153 +302,39 @@ public class Bean {
         this.orderTotalCost = orderTotalCost;
     }
 
-//    private String md5(String s) {
-//        try {
-//            MessageDigest m = MessageDigest.getInstance("MD5");
-//            m.update(s.getBytes(), 0, s.length());
-//            BigInteger i = new BigInteger(1, m.digest());
-//            return String.format("%1$032x", i);
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
     public int doLogin() throws RemoteException, SQLException {
 //        main();
         init();
-        return server.doLogin(loginUser, loginPass);
+        if (server != null) return server.doLogin(loginUser, loginPass);
+        return CMD.ERROR;
     }
-//    public int doLogin() throws SQLException {
-//        String query = "Select * from " + CMD.usersTable + " where username ='" + loginUser + "'";
-//        System.out.println(query);
-//
-//        try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            connection_orderinfo = DriverManager.getConnection(ORDERINFO_DB_URL, USER, PASS);
-//            statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        ResultSet result = statement_orderinfo.executeQuery(query);
-//
-//        if (!result.next()) {
-//            return CMD.ERROR;
-//        }
-//
-//        String password = result.getString("password");
-//
-//        if (password.equalsIgnoreCase(md5(loginPass))) {
-//
-//            System.out.println("sucesso no login");
-//
-//            int clientId = result.getInt("id");
-//            System.out.println("clientId " + clientId);
-//
-//            result.close();
-//            return clientId;
-//        }
-//        return CMD.ERROR;
-//    }
 
     public int doLogout() throws RemoteException {
         init();
-        return server.doLogout();
-//        return CMD.OK;
+        if (server != null) return server.doLogout();
+        return CMD.ERROR;
     }
 
     public int doRegist() throws RemoteException {
         init();
-        return server.doRegist(registUser, registEmail, registPass, registFirstName, registLastName, registAddress, registPhone);
+        if (server != null) return server.doRegist(registUser, registEmail, registPass, registFirstName, registLastName, registAddress, registPhone);
+        return CMD.ERROR;
     }
 
     public int doWebOrders() throws RemoteException {
         init();
         doOrder(orderCart); // vai fazer parse ao carrinho de compras
-        return server.doWebOrders(orderFirstName, orderLastName, orderAddress, orderPhoneNumber, orderTotalCost, checkList);
+        if (server != null) return server.doWebOrders(orderFirstName, orderLastName, orderAddress, orderPhoneNumber, orderTotalCost, checkList);
+        return CMD.ERROR;
     }
-//    public int doRegist() {
-//        String query = "Select username from " + CMD.usersTable + " where username ='" + registUser + "'";
-//        System.out.println(query);
-//
-//        try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            connection_orderinfo = DriverManager.getConnection(ORDERINFO_DB_URL, USER, PASS);
-//            statement_orderinfo = connection_orderinfo.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-//        try {
-//            ResultSet result = statement_orderinfo.executeQuery(query);
-//
-//            if (!result.next()) {
-//
-//                PreparedStatement pst = connection_orderinfo.prepareStatement("Insert into " + CMD.usersTable
-////                        + " (name,username,email,password,deicoins,\"ONLINE\")"
-//                        + "(username, email, password, first_name, last_name, address, phone)"
-//                        + " values(?,?,?,?,?,?,?)");
-//
-//                pst.setString(1, registUser);
-//                pst.setString(2, registEmail);
-//                pst.setString(3, registPass);
-//                pst.setString(4, registFirstName);
-//                pst.setString(5, registLastName);
-//                pst.setString(6, registAddress);
-//                pst.setString(7, registPhone);
-//                pst.executeUpdate();
-//
-//                result.close();
-//                pst.close();
-//                return CMD.OK;
-//            } else {
-//                result.close();
-//                return CMD.ERROR;
-//            }
-//
-//        } catch (SQLException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//        return CMD.ERROR;
-//    }
-//    
-//    public ArrayList<Product> returnProduts(String table) {
-//        String query = "Select * from " + table;
-//        ResultSet result = null;
-//        ArrayList<Product> products = new ArrayList<>();
-//        try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            connection_inventory = DriverManager.getConnection(INVENTORY_DB_URL, USER, PASS);
-//            statement_inventory = connection_inventory.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-//            result = statement_inventory.executeQuery(query);
-//            
-//            while (result.next())
-//            {
-////                TODO Correct ParseFloat to last parameter
-//                Product product = new Product(result.getString(1), result.getString(2), Integer.parseInt(result.getString(3)), Float.parseFloat(result.getString(4)));
-//                products.add(product);
-//            } // while
-//                    
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(Bean.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return products;
-//    }
 
     public int doLoadProducts() throws RemoteException {
         init();
-        trees = server.returnProduts(CMD.treesTable);
-        seeds = server.returnProduts(CMD.seedsTable);
-        shrubs = server.returnProduts(CMD.shrubsTable);
-        return CMD.OK;
+        if (server != null) trees = server.returnProduts(CMD.treesTable);
+        if (server != null) seeds = server.returnProduts(CMD.seedsTable);
+        if (server != null) shrubs = server.returnProduts(CMD.shrubsTable);
+        if (server != null) return CMD.OK;
+        return CMD.ERROR;
     }
 
     public int doOrder(String products) {
@@ -541,159 +376,4 @@ public class Bean {
 
         return CMD.OK;
     }
-
-    public String readFile(String filename) {
-        String content = null;
-        File file = new File(filename); //for ex foo.txt
-        try {
-            FileReader reader = new FileReader(file);
-            char[] chars = new char[(int) file.length()];
-            reader.read(chars);
-            content = new String(chars);
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return content;
-    }
-
-    public void loadLogs() {
-        readFile("");
-        
-        
-    }
-
-}
-
-//Thread para tratar de cada canal de comunicacao com um cliente
-class Connection extends Thread {
-
-    ObjectInputStream in;
-    ObjectOutputStream out;
-    RMIRemote server;
-
-    Socket clientSocket;
-    int threadNumber;
-    Boolean online = false;
-    int clientId = 0;
-
-    public Connection(Socket aClientSocket, int numero) {
-
-        threadNumber = numero;
-        String RMI = "";
-
-//        try {
-        Properties prop = new Properties();
-        try {
-            prop.load(new FileInputStream("config.properties"));
-            RMI = prop.getProperty("RMI");
-        } catch (FileNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        try {
-
-            try {
-                System.getProperties().put("java.security.policy", "policy.all");
-                server = (RMIRemote) Naming.lookup("rmi://" + RMI + "/ideabroker");
-            } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        } catch (AccessException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (RemoteException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (NotBoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-        try {
-            clientSocket = aClientSocket;
-            out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new ObjectInputStream(clientSocket.getInputStream());
-            this.start();
-        } catch (IOException e) {
-            System.out.println("Connection:" + e.getMessage());
-        }
-    }
-
-    private void exitThread() throws IOException {
-//    	System.out.println("T["+threadNumber + "] Recebeu: "+CMD.mainMenu.EXIT.toString());
-        in.close();
-        out.close();
-        this.clientSocket.close();
-        return;
-    }
-
-//    public void run(){
-//        Object received = null;
-//        try{
-//            while(clientSocket != null){
-//            	if(!online)
-//            	{
-//        			online = false;
-//            		received = in.readObject();
-//	            	if (received == null)
-//	            	{
-//	            		System.out.println("Client disconnected");
-//	            		break;
-//	            	}
-//
-//	            	int option = (Integer) received;
-//	            	if (option == CMD.mainMenu.LOGIN.ordinal()){
-//	            		login();
-//	            	}
-//	            	else if (option == CMD.mainMenu.REGISTER.ordinal()){
-//	            		register();
-//	                }
-//	            	else if (option == CMD.mainMenu.EXIT.ordinal()){
-//	            		exitThread();
-//	            		System.out.println("T["+threadNumber + "] Recebeu: "+CMD.mainMenu.EXIT.toString()+" OK");
-//            			break;
-//	            	}
-//            	}
-//            	else
-//            	{
-//            		int deiCoins = h.deiCoins(clientId);
-//            		out.writeObject(deiCoins);
-//
-//                	received = in.readObject();
-//                	if (received == null)
-//                	{
-//                		System.out.println("Client disconnected");
-//                		online = false;
-//                		break;
-//                	}
-//
-//                	int option = (Integer) received;
-//
-//            		if(clientId == CMD.ROOT){
-//            			showSecundaryRootMenu(option);
-//            		}
-//
-//            		else{
-//                    	showSecundaryClientMenu(option);
-//            		}
-//
-//
-//            	}
-//            }
-//        }catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (Exception e)
-//		{
-//			e.printStackTrace();
-//			System.out.println(e.getCause());
-//			System.out.println(e.getMessage());
-//			online = false;
-//		}
-//    }
 }
