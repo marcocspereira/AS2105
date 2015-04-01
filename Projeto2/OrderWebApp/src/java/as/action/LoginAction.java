@@ -46,7 +46,11 @@ public class LoginAction extends ActionSupport implements SessionAware {
                 session.put("user", getBean().getLoginUser());
 //                System.out.println(session.get("user"));
                 addActionMessage(getText("login.ok"));
-                if (getBean() != null && getBean().getLoginUser().compareTo("root") == 0) return "root";
+                if (getBean() != null && getBean().getLoginUser() != null && getBean().getLoginUser().compareTo("root") == 0)
+                {
+                    getBean().loadLogs();
+                    return "root";
+                }
                 return SUCCESS;
             }
             logger.error("Login with "+getBean().getLoginUser()+" fail.");
