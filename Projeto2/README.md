@@ -5,6 +5,3 @@ Mestrado em Engenharia Informática - Engenharia de Software - Arquitectura de S
 - Carlos Santos
 - Gonçalo Pereira
 - Marco Pereira
-
-#### OrderWebApp
- - Iniciada
