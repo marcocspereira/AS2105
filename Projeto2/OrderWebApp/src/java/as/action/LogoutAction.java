@@ -26,7 +26,7 @@ public class LogoutAction extends ActionSupport implements SessionAware {
             if (getBean().doLogout()== CMD.OK)
             {
                 logger.info("Logout with "+getBean().getLoginUser()+".");
-                addActionError(getText("logout.ok"));
+                addActionMessage(getText("logout.ok"));
                 session.remove("login");
                 session.clear();
                 return SUCCESS;

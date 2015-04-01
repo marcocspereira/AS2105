@@ -11,23 +11,24 @@ import java.io.Serializable;
  *
  * @author Marco
  */
-public class Product implements Serializable{
-    
+public class Product implements Serializable {
+
     private static final long serialVersionUID = -1208949373134085399L;
-    
+
     private String product_code;
     private String description;
     private int quantity;
     private String price;  /*multiplicar por 100 qdo vem da BD. Dividir por 100 quando vai para a BD*/
-    
-    public Product(String product_code, String description, int quantity, String price){
+
+
+    public Product(String product_code, String description, int quantity, String price) {
         this.product_code = product_code;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
     }
-    
-    public Product(String product_code, String description, String price){
+
+    public Product(String product_code, String description, String price) {
         this.product_code = product_code;
         this.description = description;
         this.quantity = 1;
@@ -89,6 +90,13 @@ public class Product implements Serializable{
     public void setPrice(String price) {
         this.price = price;
     }
-    
-    
+
+//    public static String padRight(String s, int n) {
+//        return String.format("%1$-" + n + "s", s);
+//    }
+
+//    public static String padLeft(String s, int n) {
+//        return String.format("%1$" + n + "s", s);
+//    }
+
 }

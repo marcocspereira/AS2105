@@ -6,6 +6,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+<!--<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $("#text1").load("../logs/logs.log");
+    });
+});
+</script>-->
 
 <html>
     <head>
@@ -99,6 +106,7 @@
                 </div>
             </div>
         </div>
+        <%--<s:textarea id="text1" name="bean.logs" cssClass="text1" readonly="true" />--%>
     </body>
 </html>
 

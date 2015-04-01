@@ -5,8 +5,11 @@
  */
 package as.model;
 
+import as.action.TextFile;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -39,18 +42,23 @@ public class Bean {
     private String registLastName;
     private String registAddress;
     private String registPhone;
-    
+
     private String orderFirstName;
     private String orderLastName;
     private String orderAddress;
     private String orderPhoneNumber;
     private String orderCart;
-    
+
     private String product_code;
     private String product_name;
     private String product_quantity;
-    private String product_price;    
+    private String product_price;
     private float orderTotalCost = 0;
+    
+    private String logs = "";
+    private String orders = "";
+    private String shipping = "";
+    
 
     private ArrayList<Product> trees = new ArrayList<Product>();
     private ArrayList<Product> seeds = new ArrayList<Product>();
@@ -232,36 +240,36 @@ public class Bean {
     public void setRegistPhone(String registPhone) {
         this.registPhone = registPhone;
     }
-    
-    public void setProductCode(String product_code){
-        this.product_code=product_code;
+
+    public void setProductCode(String product_code) {
+        this.product_code = product_code;
     }
-    
-    public String getProductCode(){
+
+    public String getProductCode() {
         return product_code;
     }
-    
-    public void setProductName(String product_name){
-        this.product_name=product_name;
+
+    public void setProductName(String product_name) {
+        this.product_name = product_name;
     }
-    
-    public String getProductName(){
+
+    public String getProductName() {
         return product_name;
     }
-    
-    public void setProductPrice(String product_price){
-        this.product_price=product_price;
+
+    public void setProductPrice(String product_price) {
+        this.product_price = product_price;
     }
-    
-    public String getProductPrice(){
+
+    public String getProductPrice() {
         return product_price;
     }
-    
-    public void setProductQuantity(String product_quantity){
-        this.product_quantity=product_quantity;
+
+    public void setProductQuantity(String product_quantity) {
+        this.product_quantity = product_quantity;
     }
-    
-    public String getProductPQuantity(){
+
+    public String getProductPQuantity() {
         return product_quantity;
     }
 
@@ -344,9 +352,6 @@ public class Bean {
     public void setOrderTotalCost(float orderTotalCost) {
         this.orderTotalCost = orderTotalCost;
     }
-    
-    
-    
 
 //    private String md5(String s) {
 //        try {
@@ -410,8 +415,8 @@ public class Bean {
         init();
         return server.doRegist(registUser, registEmail, registPass, registFirstName, registLastName, registAddress, registPhone);
     }
-    
-    public int doWebOrders() throws RemoteException{
+
+    public int doWebOrders() throws RemoteException {
         init();
         doOrder(orderCart); // vai fazer parse ao carrinho de compras
         return server.doWebOrders(orderFirstName, orderLastName, orderAddress, orderPhoneNumber, orderTotalCost, checkList);
@@ -489,62 +494,75 @@ public class Bean {
 //        return products;
 //    }
 
-    public int doLoadProducts() throws RemoteException{
+    public int doLoadProducts() throws RemoteException {
         init();
         trees = server.returnProduts(CMD.treesTable);
         seeds = server.returnProduts(CMD.seedsTable);
         shrubs = server.returnProduts(CMD.shrubsTable);
-        
-        System.out.println(trees.size());
-        System.out.println(seeds.size());
-        System.out.println(shrubs.size());
-        
         return CMD.OK;
     }
-    
-    
-     public int doOrder(String products){
+
+    public int doOrder(String products) {
         String outdelim = "[\n]";
         String innerdelim = "[|]";
         String[] outString = products.split(outdelim);
         String[] innerString;
         int i = 0;
-       
-        for(String temp : outString){            
+
+        for (String temp : outString) {
             innerString = temp.split(innerdelim);
-            
-            for(String token : innerString){           
-                if(i == 0){
-                    token = token.replaceAll("\\s","");
-                    product_code=token;
+
+            for (String token : innerString) {
+                if (i == 0) {
+                    token = token.replaceAll("\\s", "");
+                    product_code = token;
                 } // iff
 
-                if(i == 1){
-                    token = token.replaceAll("\\s","");
-                    product_name=token;
+                if (i == 1) {
+                    token = token.replaceAll("\\s", "");
+                    product_name = token;
                 } // if
 
-                if(i == 2){
-                    token = token.replaceAll("\\s","");
+                if (i == 2) {
+                    token = token.replaceAll("\\s", "");
                     product_quantity = token;
                 } // if
 
-                if(i == 3){
-                    token = token.replaceAll("\\s","");
+                if (i == 3) {
+                    token = token.replaceAll("\\s", "");
                     product_price = token;
                     orderTotalCost += Float.parseFloat(product_price);
                 } // if
                 i++;
             } // for token
-            i=0;
+            i = 0;
             getCheckList().add(new Product(product_code, product_name, product_price));
         } // for temp
 
         return CMD.OK;
     }
-    
-    
-    
+
+    public String readFile(String filename) {
+        String content = null;
+        File file = new File(filename); //for ex foo.txt
+        try {
+            FileReader reader = new FileReader(file);
+            char[] chars = new char[(int) file.length()];
+            reader.read(chars);
+            content = new String(chars);
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content;
+    }
+
+    public void loadLogs() {
+        readFile("");
+        
+        
+    }
+
 }
 
 //Thread para tratar de cada canal de comunicacao com um cliente
